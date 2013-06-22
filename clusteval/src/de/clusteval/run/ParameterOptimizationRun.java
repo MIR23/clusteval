@@ -103,53 +103,54 @@ public class ParameterOptimizationRun extends ExecutionRun {
 			final List<ProgramConfig> programConfigs,
 			final List<DataConfig> dataConfigs)
 			throws IncompatibleParameterOptimizationMethodException {
-		for (ParameterOptimizationMethod method : optimizationMethods) {
-			if (!method.getCompatibleDataSetFormatBaseClasses().isEmpty()) {
-				// for every datasetformat we check, whether it class is
-				// compatible
-				for (DataConfig dataConfig : dataConfigs) {
-					Class<? extends DataSetFormat> dataSetFormatClass = dataConfig
-							.getDatasetConfig().getDataSet().getDataSetFormat()
-							.getClass();
-					boolean compatible = false;
-					for (Class<? extends DataSetFormat> parentClass : method
-							.getCompatibleDataSetFormatBaseClasses()) {
-						if (parentClass.isAssignableFrom(dataSetFormatClass)) {
-							compatible = true;
-							break;
-						}
-					}
-					if (!compatible) {
-						throw new IncompatibleParameterOptimizationMethodException(
-								"The ParameterOptimizationMethod "
-										+ method.getClass().getSimpleName()
-										+ " cannot be applied to the dataset "
-										+ dataConfig.getDatasetConfig()
-												.getDataSet()
-										+ " with the format "
-										+ dataSetFormatClass.getSimpleName());
-					}
-				}
-			}
-
-			if (!method.getCompatibleProgramNames().isEmpty()) {
-				// for every program we check, whether it class is
-				// compatible
-				for (ProgramConfig programConfig : programConfigs) {
-					String programName = programConfig.getProgram()
-							.getMajorName();
-					boolean compatible = method.getCompatibleProgramNames()
-							.contains(programName);
-					if (!compatible) {
-						throw new IncompatibleParameterOptimizationMethodException(
-								"The ParameterOptimizationMethod "
-										+ method.getClass().getSimpleName()
-										+ " cannot be applied to the program "
-										+ programName);
-					}
-				}
-			}
-		}
+		// TODO
+//		for (ParameterOptimizationMethod method : optimizationMethods) {
+//			if (!method.getCompatibleDataSetFormatBaseClasses().isEmpty()) {
+//				// for every datasetformat we check, whether it class is
+//				// compatible
+//				for (DataConfig dataConfig : dataConfigs) {
+//					Class<? extends DataSetFormat> dataSetFormatClass = dataConfig
+//							.getDatasetConfig().getDataSet().getDataSetFormat()
+//							.getClass();
+//					boolean compatible = false;
+//					for (Class<? extends DataSetFormat> parentClass : method
+//							.getCompatibleDataSetFormatBaseClasses()) {
+//						if (parentClass.isAssignableFrom(dataSetFormatClass)) {
+//							compatible = true;
+//							break;
+//						}
+//					}
+//					if (!compatible) {
+//						throw new IncompatibleParameterOptimizationMethodException(
+//								"The ParameterOptimizationMethod "
+//										+ method.getClass().getSimpleName()
+//										+ " cannot be applied to the dataset "
+//										+ dataConfig.getDatasetConfig()
+//												.getDataSet()
+//										+ " with the format "
+//										+ dataSetFormatClass.getSimpleName());
+//					}
+//				}
+//			}
+//
+//			if (!method.getCompatibleProgramNames().isEmpty()) {
+//				// for every program we check, whether it class is
+//				// compatible
+//				for (ProgramConfig programConfig : programConfigs) {
+//					String programName = programConfig.getProgram()
+//							.getMajorName();
+//					boolean compatible = method.getCompatibleProgramNames()
+//							.contains(programName);
+//					if (!compatible) {
+//						throw new IncompatibleParameterOptimizationMethodException(
+//								"The ParameterOptimizationMethod "
+//										+ method.getClass().getSimpleName()
+//										+ " cannot be applied to the program "
+//										+ programName);
+//					}
+//				}
+//			}
+//		}
 	}
 
 	/**

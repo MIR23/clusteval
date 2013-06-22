@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
 import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
@@ -48,24 +50,63 @@ import file.FileUtils;
 public class DataSetConfig extends RepositoryObject {
 
 	/**
+	 * A helper method for cloning a list of data sets.
+	 * 
+	 * @param dataSets
+	 *            The list of data sets to clone.
+	 * @return The list containing the cloned objects of the input list.
+	 */
+	public static List<DataSet> cloneDataSets(final List<DataSet> dataSets) {
+		List<DataSet> result = new ArrayList<DataSet>();
+
+		for (DataSet dataSet : dataSets) {
+			result.add(dataSet.clone());
+		}
+
+		return result;
+	}
+
+	public static List<ConversionInputToStandardConfiguration> cloneInputToStandardConfigs(
+			final List<ConversionInputToStandardConfiguration> inputToStandardConfigs) {
+		List<ConversionInputToStandardConfiguration> result = new ArrayList<ConversionInputToStandardConfiguration>();
+
+		for (ConversionInputToStandardConfiguration inputToStandardConfig : inputToStandardConfigs) {
+			result.add(inputToStandardConfig.clone());
+		}
+
+		return result;
+	}
+
+	public static List<ConversionStandardToInputConfiguration> cloneStandardToInputConfigs(
+			final List<ConversionStandardToInputConfiguration> standardToInputConfigs) {
+		List<ConversionStandardToInputConfiguration> result = new ArrayList<ConversionStandardToInputConfiguration>();
+
+		for (ConversionStandardToInputConfiguration standardToInputConfig : standardToInputConfigs) {
+			result.add(standardToInputConfig.clone());
+		}
+
+		return result;
+	}
+
+	/**
 	 * A dataset configuration encapsulates a dataset. This attribute stores a
 	 * reference to the dataset wrapper object.
 	 */
-	protected DataSet dataset;
+	protected List<DataSet> datasets;
 
 	/**
 	 * This variable holds the configuration needed, when {@link #dataset} is
 	 * converted from its original input format to the internal standard format
 	 * of the framework.
 	 */
-	protected ConversionInputToStandardConfiguration configInputToStandard;
+	protected List<ConversionInputToStandardConfiguration> configInputToStandard;
 
 	/**
 	 * This variable holds the configuration needed, when {@link #dataset} is
 	 * converted from the internal standard format of the framework to the input
 	 * format of a program.
 	 */
-	protected ConversionStandardToInputConfiguration configStandardToInput;
+	protected List<ConversionStandardToInputConfiguration> configStandardToInput;
 
 	/**
 	 * Instantiates a new dataset configuration.
@@ -81,7 +122,7 @@ public class DataSetConfig extends RepositoryObject {
 	 * @param ds
 	 *            The encapsulated dataset.
 	 * @param configInputToStandard
-	 *            The configuration needed, when {@link #dataset} is converted
+	 *            The configuration needed, when {@link #datasets} is converted
 	 *            from its original input format to the internal standard format
 	 *            of the framework.
 	 * @param configStandardToInput
@@ -90,26 +131,32 @@ public class DataSetConfig extends RepositoryObject {
 	 *            input format of a program.
 	 * @throws RegisterException
 	 */
-	public DataSetConfig(final Repository repository, final long changeDate,
-			final File absPath, final DataSet ds,
-			final ConversionInputToStandardConfiguration configInputToStandard,
-			final ConversionStandardToInputConfiguration configStandardToInput)
+	public DataSetConfig(
+			final Repository repository,
+			final long changeDate,
+			final File absPath,
+			final List<DataSet> ds,
+			final List<ConversionInputToStandardConfiguration> configInputToStandard,
+			final List<ConversionStandardToInputConfiguration> configStandardToInput)
 			throws RegisterException {
 		super(repository, false, changeDate, absPath);
 
-		this.dataset = ds;
+		this.datasets = ds;
 		this.configInputToStandard = configInputToStandard;
 		this.configStandardToInput = configStandardToInput;
 
 		if (this.register()) {
-			this.dataset.addListener(this);
+			for (DataSet dataset : this.datasets)
+				dataset.addListener(this);
 
 			// added 21.03.2013: register only, if this dataset config has been
 			// registered before
-			this.configInputToStandard.getDistanceMeasureAbsoluteToRelative()
-					.register();
-			this.configInputToStandard.getDistanceMeasureAbsoluteToRelative()
-					.addListener(this);
+			for (ConversionInputToStandardConfiguration config : this.configInputToStandard) {
+				DistanceMeasure measure = config
+						.getDistanceMeasureAbsoluteToRelative();
+				measure.register();
+				measure.addListener(this);
+			}
 		}
 	}
 
@@ -123,11 +170,9 @@ public class DataSetConfig extends RepositoryObject {
 	public DataSetConfig(DataSetConfig datasetConfig) throws RegisterException {
 		super(datasetConfig);
 
-		this.dataset = datasetConfig.dataset.clone();
-		this.configInputToStandard = datasetConfig.configInputToStandard
-				.clone();
-		this.configStandardToInput = datasetConfig.configStandardToInput
-				.clone();
+		this.datasets = cloneDataSets(datasetConfig.datasets);
+		this.configInputToStandard = cloneInputToStandardConfigs(datasetConfig.configInputToStandard);
+		this.configStandardToInput = cloneStandardToInputConfigs(datasetConfig.configStandardToInput);
 	}
 
 	/*
@@ -198,67 +243,82 @@ public class DataSetConfig extends RepositoryObject {
 				"Parsing dataset config \"" + absConfigPath + "\"");
 
 		try {
-			HierarchicalINIConfiguration props = new HierarchicalINIConfiguration(
+			HierarchicalINIConfiguration conf = new HierarchicalINIConfiguration(
 					absConfigPath);
-			props.setThrowExceptionOnMissing(true);
-
-			final long changeDate = absConfigPath.lastModified();
-			String datasetName = props.getString("datasetName");
-			String datasetFile = props.getString("datasetFile");
 
 			Repository repo = Repository.getRepositoryForPath(absConfigPath
 					.getAbsolutePath());
 
-			DistanceMeasure distanceMeasure;
-			if (props.containsKey("distanceMeasureAbsoluteToRelative")) {
-				distanceMeasure = DistanceMeasure.parseFromString(repo,
-						props.getString("distanceMeasureAbsoluteToRelative"));
-			} else
-				distanceMeasure = DistanceMeasure.parseFromString(repo,
-						"EuclidianDistanceMeasure");
+			List<DataSet> dataSets = new ArrayList<DataSet>();
+			List<ConversionInputToStandardConfiguration> inputToStandards = new ArrayList<ConversionInputToStandardConfiguration>();
+			List<ConversionStandardToInputConfiguration> standardToInputs = new ArrayList<ConversionStandardToInputConfiguration>();
 
-			DataSet dataSet = DataSet.parseFromFile(new File(FileUtils
-					.buildPath(repo.getDataSetBasePath(), datasetName,
-							datasetFile)));
+			Set<String> sections = conf.getSections();
+			for (String section : sections) {
+				SubnodeConfiguration props = conf.getSection(section);
+				props.setThrowExceptionOnMissing(true);
 
-			// added 12.04.2013
-			List<DataPreprocessor> preprocessorBeforeDistance;
-			if (props.containsKey("preprocessorBeforeDistance")) {
-				preprocessorBeforeDistance = DataPreprocessor.parseFromString(
-						repo,
-						props.getStringArray("preprocessorBeforeDistance"));
+				String datasetName = props.getString("datasetName");
+				String datasetFile = props.getString("datasetFile");
 
-				for (DataPreprocessor proc : preprocessorBeforeDistance) {
-					if (!proc.getCompatibleDataSetFormats().contains(
-							dataSet.getDataSetFormat().getClass()
-									.getSimpleName())) {
-						throw new IncompatibleDataSetConfigPreprocessorException(
-								"The data preprocessor "
-										+ proc.getClass().getSimpleName()
-										+ " cannot be applied to a dataset with format "
-										+ dataSet.getDataSetFormat().getClass()
-												.getSimpleName());
+				DistanceMeasure distanceMeasure;
+				if (props.containsKey("distanceMeasureAbsoluteToRelative")) {
+					distanceMeasure = DistanceMeasure
+							.parseFromString(
+									repo,
+									props.getString("distanceMeasureAbsoluteToRelative"));
+				} else
+					distanceMeasure = DistanceMeasure.parseFromString(repo,
+							"EuclidianDistanceMeasure");
+
+				DataSet dataSet = DataSet.parseFromFile(new File(FileUtils
+						.buildPath(repo.getDataSetBasePath(), datasetName,
+								datasetFile)));
+
+				// added 12.04.2013
+				List<DataPreprocessor> preprocessorBeforeDistance;
+				if (props.containsKey("preprocessorBeforeDistance")) {
+					preprocessorBeforeDistance = DataPreprocessor
+							.parseFromString(
+									repo,
+									props.getStringArray("preprocessorBeforeDistance"));
+
+					for (DataPreprocessor proc : preprocessorBeforeDistance) {
+						if (!proc.getCompatibleDataSetFormats().contains(
+								dataSet.getDataSetFormat().getClass()
+										.getSimpleName())) {
+							throw new IncompatibleDataSetConfigPreprocessorException(
+									"The data preprocessor "
+											+ proc.getClass().getSimpleName()
+											+ " cannot be applied to a dataset with format "
+											+ dataSet.getDataSetFormat()
+													.getClass().getSimpleName());
+						}
 					}
-				}
-			} else
-				preprocessorBeforeDistance = new ArrayList<DataPreprocessor>();
+				} else
+					preprocessorBeforeDistance = new ArrayList<DataPreprocessor>();
 
-			List<DataPreprocessor> preprocessorAfterDistance;
-			if (props.containsKey("preprocessorAfterDistance")) {
-				preprocessorAfterDistance = DataPreprocessor
-						.parseFromString(repo, props
-								.getStringArray("preprocessorAfterDistance"));
-			} else
-				preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
+				List<DataPreprocessor> preprocessorAfterDistance;
+				if (props.containsKey("preprocessorAfterDistance")) {
+					preprocessorAfterDistance = DataPreprocessor
+							.parseFromString(
+									repo,
+									props.getStringArray("preprocessorAfterDistance"));
+				} else
+					preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
 
-			ConversionInputToStandardConfiguration configInputToStandard = new ConversionInputToStandardConfiguration(
-					distanceMeasure, preprocessorBeforeDistance,
-					preprocessorAfterDistance);
-			ConversionStandardToInputConfiguration configStandardToInput = new ConversionStandardToInputConfiguration();
+				ConversionInputToStandardConfiguration configInputToStandard = new ConversionInputToStandardConfiguration(
+						distanceMeasure, preprocessorBeforeDistance,
+						preprocessorAfterDistance);
+				ConversionStandardToInputConfiguration configStandardToInput = new ConversionStandardToInputConfiguration();
 
-			DataSetConfig result = new DataSetConfig(repo, changeDate,
-					absConfigPath, dataSet, configInputToStandard,
-					configStandardToInput);
+				dataSets.add(dataSet);
+				inputToStandards.add(configInputToStandard);
+				standardToInputs.add(configStandardToInput);
+			}
+			DataSetConfig result = new DataSetConfig(repo,
+					absConfigPath.lastModified(), absConfigPath, dataSets,
+					inputToStandards, standardToInputs);
 			result = repo.getRegisteredObject(result);
 			return result;
 		} catch (ConfigurationException e) {
@@ -271,8 +331,8 @@ public class DataSetConfig extends RepositoryObject {
 	/**
 	 * @return The dataset, this configuration belongs to.
 	 */
-	public DataSet getDataSet() {
-		return dataset;
+	public List<DataSet> getDataSets() {
+		return datasets;
 	}
 
 	/*
@@ -307,14 +367,20 @@ public class DataSetConfig extends RepositoryObject {
 			if (event.getOld().equals(this)) {
 				super.notify(event);
 			} else {
-				if (event.getOld().equals(dataset)) {
-					event.getOld().removeListener(this);
-					this.log.info("DataSetConfig "
-							+ this.absPath.getName()
-							+ ": Dataset reloaded due to modifications in filesystem");
-					event.getReplacement().addListener(this);
-					// added 06.07.2012
-					this.dataset = (DataSet) event.getReplacement();
+				// check whether the object was a dataset contained in this
+				// dataset config
+				for (int i = 0; i < datasets.size(); i++) {
+					DataSet dataset = datasets.get(i);
+					if (event.getOld().equals(dataset)) {
+						event.getOld().removeListener(this);
+						this.log.info("DataSetConfig "
+								+ this.absPath.getName()
+								+ ": Dataset reloaded due to modifications in filesystem");
+						event.getReplacement().addListener(this);
+						// added 06.07.2012
+						this.datasets.set(i, (DataSet) event.getReplacement());
+						break;
+					}
 				}
 			}
 		} else if (e instanceof RepositoryRemoveEvent) {
@@ -322,26 +388,38 @@ public class DataSetConfig extends RepositoryObject {
 			if (event.getRemovedObject().equals(this))
 				super.notify(event);
 			else {
-				if (event.getRemovedObject().equals(dataset)) {
-					event.getRemovedObject().removeListener(this);
-					this.log.info("DataSetConfig " + this
-							+ ": Removed, because DataSet " + dataset
-							+ " was removed.");
-					RepositoryRemoveEvent newEvent = new RepositoryRemoveEvent(
-							this);
-					this.unregister();
-					this.notify(newEvent);
-				} else if (this.configInputToStandard
-						.getDistanceMeasureAbsoluteToRelative().equals(
-								event.getRemovedObject())) {
-					event.getRemovedObject().removeListener(this);
-					this.log.info("DataSetConfig " + this
-							+ ": Removed, because DistanceMeasure "
-							+ event.getRemovedObject() + " was removed.");
-					RepositoryRemoveEvent newEvent = new RepositoryRemoveEvent(
-							this);
-					this.unregister();
-					this.notify(newEvent);
+				// check whether the object was a dataset contained in this
+				// dataset config
+				for (int i = 0; i < datasets.size(); i++) {
+					DataSet dataset = datasets.get(i);
+					if (event.getRemovedObject().equals(dataset)) {
+						event.getRemovedObject().removeListener(this);
+						this.log.info("DataSetConfig " + this
+								+ ": Removed, because DataSet " + dataset
+								+ " was removed.");
+						RepositoryRemoveEvent newEvent = new RepositoryRemoveEvent(
+								this);
+						this.unregister();
+						this.notify(newEvent);
+					}
+				}
+
+				// check whether the object was a dataset contained in this
+				// dataset config
+				for (int i = 0; i < configInputToStandard.size(); i++) {
+					ConversionInputToStandardConfiguration config = configInputToStandard
+							.get(i);
+					if (config.getDistanceMeasureAbsoluteToRelative().equals(
+							event.getRemovedObject())) {
+						event.getRemovedObject().removeListener(this);
+						this.log.info("DataSetConfig " + this
+								+ ": Removed, because DistanceMeasure "
+								+ event.getRemovedObject() + " was removed.");
+						RepositoryRemoveEvent newEvent = new RepositoryRemoveEvent(
+								this);
+						this.unregister();
+						this.notify(newEvent);
+					}
 				}
 			}
 		}
@@ -362,7 +440,7 @@ public class DataSetConfig extends RepositoryObject {
 	 *         to the standard format.
 	 * @see #configInputToStandard
 	 */
-	public ConversionInputToStandardConfiguration getConversionInputToStandardConfiguration() {
+	public List<ConversionInputToStandardConfiguration> getConversionInputToStandardConfigurations() {
 		return this.configInputToStandard;
 	}
 
@@ -371,15 +449,15 @@ public class DataSetConfig extends RepositoryObject {
 	 *         input format of the clustering method.
 	 * @see #configStandardToInput
 	 */
-	public ConversionStandardToInputConfiguration getConversionStandardToInputConfiguration() {
+	public List<ConversionStandardToInputConfiguration> getConversionStandardToInputConfigurations() {
 		return this.configStandardToInput;
 	}
 
 	/**
-	 * @param dataset
-	 *            The new dataset
+	 * @param datasets
+	 *            The new datasets
 	 */
-	public void setDataSet(DataSet dataset) {
-		this.dataset = dataset;
+	public void setDataSets(List<DataSet> datasets) {
+		this.datasets = datasets;
 	}
 }

@@ -18,6 +18,7 @@ import utils.Pair;
 import de.clusteval.cluster.quality.ClusteringQualityMeasure;
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
+import de.clusteval.data.dataset.DataSet;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.repository.RepositoryEvent;
@@ -331,27 +332,48 @@ public abstract class ExecutionRun extends Run {
 				new File(programConfig.getAbsolutePath()).getName()));
 		programConfig.copyTo(copiedProgramConfig);
 
-		String input = dataConfig.getDatasetConfig().getDataSet()
-				.getAbsolutePath();
-
 		/*
-		 * To avoid overwriting of the input or conversion files, we copy it to
-		 * the results directory (which is unique for this run).
+		 * 06.04.2013: create a new data configuration object for use within the
+		 * runnable bugfix: the runnable so far accessed the old data
+		 * configuration and program configuration objects. this lead to
+		 * inconsistent behaviour when accessing internal attributes, because
+		 * all threads were operating on the same objects.
 		 */
+		DataConfig newDataConfig = dataConfig.clone();
+		newDataConfig.setAbsolutePath(copiedDataConfig);
+		newDataConfig.getDatasetConfig().setAbsolutePath(copiedDataSetConfig);
 
-		// changed 01.09.2012, don't create subdirectory for
-		// programConfig_dataConfig
-		// undo: 26.02.2013: not creating subdirectory lead to a bug of
-		// overwriting same dataset file for different dataconfigs
-		String movedInput = FileUtils.buildPath(new File(runCopy
-				.getRepository().getClusterResultsBasePath()).getParentFile()
-				.getAbsolutePath().replace("%RUNIDENTSTRING", runIdentString),
-				"inputs", programConfig.getName() + "_" + dataConfig.getName(),
-				new File(input).getParentFile().getName(), new File(input)
-						.getName());
-		if (!(new File(movedInput).exists()))
-			dataConfig.getDatasetConfig().getDataSet()
-					.copyTo(new File(movedInput));
+		// 22.06.2013: move the dataset files
+		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
+			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
+					.get(i);
+			String input = dataSet.getAbsolutePath();
+
+			/*
+			 * To avoid overwriting of the input or conversion files, we copy it
+			 * to the results directory (which is unique for this run).
+			 */
+
+			// changed 01.09.2012, don't create subdirectory for
+			// programConfig_dataConfig
+			// undo: 26.02.2013: not creating subdirectory lead to a bug of
+			// overwriting same dataset file for different dataconfigs
+			String movedInput = FileUtils.buildPath(
+					new File(runCopy.getRepository()
+							.getClusterResultsBasePath()).getParentFile()
+							.getAbsolutePath()
+							.replace("%RUNIDENTSTRING", runIdentString),
+					"inputs",
+					programConfig.getName() + "_" + dataConfig.getName(),
+					new File(input).getParentFile().getName(), new File(input)
+							.getName());
+			if (!(new File(movedInput).exists()))
+				dataSet.copyTo(new File(movedInput));
+
+			// update the paths to dataset in the copied data config
+			newDataConfig.getDatasetConfig().getDataSets().get(i)
+					.setAbsolutePath(new File(movedInput));
+		}
 
 		/*
 		 * Copy gold standard
@@ -379,18 +401,6 @@ public abstract class ExecutionRun extends Run {
 			// .setAbsolutePath(new File(movedGoldStandard));
 		}
 
-		/*
-		 * 06.04.2013: create a new data configuration object for use within the
-		 * runnable bugfix: the runnable so far accessed the old data
-		 * configuration and program configuration objects. this lead to
-		 * inconsistent behaviour when accessing internal attributes, because
-		 * all threads were operating on the same objects.
-		 */
-		DataConfig newDataConfig = dataConfig.clone();
-		newDataConfig.setAbsolutePath(copiedDataConfig);
-		newDataConfig.getDatasetConfig().setAbsolutePath(copiedDataSetConfig);
-		newDataConfig.getDatasetConfig().getDataSet()
-				.setAbsolutePath(new File(movedInput));
 		if (newDataConfig.hasGoldStandardConfig()) {
 			newDataConfig.getGoldstandardConfig().setAbsolutePath(
 					copiedGoldstandardConfig);
@@ -459,35 +469,52 @@ public abstract class ExecutionRun extends Run {
 				new File(programConfig.getAbsolutePath()).getName()));
 		programConfig.copyTo(copiedProgramConfig, false);
 
-		String input = dataConfig.getDatasetConfig().getDataSet()
-				.getAbsolutePath();
-
 		/*
-		 * To avoid overwriting of the input or conversion files, we copy it to
-		 * the results directory (which is unique for this run).
+		 * 06.04.2013: create a new data configuration object for use within the
+		 * runnable bugfix: the runnable so far accessed the old data
+		 * configuration and program configuration objects. this lead to
+		 * inconsistent behaviour when accessing internal attributes, because
+		 * all threads were operating on the same objects.
 		 */
+		DataConfig newDataConfig = dataConfig.clone();
+		newDataConfig.setAbsolutePath(copiedDataConfig);
+		newDataConfig.getDatasetConfig().setAbsolutePath(copiedDataSetConfig);
 
-		// changed 01.09.2012, don't create subdirectory for
-		// programConfig_dataConfig
-		// undo: 26.02.2013: not creating subdirectory lead to a bug of
-		// overwriting same dataset file for different dataconfigs
-		String movedInput = FileUtils.buildPath(
-				new File(runCopy.getRepository().getParent()
-						.getClusterResultsBasePath()).getParentFile()
-						.getAbsolutePath()
-						.replace("%RUNIDENTSTRING", runIdentString), "inputs",
-				programConfig.getName() + "_" + dataConfig.getName(), new File(
-						input).getParentFile().getName(), new File(input)
-						.getName());
-		if (!(new File(movedInput).exists()))
-			dataConfig.getDatasetConfig().getDataSet()
-					.copyTo(new File(movedInput), false);
+		// 22.06.2013: move the dataset files
+		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
+			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
+					.get(i);
+			String input = dataSet.getAbsolutePath();
 
-		/*
-		 * Change the path to the input in the DataSetConfig.
-		 */
-		dataConfig.getDatasetConfig().getDataSet()
-				.setAbsolutePath(new File(movedInput));
+			/*
+			 * To avoid overwriting of the input or conversion files, we copy it
+			 * to the results directory (which is unique for this run).
+			 */
+
+			// changed 01.09.2012, don't create subdirectory for
+			// programConfig_dataConfig
+			// undo: 26.02.2013: not creating subdirectory lead to a bug of
+			// overwriting same dataset file for different dataconfigs
+			String movedInput = FileUtils.buildPath(
+					new File(runCopy.getRepository().getParent()
+							.getClusterResultsBasePath()).getParentFile()
+							.getAbsolutePath()
+							.replace("%RUNIDENTSTRING", runIdentString),
+					"inputs",
+					programConfig.getName() + "_" + dataConfig.getName(),
+					new File(input).getParentFile().getName(),
+					new File(input).getName());
+			if (!(new File(movedInput).exists()))
+				dataSet.copyTo(new File(movedInput), false);
+
+			/*
+			 * Change the path to the input in the DataSetConfig.
+			 */
+			dataSet.setAbsolutePath(new File(movedInput));
+
+			newDataConfig.getDatasetConfig().getDataSets().get(i)
+					.setAbsolutePath(new File(movedInput));
+		}
 
 		/*
 		 * Copy gold standard
@@ -507,19 +534,7 @@ public abstract class ExecutionRun extends Run {
 				dataConfig.getGoldstandardConfig().getGoldstandard()
 						.copyTo(new File(movedGoldStandard), false);
 		}
-		/*
-		 * 06.04.2013: create a new data configuration object for use within the
-		 * runnable bugfix: the runnable so far accessed the old data
-		 * configuration and program configuration objects. this lead to
-		 * inconsistent behaviour when accessing internal attributes, because
-		 * all threads were operating on the same objects.
-		 */
-		DataConfig newDataConfig = dataConfig.clone();
-		newDataConfig.setAbsolutePath(copiedDataConfig);
-		newDataConfig.getDatasetConfig().setAbsolutePath(copiedDataSetConfig);
 
-		newDataConfig.getDatasetConfig().getDataSet()
-				.setAbsolutePath(new File(movedInput));
 		if (newDataConfig.hasGoldStandardConfig()) {
 			newDataConfig.getGoldstandardConfig().setAbsolutePath(
 					copiedGoldstandardConfig);

@@ -7,9 +7,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
 import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
@@ -38,9 +40,9 @@ public class RunResultDataSetConfig extends DataSetConfig {
 	 * @throws RegisterException
 	 */
 	public RunResultDataSetConfig(Repository repository, long changeDate,
-			File absPath, DataSet ds,
-			ConversionInputToStandardConfiguration configInputToStandard,
-			ConversionStandardToInputConfiguration configStandardToInput)
+			File absPath, List<DataSet> ds,
+			List<ConversionInputToStandardConfiguration> configInputToStandard,
+			List<ConversionStandardToInputConfiguration> configStandardToInput)
 			throws RegisterException {
 		super(repository, changeDate, absPath, ds, configInputToStandard,
 				configStandardToInput);
@@ -93,54 +95,69 @@ public class RunResultDataSetConfig extends DataSetConfig {
 				"Parsing dataset config \"" + absConfigPath + "\"");
 
 		try {
-			HierarchicalINIConfiguration props = new HierarchicalINIConfiguration(
+			HierarchicalINIConfiguration conf = new HierarchicalINIConfiguration(
 					absConfigPath);
-			props.setThrowExceptionOnMissing(true);
-
-			final long changeDate = absConfigPath.lastModified();
-			String datasetName = props.getString("datasetName");
-			String datasetFile = props.getString("datasetFile");
 
 			Repository repo = Repository.getRepositoryForPath(absConfigPath
 					.getAbsolutePath());
 
-			DistanceMeasure distanceMeasure;
-			if (props.containsKey("distanceMeasureAbsoluteToRelative")) {
-				distanceMeasure = DistanceMeasure.parseFromString(repo,
-						props.getString("distanceMeasureAbsoluteToRelative"));
-			} else
-				distanceMeasure = DistanceMeasure.parseFromString(repo,
-						"EuclidianDistanceMeasure");
+			List<DataSet> dataSets = new ArrayList<DataSet>();
+			List<ConversionInputToStandardConfiguration> inputToStandards = new ArrayList<ConversionInputToStandardConfiguration>();
+			List<ConversionStandardToInputConfiguration> standardToInputs = new ArrayList<ConversionStandardToInputConfiguration>();
 
-			// added 12.04.2013
-			List<DataPreprocessor> preprocessorBeforeDistance;
-			if (props.containsKey("preprocessorBeforeDistance")) {
-				preprocessorBeforeDistance = DataPreprocessor.parseFromString(
-						repo,
-						props.getStringArray("preprocessorBeforeDistance"));
-			} else
-				preprocessorBeforeDistance = new ArrayList<DataPreprocessor>();
+			Set<String> sections = conf.getSections();
+			for (String section : sections) {
+				SubnodeConfiguration props = conf.getSection(section);
+				props.setThrowExceptionOnMissing(true);
 
-			List<DataPreprocessor> preprocessorAfterDistance;
-			if (props.containsKey("preprocessorAfterDistance")) {
-				preprocessorAfterDistance = DataPreprocessor
-						.parseFromString(repo, props
-								.getStringArray("preprocessorAfterDistance"));
-			} else
-				preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
+				String datasetName = props.getString("datasetName");
+				String datasetFile = props.getString("datasetFile");
 
-			ConversionInputToStandardConfiguration configInputToStandard = new ConversionInputToStandardConfiguration(
-					distanceMeasure, preprocessorBeforeDistance,
-					preprocessorAfterDistance);
-			ConversionStandardToInputConfiguration configStandardToInput = new ConversionStandardToInputConfiguration();
+				DistanceMeasure distanceMeasure;
+				if (props.containsKey("distanceMeasureAbsoluteToRelative")) {
+					distanceMeasure = DistanceMeasure
+							.parseFromString(
+									repo,
+									props.getString("distanceMeasureAbsoluteToRelative"));
+				} else
+					distanceMeasure = DistanceMeasure.parseFromString(repo,
+							"EuclidianDistanceMeasure");
 
-			// we take the dataset from the runresult repository
-			DataSet dataSet = repo.getDataSetWithName(datasetName + "/"
-					+ datasetFile);
+				// added 12.04.2013
+				List<DataPreprocessor> preprocessorBeforeDistance;
+				if (props.containsKey("preprocessorBeforeDistance")) {
+					preprocessorBeforeDistance = DataPreprocessor
+							.parseFromString(
+									repo,
+									props.getStringArray("preprocessorBeforeDistance"));
+				} else
+					preprocessorBeforeDistance = new ArrayList<DataPreprocessor>();
 
-			DataSetConfig result = new DataSetConfig(repo, changeDate,
-					absConfigPath, dataSet, configInputToStandard,
-					configStandardToInput);
+				List<DataPreprocessor> preprocessorAfterDistance;
+				if (props.containsKey("preprocessorAfterDistance")) {
+					preprocessorAfterDistance = DataPreprocessor
+							.parseFromString(
+									repo,
+									props.getStringArray("preprocessorAfterDistance"));
+				} else
+					preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
+
+				ConversionInputToStandardConfiguration configInputToStandard = new ConversionInputToStandardConfiguration(
+						distanceMeasure, preprocessorBeforeDistance,
+						preprocessorAfterDistance);
+				ConversionStandardToInputConfiguration configStandardToInput = new ConversionStandardToInputConfiguration();
+
+				// we take the dataset from the runresult repository
+				DataSet dataSet = repo.getDataSetWithName(datasetName + "/"
+						+ datasetFile);
+
+				dataSets.add(dataSet);
+				inputToStandards.add(configInputToStandard);
+				standardToInputs.add(configStandardToInput);
+			}
+			DataSetConfig result = new DataSetConfig(repo,
+					absConfigPath.lastModified(), absConfigPath, dataSets,
+					inputToStandards, standardToInputs);
 			result = repo.getRegisteredObject(result);
 			return result;
 		} catch (ConfigurationException e) {

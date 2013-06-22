@@ -2668,52 +2668,54 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected boolean register(DataSetConfig object, final boolean updateOnly) {
-
-		try {
-			int dataset_id = getDataSetId(object.getDataSet());
-
-			String[] columns;
-			String[] values;
-			if (object.getRepository() instanceof RunResultRepository) {
-				columns = new String[]{"repository_id", "absPath", "name",
-						"dataset_id", "dataset_config_id"};
-				values = new String[]{
-						"" + this.updateRepositoryId(),
-						"" + object.getAbsolutePath(),
-						new File(object.getAbsolutePath()).getName().replace(
-								".dsconfig", ""),
-						"" + dataset_id,
-						""
-								+ getDataSetConfigId(object
-										.getRepository()
-										.getParent()
-										.getDataSetConfigWithName(
-												object.getAbsolutePath()
-														.substring(
-																object.getAbsolutePath()
-																		.lastIndexOf(
-																				"/") + 1)))};
-			} else {
-				columns = new String[]{"repository_id", "absPath", "name",
-						"dataset_id"};
-				values = new String[]{
-						"" + this.updateRepositoryId(),
-						"" + object.getAbsolutePath(),
-						new File(object.getAbsolutePath()).getName().replace(
-								".dsconfig", ""), "" + dataset_id};
-			}
-			if (updateOnly) {
-				int rowId = getDataSetConfigId(object);
-				update(this.getTableDataSetConfigs(), columns, values, rowId);
-			} else
-				insert(this.getTableDataSetConfigs(), columns, values);
-			return true;
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-
-		return false;
+		// TODO: change database structure
+		return true;
+//
+//		try {
+//			int dataset_id = getDataSetId(object.getDataSet());
+//
+//			String[] columns;
+//			String[] values;
+//			if (object.getRepository() instanceof RunResultRepository) {
+//				columns = new String[]{"repository_id", "absPath", "name",
+//						"dataset_id", "dataset_config_id"};
+//				values = new String[]{
+//						"" + this.updateRepositoryId(),
+//						"" + object.getAbsolutePath(),
+//						new File(object.getAbsolutePath()).getName().replace(
+//								".dsconfig", ""),
+//						"" + dataset_id,
+//						""
+//								+ getDataSetConfigId(object
+//										.getRepository()
+//										.getParent()
+//										.getDataSetConfigWithName(
+//												object.getAbsolutePath()
+//														.substring(
+//																object.getAbsolutePath()
+//																		.lastIndexOf(
+//																				"/") + 1)))};
+//			} else {
+//				columns = new String[]{"repository_id", "absPath", "name",
+//						"dataset_id"};
+//				values = new String[]{
+//						"" + this.updateRepositoryId(),
+//						"" + object.getAbsolutePath(),
+//						new File(object.getAbsolutePath()).getName().replace(
+//								".dsconfig", ""), "" + dataset_id};
+//			}
+//			if (updateOnly) {
+//				int rowId = getDataSetConfigId(object);
+//				update(this.getTableDataSetConfigs(), columns, values, rowId);
+//			} else
+//				insert(this.getTableDataSetConfigs(), columns, values);
+//			return true;
+//		} catch (SQLException e) {
+//
+//			e.printStackTrace();
+//		}
+//
+//		return false;
 	}
 
 	/*

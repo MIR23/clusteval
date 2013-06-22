@@ -1069,50 +1069,49 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @throws IllegalArgumentException
 	 */
 	protected void setInternalAttributes() throws IllegalArgumentException {
-		// TODO; make use of inheritance! (relative and absolute datasets)
-		// TODO: move to place, where dataset is loaded?
-		DataSet ds = this.dataConfig.getDatasetConfig().getDataSet()
-				.getInStandardFormat();
-
-		if (ds instanceof RelativeDataSet) {
-			RelativeDataSet dataSet = (RelativeDataSet) ds;
-			this.dataConfig
-					.getRepository()
-					.getInternalDoubleAttribute(
-							"$("
-									+ this.dataConfig.getDatasetConfig()
-											.getDataSet().getOriginalDataSet()
-											.getAbsolutePath()
-									+ ":minSimilarity)")
-					.setValue(dataSet.getDataSetContent().getMinValue());
-			this.dataConfig
-					.getRepository()
-					.getInternalDoubleAttribute(
-							"$("
-									+ this.dataConfig.getDatasetConfig()
-											.getDataSet().getOriginalDataSet()
-											.getAbsolutePath()
-									+ ":maxSimilarity)")
-					.setValue(dataSet.getDataSetContent().getMaxValue());
-			this.dataConfig
-					.getRepository()
-					.getInternalDoubleAttribute(
-							"$("
-									+ this.dataConfig.getDatasetConfig()
-											.getDataSet().getOriginalDataSet()
-											.getAbsolutePath()
-									+ ":meanSimilarity)")
-					.setValue(dataSet.getDataSetContent().getMean());
-		}
-		this.dataConfig
-				.getRepository()
-				.getInternalIntegerAttribute(
-						"$("
-								+ this.dataConfig.getDatasetConfig()
-										.getDataSet().getOriginalDataSet()
-										.getAbsolutePath()
-								+ ":numberOfElements)")
-				.setValue(ds.getIds().size());
+		// TODO
+//		DataSet ds = this.dataConfig.getDatasetConfig().getDataSet()
+//				.getInStandardFormat();
+//
+//		if (ds instanceof RelativeDataSet) {
+//			RelativeDataSet dataSet = (RelativeDataSet) ds;
+//			this.dataConfig
+//					.getRepository()
+//					.getInternalDoubleAttribute(
+//							"$("
+//									+ this.dataConfig.getDatasetConfig()
+//											.getDataSet().getOriginalDataSet()
+//											.getAbsolutePath()
+//									+ ":minSimilarity)")
+//					.setValue(dataSet.getDataSetContent().getMinValue());
+//			this.dataConfig
+//					.getRepository()
+//					.getInternalDoubleAttribute(
+//							"$("
+//									+ this.dataConfig.getDatasetConfig()
+//											.getDataSet().getOriginalDataSet()
+//											.getAbsolutePath()
+//									+ ":maxSimilarity)")
+//					.setValue(dataSet.getDataSetContent().getMaxValue());
+//			this.dataConfig
+//					.getRepository()
+//					.getInternalDoubleAttribute(
+//							"$("
+//									+ this.dataConfig.getDatasetConfig()
+//											.getDataSet().getOriginalDataSet()
+//											.getAbsolutePath()
+//									+ ":meanSimilarity)")
+//					.setValue(dataSet.getDataSetContent().getMean());
+//		}
+//		this.dataConfig
+//				.getRepository()
+//				.getInternalIntegerAttribute(
+//						"$("
+//								+ this.dataConfig.getDatasetConfig()
+//										.getDataSet().getOriginalDataSet()
+//										.getAbsolutePath()
+//								+ ":numberOfElements)")
+//				.setValue(ds.getIds().size());
 	}
 
 	/*

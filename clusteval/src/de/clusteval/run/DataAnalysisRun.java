@@ -18,6 +18,7 @@ import de.clusteval.context.UnknownContextException;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.DataConfigNotFoundException;
 import de.clusteval.data.DataConfigurationException;
+import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.DataSetConfigNotFoundException;
 import de.clusteval.data.dataset.DataSetConfigurationException;
 import de.clusteval.data.dataset.DataSetNotFoundException;
@@ -194,28 +195,31 @@ public class DataAnalysisRun extends AnalysisRun<DataStatistic> {
 		if (dataConfig.hasGoldStandardConfig())
 			dataConfig.getGoldstandardConfig().copyToFolder(movedConfigsDir);
 
-		String input = dataConfig.getDatasetConfig().getDataSet()
-				.getAbsolutePath();
+		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
+			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
+					.get(i);
+			String input = dataSet.getAbsolutePath();
 
-		/*
-		 * To avoid overwriting of the input or conversion files, we copy it to
-		 * the results directory (which is unique for this run).
-		 */
+			/*
+			 * To avoid overwriting of the input or conversion files, we copy it
+			 * to the results directory (which is unique for this run).
+			 */
 
-		String movedInput = FileUtils.buildPath(new File(runCopy
-				.getRepository().getClusterResultsBasePath()).getParentFile()
-				.getAbsolutePath().replace("%RUNIDENTSTRING", runIdentString),
-				"inputs", new File(input).getParentFile().getName(), new File(
-						input).getName());
-		if (!(new File(movedInput).exists()))
-			dataConfig.getDatasetConfig().getDataSet()
-					.copyTo(new File(movedInput));
+			String movedInput = FileUtils.buildPath(
+					new File(runCopy.getRepository()
+							.getClusterResultsBasePath()).getParentFile()
+							.getAbsolutePath()
+							.replace("%RUNIDENTSTRING", runIdentString),
+					"inputs", new File(input).getParentFile().getName(),
+					new File(input).getName());
+			if (!(new File(movedInput).exists()))
+				dataSet.copyTo(new File(movedInput));
 
-		/*
-		 * Change the path to the input in the DataSetConfig.
-		 */
-		dataConfig.getDatasetConfig().getDataSet()
-				.setAbsolutePath(new File(movedInput));
+			/*
+			 * Change the path to the input in the DataSetConfig.
+			 */
+			dataSet.setAbsolutePath(new File(movedInput));
+		}
 
 		/*
 		 * Copy gold standard
@@ -304,31 +308,32 @@ public class DataAnalysisRun extends AnalysisRun<DataStatistic> {
 			dataConfig.getGoldstandardConfig().copyToFolder(movedConfigsDir,
 					false);
 
-		String input = dataConfig.getDatasetConfig().getDataSet()
-				.getAbsolutePath();
+		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
+			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
+					.get(i);
+			String input = dataSet.getAbsolutePath();
 
-		/*
-		 * To avoid overwriting of the input or conversion files, we copy it to
-		 * the results directory (which is unique for this run).
-		 */
+			/*
+			 * To avoid overwriting of the input or conversion files, we copy it
+			 * to the results directory (which is unique for this run).
+			 */
 
-		String movedInput = FileUtils.buildPath(
-				new File(runCopy.getRepository().getParent()
-						.getClusterResultsBasePath()).getParentFile()
-						.getAbsolutePath()
-						.replace("%RUNIDENTSTRING", runIdentString), "inputs",
-				dataConfig.getName(),
-				new File(input).getParentFile().getName(),
-				new File(input).getName());
-		if (!(new File(movedInput).exists()))
-			dataConfig.getDatasetConfig().getDataSet()
-					.copyTo(new File(movedInput), false);
+			String movedInput = FileUtils.buildPath(
+					new File(runCopy.getRepository().getParent()
+							.getClusterResultsBasePath()).getParentFile()
+							.getAbsolutePath()
+							.replace("%RUNIDENTSTRING", runIdentString),
+					"inputs", dataConfig.getName(), new File(input)
+							.getParentFile().getName(), new File(input)
+							.getName());
+			if (!(new File(movedInput).exists()))
+				dataSet.copyTo(new File(movedInput), false);
 
-		/*
-		 * Change the path to the input in the DataSetConfig.
-		 */
-		dataConfig.getDatasetConfig().getDataSet()
-				.setAbsolutePath(new File(movedInput));
+			/*
+			 * Change the path to the input in the DataSetConfig.
+			 */
+			dataSet.setAbsolutePath(new File(movedInput));
+		}
 
 		/*
 		 * Copy gold standard

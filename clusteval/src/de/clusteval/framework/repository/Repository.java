@@ -1286,23 +1286,25 @@ public class Repository {
 	@SuppressWarnings("unused")
 	private String extendInternalAttributes(final String old,
 			final DataConfig dataConfig, final ProgramConfig programConfig) {
-		String result = old.replaceAll("\\$\\(minSimilarity\\)", "\\$\\("
-				+ dataConfig.getDatasetConfig().getDataSet()
-						.getOriginalDataSet().getAbsolutePath()
-				+ ":minSimilarity\\)");
-		result = result.replaceAll("\\$\\(maxSimilarity\\)", "\\$\\("
-				+ dataConfig.getDatasetConfig().getDataSet()
-						.getOriginalDataSet().getAbsolutePath()
-				+ ":maxSimilarity\\)");
-		result = result.replaceAll("\\$\\(meanSimilarity\\)", "\\$\\("
-				+ dataConfig.getDatasetConfig().getDataSet()
-						.getOriginalDataSet().getAbsolutePath()
-				+ ":meanSimilarity\\)");
-		result = result.replaceAll("\\$\\(numberOfElements\\)", "\\$\\("
-				+ dataConfig.getDatasetConfig().getDataSet()
-						.getOriginalDataSet().getAbsolutePath()
-				+ ":numberOfElements\\)");
-		return result;
+		// TODO
+		return old;
+//		String result = old.replaceAll("\\$\\(minSimilarity\\)", "\\$\\("
+//				+ dataConfig.getDatasetConfig().getDataSet()
+//						.getOriginalDataSet().getAbsolutePath()
+//				+ ":minSimilarity\\)");
+//		result = result.replaceAll("\\$\\(maxSimilarity\\)", "\\$\\("
+//				+ dataConfig.getDatasetConfig().getDataSet()
+//						.getOriginalDataSet().getAbsolutePath()
+//				+ ":maxSimilarity\\)");
+//		result = result.replaceAll("\\$\\(meanSimilarity\\)", "\\$\\("
+//				+ dataConfig.getDatasetConfig().getDataSet()
+//						.getOriginalDataSet().getAbsolutePath()
+//				+ ":meanSimilarity\\)");
+//		result = result.replaceAll("\\$\\(numberOfElements\\)", "\\$\\("
+//				+ dataConfig.getDatasetConfig().getDataSet()
+//						.getOriginalDataSet().getAbsolutePath()
+//				+ ":numberOfElements\\)");
+//		return result;
 	}
 
 	@Override
