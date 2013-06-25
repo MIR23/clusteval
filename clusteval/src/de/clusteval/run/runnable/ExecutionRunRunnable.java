@@ -311,35 +311,36 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			DataSetConfig dataSetConfig, GoldStandardConfig goldStandardConfig)
 			throws UnknownGoldStandardFormatException,
 			IncompleteGoldStandardException, IllegalArgumentException {
-		DataSet dataSet = dataSetConfig.getDataSet().getInStandardFormat();
-		File dataSetFile = ClustevalBackendServer.getCommonFile(new File(
-				dataSet.getAbsolutePath()));
-		synchronized (dataSetFile) {
-			GoldStandard goldStandard = goldStandardConfig.getGoldstandard();
-			File goldStandardFile = ClustevalBackendServer
-					.getCommonFile(new File(goldStandard.getAbsolutePath()));
-			synchronized (goldStandardFile) {
-
-				/*
-				 * Check whether all ids in the dataset have a corresponding
-				 * entry in the gold standard
-				 */
-				// dataSet.loadIntoMemory();
-				goldStandard.loadIntoMemory();
-
-				final Set<String> ids = new HashSet<String>(dataSet.getIds());
-				final Set<ClusterItem> gsItems = goldStandard.getClustering()
-						.getClusterItems();
-				final Set<String> gsIds = new HashSet<String>();
-				for (ClusterItem item : gsItems)
-					gsIds.add(item.getId());
-
-				if (!gsIds.containsAll(ids)) {
-					ids.removeAll(gsIds);
-					throw new IncompleteGoldStandardException(ids);
-				}
-			}
-		}
+		// TODO: will there even be a gold standard
+//		DataSet dataSet = dataSetConfig.getDataSet().getInStandardFormat();
+//		File dataSetFile = ClustevalBackendServer.getCommonFile(new File(
+//				dataSet.getAbsolutePath()));
+//		synchronized (dataSetFile) {
+//			GoldStandard goldStandard = goldStandardConfig.getGoldstandard();
+//			File goldStandardFile = ClustevalBackendServer
+//					.getCommonFile(new File(goldStandard.getAbsolutePath()));
+//			synchronized (goldStandardFile) {
+//
+//				/*
+//				 * Check whether all ids in the dataset have a corresponding
+//				 * entry in the gold standard
+//				 */
+//				// dataSet.loadIntoMemory();
+//				goldStandard.loadIntoMemory();
+//
+//				final Set<String> ids = new HashSet<String>(dataSet.getIds());
+//				final Set<ClusterItem> gsItems = goldStandard.getClustering()
+//						.getClusterItems();
+//				final Set<String> gsIds = new HashSet<String>();
+//				for (ClusterItem item : gsItems)
+//					gsIds.add(item.getId());
+//
+//				if (!gsIds.containsAll(ids)) {
+//					ids.removeAll(gsIds);
+//					throw new IncompleteGoldStandardException(ids);
+//				}
+//			}
+//		}
 	}
 
 	/**
