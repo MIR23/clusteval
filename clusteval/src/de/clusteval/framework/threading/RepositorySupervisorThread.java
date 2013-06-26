@@ -138,6 +138,7 @@ public class RepositorySupervisorThread extends SupervisorThread {
 			final boolean checkForRunResults) {
 		super(repository, checkForRunResults
 				? createList(DataSetFormatFinderThread.class,
+						RunResultFormatFinderThread.class,
 						ContextFinderThread.class,
 						DataSetTypeFinderThread.class,
 						DataSetFinderThread.class,
@@ -146,7 +147,6 @@ public class RepositorySupervisorThread extends SupervisorThread {
 						DataStatisticFinderThread.class,
 						RunStatisticFinderThread.class,
 						RunDataStatisticFinderThread.class,
-						RunResultFormatFinderThread.class,
 						ClusteringQualityMeasureFinderThread.class,
 						ParameterOptimizationMethodFinderThread.class,
 						DataSetConfigFinderThread.class,

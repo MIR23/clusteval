@@ -1,24 +1,12 @@
 package de.clusteval.utils.plot;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
 
-import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
-import org.rosuda.REngine.Rserve.RserveException;
 
-import utils.ArraysExt;
-import utils.SimilarityMatrix;
 import de.clusteval.data.DataConfig;
-import de.clusteval.data.dataset.AbsoluteDataSet;
-import de.clusteval.data.dataset.DataMatrix;
-import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
-import de.clusteval.framework.MyRengine;
 import de.clusteval.run.result.ParameterOptimizationResult;
 
 /**

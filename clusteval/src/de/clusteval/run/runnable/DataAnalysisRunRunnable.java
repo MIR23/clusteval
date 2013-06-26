@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import de.clusteval.data.DataConfig;
-import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.statistics.DataStatistic;
 import de.clusteval.data.statistics.DataStatisticCalculator;
 import de.clusteval.framework.repository.RegisterException;
@@ -143,22 +142,19 @@ public class DataAnalysisRunRunnable
 	public void beforeRun() {
 		super.beforeRun();
 
-		DataSet current = this.dataConfig.getDatasetConfig().getDataSet();
-
-		DataSet ds;
-		try {
-			ds = current.preprocessAndConvertTo(this.run.getContext(), this.run
-					.getContext().getStandardInputFormat(), this.dataConfig
-					.getDatasetConfig()
-					.getConversionInputToStandardConfiguration(),
-					this.dataConfig.getDatasetConfig()
-							.getConversionStandardToInputConfiguration());
-
-			this.dataConfig = new DataConfig(this.dataConfig);
-			this.dataConfig.getDatasetConfig().setDataSet(ds);
-		} catch (Exception e) {
-			throw new IllegalArgumentException(
-					"The given data configuration could not be converted.");
-		}
+		// TODO: no conversion implemented yet
+		// DataSet current = this.dataConfig.getDatasetConfig().getDataSet();
+		//
+		// DataSet ds;
+		// try {
+		// ds = current.preprocessAndConvertTo(this.run.getContext(), this.run
+		// .getContext().getStandardInputFormat());
+		//
+		// this.dataConfig = new DataConfig(this.dataConfig);
+		// this.dataConfig.getDatasetConfig().setDataSet(ds);
+		// } catch (Exception e) {
+		// throw new IllegalArgumentException(
+		// "The given data configuration could not be converted.");
+		// }
 	}
 }

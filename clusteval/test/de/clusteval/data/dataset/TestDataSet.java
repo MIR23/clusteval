@@ -372,56 +372,6 @@ public class TestDataSet extends TestRepositoryObject {
 	}
 
 	/**
-	 * Test method for {@link data.dataset.DataSet#getSimilarityMatrix()}.
-	 * 
-	 * @throws UnknownDataSetFormatException
-	 * @throws NoRepositoryFoundException
-	 * @throws IOException
-	 * @throws FormatConversionException
-	 * @throws DataSetNotFoundException
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws DataSetConfigurationException
-	 * @throws RegisterException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws RNotAvailableException
-	 * @throws UnknownContextException
-	 */
-	@Test
-	public void testGetSimilarityMatrix() throws NoRepositoryFoundException,
-			UnknownDataSetFormatException, FormatConversionException,
-			IOException, DataSetNotFoundException,
-			InvalidDataSetFormatVersionException,
-			DataSetConfigurationException, RegisterException,
-			UnknownDataSetTypeException, NoDataSetException,
-			InstantiationException, IllegalAccessException,
-			UnknownDistanceMeasureException, RNotAvailableException {
-		this.repositoryObject = DataSet
-				.parseFromFile(new File(
-						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim")
-						.getAbsoluteFile());
-		RelativeDataSet standard = (RelativeDataSet) ((DataSet) this.repositoryObject)
-				.preprocessAndConvertTo(
-						context,
-						DataSetFormat.parseFromString(repository,
-								"SimMatrixDataSetFormat"),
-						new ConversionInputToStandardConfiguration(
-								DistanceMeasure.parseFromString(repository,
-										"EuclidianDistanceMeasure"),
-								new ArrayList<DataPreprocessor>(),
-								new ArrayList<DataPreprocessor>()),
-						new ConversionStandardToInputConfiguration());
-		standard.loadIntoMemory();
-		SimilarityMatrix simMatrix = standard.getDataSetContent();
-		double[][] sims = new double[][]{new double[]{1.0, 0.6, 0.5},
-				new double[]{0.6, 0.5, 0.1}, new double[]{0.5, 0.1, 0.8}};
-		String[] ids = new String[]{"1", "2", "3"};
-		SimilarityMatrix expected = new SimilarityMatrix(sims);
-		expected.setIds(ids);
-		Assert.assertEquals(expected, simMatrix);
-	}
-
-	/**
 	 * Test method for {@link data.dataset.DataSet#unloadFromMemory()}.
 	 * 
 	 * @throws UnknownDataSetFormatException
@@ -787,33 +737,5 @@ public class TestDataSet extends TestRepositoryObject {
 		Assert.assertEquals(context.getStandardInputFormat().getClass()
 				.getSimpleName(), newDataSet.thisInStandardFormat
 				.getDataSetFormat().getClass().getSimpleName());
-	}
-
-	@Test
-	public void testConvertMatrixToSimMatrix()
-			throws RepositoryAlreadyExistsException,
-			InvalidRepositoryException, RepositoryConfigNotFoundException,
-			RepositoryConfigurationException, UnknownDataSetFormatException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			FormatConversionException, IOException,
-			UnknownDistanceMeasureException, RNotAvailableException {
-		ClustevalBackendServer.logLevel(Level.INFO);
-		Repository repo = new Repository(
-				new File("testCaseRepository").getAbsolutePath(), null);
-		repo.initialize();
-
-		DataConfig dataConfig = repo
-				.getDataConfigWithName("synthetic_cassini250.dataconfig");
-		DataSet ds = dataConfig.getDatasetConfig().getDataSet();
-		DataSetFormat internal = DataSetFormat.parseFromString(repo,
-				"SimMatrixDataSetFormat");
-		ds = ds.preprocessAndConvertTo(
-				context,
-				internal,
-				new ConversionInputToStandardConfiguration(DistanceMeasure
-						.parseFromString(repo, "EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()),
-				new ConversionStandardToInputConfiguration());
 	}
 }
