@@ -9,28 +9,19 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import ch.qos.logback.classic.Level;
-
-import utils.SimilarityMatrix;
-import de.clusteval.data.DataConfig;
-import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
-import de.clusteval.data.dataset.format.ConversionStandardToInputConfiguration;
+import de.clusteval.context.UnknownContextException;
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
 import de.clusteval.data.dataset.format.RelativeDataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.DataSetType;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
-import de.clusteval.data.distance.DistanceMeasure;
 import de.clusteval.data.distance.UnknownDistanceMeasureException;
-import de.clusteval.data.preprocessing.DataPreprocessor;
-import de.clusteval.framework.ClustevalBackendServer;
 import de.clusteval.framework.repository.InvalidRepositoryException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
@@ -40,7 +31,6 @@ import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.StubSQLCommunicator;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
-import de.clusteval.run.ParameterOptimizationRun;
 import de.clusteval.utils.FormatConversionException;
 import de.clusteval.utils.RNotAvailableException;
 import de.clusteval.utils.TestRepositoryObject;
@@ -356,16 +346,8 @@ public class TestDataSet extends TestRepositoryObject {
 						.getAbsoluteFile());
 
 		DataSet standard = ((DataSet) this.repositoryObject)
-				.preprocessAndConvertTo(
-						context,
-						DataSetFormat.parseFromString(repository,
-								"SimMatrixDataSetFormat"),
-						new ConversionInputToStandardConfiguration(
-								DistanceMeasure.parseFromString(repository,
-										"EuclidianDistanceMeasure"),
-								new ArrayList<DataPreprocessor>(),
-								new ArrayList<DataPreprocessor>()),
-						new ConversionStandardToInputConfiguration());
+				.preprocessAndConvertTo(context, DataSetFormat.parseFromString(
+						repository, "SimMatrixDataSetFormat"));
 		Assert.assertFalse(standard.isInMemory());
 		standard.loadIntoMemory();
 		Assert.assertTrue(standard.isInMemory());
@@ -401,16 +383,8 @@ public class TestDataSet extends TestRepositoryObject {
 						"testCaseRepository/data/datasets/DS1/Zachary_karate_club_similarities.txt")
 						.getAbsoluteFile());
 		DataSet standard = ((DataSet) this.repositoryObject)
-				.preprocessAndConvertTo(
-						context,
-						DataSetFormat.parseFromString(repository,
-								"SimMatrixDataSetFormat"),
-						new ConversionInputToStandardConfiguration(
-								DistanceMeasure.parseFromString(repository,
-										"EuclidianDistanceMeasure"),
-								new ArrayList<DataPreprocessor>(),
-								new ArrayList<DataPreprocessor>()),
-						new ConversionStandardToInputConfiguration());
+				.preprocessAndConvertTo(context, DataSetFormat.parseFromString(
+						repository, "SimMatrixDataSetFormat"));
 		standard.loadIntoMemory();
 		Assert.assertTrue(standard.isInMemory());
 		standard.unloadFromMemory();
@@ -460,16 +434,8 @@ public class TestDataSet extends TestRepositoryObject {
 						"testCaseRepository/data/datasets/nora_cancer/all_expression_spearman.txt")
 						.getAbsoluteFile());
 		DataSet newDataSet = ((DataSet) this.repositoryObject)
-				.preprocessAndConvertTo(
-						context,
-						DataSetFormat.parseFromString(repository,
-								"SimMatrixDataSetFormat"),
-						new ConversionInputToStandardConfiguration(
-								DistanceMeasure.parseFromString(repository,
-										"EuclidianDistanceMeasure"),
-								new ArrayList<DataPreprocessor>(),
-								new ArrayList<DataPreprocessor>()),
-						new ConversionStandardToInputConfiguration());
+				.preprocessAndConvertTo(context, DataSetFormat.parseFromString(
+						repository, "SimMatrixDataSetFormat"));
 		Assert.assertEquals(this.repositoryObject.getAbsolutePath(),
 				newDataSet.getAbsolutePath());
 		/*
@@ -480,15 +446,8 @@ public class TestDataSet extends TestRepositoryObject {
 						"testCaseRepository/data/datasets/nora_cancer/all_expression_spearman.txt")
 						.getAbsoluteFile());
 		newDataSet = ((DataSet) this.repositoryObject).preprocessAndConvertTo(
-				context,
-				DataSetFormat.parseFromString(repository,
-						"APRowSimDataSetFormat"),
-				new ConversionInputToStandardConfiguration(
-						DistanceMeasure.parseFromString(repository,
-								"EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()),
-				new ConversionStandardToInputConfiguration());
+				context, DataSetFormat.parseFromString(repository,
+						"APRowSimDataSetFormat"));
 
 		/*
 		 * convertTo(SimMatrixDataSetFormat) is a special case
@@ -497,16 +456,9 @@ public class TestDataSet extends TestRepositoryObject {
 				.parseFromFile(new File(
 						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim")
 						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).preprocessAndConvertTo(
-				context,
+		((DataSet) this.repositoryObject).preprocessAndConvertTo(context,
 				DataSetFormat.parseFromString(repository,
-						"SimMatrixDataSetFormat"),
-				new ConversionInputToStandardConfiguration(
-						DistanceMeasure.parseFromString(repository,
-								"EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()),
-				new ConversionStandardToInputConfiguration());
+						"SimMatrixDataSetFormat"));
 		Assert.assertTrue(new File(
 				"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip.SimMatrix")
 				.getAbsoluteFile().exists());
@@ -518,16 +470,9 @@ public class TestDataSet extends TestRepositoryObject {
 				.parseFromFile(new File(
 						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim")
 						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).preprocessAndConvertTo(
-				context,
+		((DataSet) this.repositoryObject).preprocessAndConvertTo(context,
 				DataSetFormat.parseFromString(repository,
-						"APRowSimDataSetFormat"),
-				new ConversionInputToStandardConfiguration(
-						DistanceMeasure.parseFromString(repository,
-								"EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()),
-				new ConversionStandardToInputConfiguration());
+						"APRowSimDataSetFormat"));
 		Assert.assertTrue(new File(
 				"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip.APRowSim")
 				.getAbsoluteFile().exists());
@@ -561,16 +506,9 @@ public class TestDataSet extends TestRepositoryObject {
 				.parseFromFile(new File(
 						"testCaseRepository/data/datasets/sfld/sfld_brown_et_al_amidohydrolases_protein_similarities_for_beh.txt")
 						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).preprocessAndConvertTo(
-				context,
+		((DataSet) this.repositoryObject).preprocessAndConvertTo(context,
 				DataSetFormat
-						.parseFromString(repository, "MatrixDataSetFormat"),
-				new ConversionInputToStandardConfiguration(
-						DistanceMeasure.parseFromString(repository,
-								"EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()),
-				new ConversionStandardToInputConfiguration());
+						.parseFromString(repository, "MatrixDataSetFormat"));
 	}
 
 	/**
@@ -614,13 +552,7 @@ public class TestDataSet extends TestRepositoryObject {
 				.setAbsolutePath(new File(
 						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip")
 						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).convertToStandardDirectly(
-				context,
-				new ConversionInputToStandardConfiguration(
-						DistanceMeasure.parseFromString(repository,
-								"EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()));
+		((DataSet) this.repositoryObject).convertToStandardDirectly(context);
 		Assert.assertTrue(targetFile.exists());
 
 		targetFile.delete();
@@ -660,13 +592,7 @@ public class TestDataSet extends TestRepositoryObject {
 				.setAbsolutePath(new File(
 						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip")
 						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).convertToStandardDirectly(
-				context,
-				new ConversionInputToStandardConfiguration(
-						DistanceMeasure.parseFromString(repository,
-								"EuclidianDistanceMeasure"),
-						new ArrayList<DataPreprocessor>(),
-						new ArrayList<DataPreprocessor>()));
+		((DataSet) this.repositoryObject).convertToStandardDirectly(context);
 		DataSet standard = ((DataSet) this.repositoryObject)
 				.getInStandardFormat();
 		Assert.assertEquals(DataSetFormat.parseFromString(repository,
@@ -689,16 +615,8 @@ public class TestDataSet extends TestRepositoryObject {
 						"testCaseRepository/data/datasets/bone_marrow_gene_expr/ALB_ALT_AML.1000genes.res.out2")
 						.getAbsoluteFile());
 		DataSet newDataSet = ((DataSet) this.repositoryObject)
-				.preprocessAndConvertTo(
-						context,
-						DataSetFormat.parseFromString(repository,
-								"MatrixDataSetFormat"),
-						new ConversionInputToStandardConfiguration(
-								DistanceMeasure.parseFromString(repository,
-										"EuclidianDistanceMeasure"),
-								new ArrayList<DataPreprocessor>(),
-								new ArrayList<DataPreprocessor>()),
-						new ConversionStandardToInputConfiguration());
+				.preprocessAndConvertTo(context, DataSetFormat.parseFromString(
+						repository, "MatrixDataSetFormat"));
 		Assert.assertEquals("MatrixDataSetFormat", newDataSet
 				.getDataSetFormat().getClass().getSimpleName());
 		Assert.assertEquals(context.getStandardInputFormat().getClass()
@@ -722,15 +640,8 @@ public class TestDataSet extends TestRepositoryObject {
 						"testCaseRepository/data/datasets/bone_marrow_gene_expr/ALB_ALT_AML.1000genes.res.out2.SimMatrix")
 						.getAbsoluteFile());
 		DataSet newDataSet = ((DataSet) this.repositoryObject)
-				.preprocessAndConvertTo(
-						context,
-						context.getStandardInputFormat(),
-						new ConversionInputToStandardConfiguration(
-								DistanceMeasure.parseFromString(repository,
-										"EuclidianDistanceMeasure"),
-								new ArrayList<DataPreprocessor>(),
-								new ArrayList<DataPreprocessor>()),
-						new ConversionStandardToInputConfiguration());
+				.preprocessAndConvertTo(context,
+						context.getStandardInputFormat());
 		Assert.assertEquals(context.getStandardInputFormat().getClass()
 				.getSimpleName(), newDataSet.getDataSetFormat().getClass()
 				.getSimpleName());
