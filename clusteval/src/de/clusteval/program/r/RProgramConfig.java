@@ -5,6 +5,7 @@ package de.clusteval.program.r;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.framework.repository.RegisterException;
@@ -51,17 +52,15 @@ public class RProgramConfig extends ProgramConfig {
 	 *            The parameters of the program.
 	 * @param optimizableParameters
 	 *            The parameters of the program, that can be optimized.
-	 * @param expectsNormalizedDataSet
-	 *            Whether the encapsulated program requires normalized input.
 	 * @throws RegisterException
 	 */
 	public RProgramConfig(Repository repository, final boolean register,
 			long changeDate, File absPath, Program program,
 			RunResultFormat outputFormat,
-			List<DataSetFormat> compatibleDataSetFormats,
+			List<Set<DataSetFormat>> compatibleDataSetFormats,
 			List<ProgramParameter<?>> params,
-			List<ProgramParameter<?>> optimizableParameters,
-			boolean expectsNormalizedDataSet) throws RegisterException {
+			List<ProgramParameter<?>> optimizableParameters)
+			throws RegisterException {
 		super(repository, register,
 				changeDate,
 				absPath,
@@ -74,7 +73,7 @@ public class RProgramConfig extends ProgramConfig {
 				((RProgram) program).getInvocationFormat(),
 				((RProgram) program).getInvocationFormat(),
 				((RProgram) program).getInvocationFormat(), params,
-				optimizableParameters, expectsNormalizedDataSet);
+				optimizableParameters);
 	}
 
 	/**

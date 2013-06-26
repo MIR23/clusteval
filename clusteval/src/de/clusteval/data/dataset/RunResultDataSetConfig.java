@@ -14,12 +14,6 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
-import de.clusteval.data.dataset.format.ConversionStandardToInputConfiguration;
-import de.clusteval.data.distance.DistanceMeasure;
-import de.clusteval.data.distance.UnknownDistanceMeasureException;
-import de.clusteval.data.preprocessing.DataPreprocessor;
-import de.clusteval.data.preprocessing.UnknownDataPreprocessorException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -35,17 +29,11 @@ public class RunResultDataSetConfig extends DataSetConfig {
 	 * @param changeDate
 	 * @param absPath
 	 * @param ds
-	 * @param configInputToStandard
-	 * @param configStandardToInput
 	 * @throws RegisterException
 	 */
 	public RunResultDataSetConfig(Repository repository, long changeDate,
-			File absPath, List<DataSet> ds,
-			List<ConversionInputToStandardConfiguration> configInputToStandard,
-			List<ConversionStandardToInputConfiguration> configStandardToInput)
-			throws RegisterException {
-		super(repository, changeDate, absPath, ds, configInputToStandard,
-				configStandardToInput);
+			File absPath, List<DataSet> ds) throws RegisterException {
+		super(repository, changeDate, absPath, ds);
 	}
 
 	/**
@@ -75,17 +63,14 @@ public class RunResultDataSetConfig extends DataSetConfig {
 	 * @throws DataSetConfigurationException
 	 * @throws NoRepositoryFoundException
 	 * @throws DataSetConfigNotFoundException
-	 * @throws UnknownDistanceMeasureException
 	 * @throws RegisterException
 	 * @throws NumberFormatException
 	 * @return The dataset configuration object.
-	 * @throws UnknownDataPreprocessorException
 	 */
 	public static DataSetConfig parseFromFile(final File absConfigPath)
 			throws DataSetConfigurationException, NoRepositoryFoundException,
-			DataSetConfigNotFoundException, UnknownDistanceMeasureException,
-			RegisterException, NumberFormatException,
-			UnknownDataPreprocessorException {
+			DataSetConfigNotFoundException, RegisterException,
+			NumberFormatException {
 
 		if (!absConfigPath.exists())
 			throw new DataSetConfigNotFoundException("Dataset config \""
@@ -102,8 +87,6 @@ public class RunResultDataSetConfig extends DataSetConfig {
 					.getAbsolutePath());
 
 			List<DataSet> dataSets = new ArrayList<DataSet>();
-			List<ConversionInputToStandardConfiguration> inputToStandards = new ArrayList<ConversionInputToStandardConfiguration>();
-			List<ConversionStandardToInputConfiguration> standardToInputs = new ArrayList<ConversionStandardToInputConfiguration>();
 
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
@@ -113,51 +96,14 @@ public class RunResultDataSetConfig extends DataSetConfig {
 				String datasetName = props.getString("datasetName");
 				String datasetFile = props.getString("datasetFile");
 
-				DistanceMeasure distanceMeasure;
-				if (props.containsKey("distanceMeasureAbsoluteToRelative")) {
-					distanceMeasure = DistanceMeasure
-							.parseFromString(
-									repo,
-									props.getString("distanceMeasureAbsoluteToRelative"));
-				} else
-					distanceMeasure = DistanceMeasure.parseFromString(repo,
-							"EuclidianDistanceMeasure");
-
-				// added 12.04.2013
-				List<DataPreprocessor> preprocessorBeforeDistance;
-				if (props.containsKey("preprocessorBeforeDistance")) {
-					preprocessorBeforeDistance = DataPreprocessor
-							.parseFromString(
-									repo,
-									props.getStringArray("preprocessorBeforeDistance"));
-				} else
-					preprocessorBeforeDistance = new ArrayList<DataPreprocessor>();
-
-				List<DataPreprocessor> preprocessorAfterDistance;
-				if (props.containsKey("preprocessorAfterDistance")) {
-					preprocessorAfterDistance = DataPreprocessor
-							.parseFromString(
-									repo,
-									props.getStringArray("preprocessorAfterDistance"));
-				} else
-					preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
-
-				ConversionInputToStandardConfiguration configInputToStandard = new ConversionInputToStandardConfiguration(
-						distanceMeasure, preprocessorBeforeDistance,
-						preprocessorAfterDistance);
-				ConversionStandardToInputConfiguration configStandardToInput = new ConversionStandardToInputConfiguration();
-
 				// we take the dataset from the runresult repository
 				DataSet dataSet = repo.getDataSetWithName(datasetName + "/"
 						+ datasetFile);
 
 				dataSets.add(dataSet);
-				inputToStandards.add(configInputToStandard);
-				standardToInputs.add(configStandardToInput);
 			}
 			DataSetConfig result = new DataSetConfig(repo,
-					absConfigPath.lastModified(), absConfigPath, dataSets,
-					inputToStandards, standardToInputs);
+					absConfigPath.lastModified(), absConfigPath, dataSets);
 			result = repo.getRegisteredObject(result);
 			return result;
 		} catch (ConfigurationException e) {

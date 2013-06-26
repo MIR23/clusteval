@@ -73,10 +73,10 @@ public abstract class DataSetFormatParser {
 	 * @throws UnknownDataSetFormatException
 	 * @throws RNotAvailableException
 	 */
-	protected abstract DataSet convertToStandardFormat(DataSet dataSet,
-			ConversionInputToStandardConfiguration config) throws IOException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			UnknownDataSetFormatException, RNotAvailableException;
+	protected abstract DataSet convertToStandardFormat(DataSet dataSet)
+			throws IOException, InvalidDataSetFormatVersionException,
+			RegisterException, UnknownDataSetFormatException,
+			RNotAvailableException;
 
 	/**
 	 * Convert the given dataset to the given dataset format (this format) using
@@ -102,9 +102,9 @@ public abstract class DataSetFormatParser {
 	 * @throws UnknownDataSetFormatException
 	 */
 	protected abstract DataSet convertToThisFormat(DataSet dataSet,
-			DataSetFormat dataSetFormat, ConversionConfiguration config)
-			throws IOException, InvalidDataSetFormatVersionException,
-			RegisterException, UnknownDataSetFormatException;
+			DataSetFormat dataSetFormat) throws IOException,
+			InvalidDataSetFormatVersionException, RegisterException,
+			UnknownDataSetFormatException;
 
 	/**
 	 * @param dataSet

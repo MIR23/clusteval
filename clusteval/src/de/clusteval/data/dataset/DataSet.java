@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import de.clusteval.context.Context;
 import de.clusteval.data.dataset.format.AbsoluteDataSetFormat;
-import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
-import de.clusteval.data.dataset.format.ConversionStandardToInputConfiguration;
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.DataSetFormatParser;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
@@ -20,7 +18,6 @@ import de.clusteval.data.dataset.format.RelativeDataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.DataSetType;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
-import de.clusteval.data.preprocessing.DataPreprocessor;
 import de.clusteval.framework.ClustevalBackendServer;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
@@ -549,12 +546,6 @@ public abstract class DataSet extends RepositoryObject {
 	 *            This is the format, the dataset is expected to be in after the
 	 *            conversion process. After the dataset is converted to the
 	 *            internal format, it is converted to the target format.
-	 * @param configInputToStandard
-	 *            This is the configuration that is used during the conversion
-	 *            from the original format to the internal standard format.
-	 * @param configStandardToInput
-	 *            This is the configuration that is used during the conversion
-	 *            from the internal standard format to the target format.
 	 * @return The dataset in the target format.
 	 * @throws FormatConversionException
 	 * @throws IOException
@@ -563,12 +554,9 @@ public abstract class DataSet extends RepositoryObject {
 	 * @throws RNotAvailableException
 	 */
 	public DataSet preprocessAndConvertTo(final Context context,
-			final DataSetFormat targetFormat,
-			final ConversionInputToStandardConfiguration configInputToStandard,
-			final ConversionStandardToInputConfiguration configStandardToInput)
-			throws FormatConversionException, IOException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			RNotAvailableException {
+			final DataSetFormat targetFormat) throws FormatConversionException,
+			IOException, InvalidDataSetFormatVersionException,
+			RegisterException, RNotAvailableException {
 
 		// only one conversion process at a time
 		File sourceFile = ClustevalBackendServer.getCommonFile(new File(this
@@ -604,15 +592,6 @@ public abstract class DataSet extends RepositoryObject {
 			// 13.04.2013: update the original dataset of the dataset to itself
 			this.originalDataSet = this;
 
-			// 13.04.2013: apply all data preprocessors before distance
-			// conversion
-			DataSet preprocessed = this;
-			List<DataPreprocessor> preprocessors = configInputToStandard
-					.getPreprocessorsBeforeDistance();
-			for (DataPreprocessor proc : preprocessors) {
-				preprocessed = proc.preprocess(preprocessed);
-			}
-
 			// convert the input format to the standard format
 			try {
 				DataSetFormat standardFormat = context.getStandardInputFormat();
@@ -632,16 +611,7 @@ public abstract class DataSet extends RepositoryObject {
 				}
 				this.setAbsolutePath(strippedFilePath);
 
-				result = preprocessed.convertToStandardDirectly(context,
-						configInputToStandard);
-
-				// 13.04.2013: apply all data preprocessors after distance
-				// conversion
-				preprocessors = configInputToStandard
-						.getPreprocessorsAfterDistance();
-				for (DataPreprocessor proc : preprocessors) {
-					preprocessed = proc.preprocess(result);
-				}
+				result = this.convertToStandardDirectly(context);
 
 				/*
 				 * This temporary dataset is now in our standard format. Store
@@ -649,7 +619,7 @@ public abstract class DataSet extends RepositoryObject {
 				 */
 				try {
 					result = result.convertStandardToDirectly(context,
-							targetFormat, configStandardToInput);
+							targetFormat);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -683,11 +653,9 @@ public abstract class DataSet extends RepositoryObject {
 	 * @throws FormatConversionException
 	 */
 	protected DataSet convertStandardToDirectly(final Context context,
-			final DataSetFormat targetFormat,
-			final ConversionStandardToInputConfiguration configStandardToInput)
-			throws IOException, InvalidDataSetFormatVersionException,
-			RegisterException, UnknownDataSetFormatException,
-			FormatConversionException {
+			final DataSetFormat targetFormat) throws IOException,
+			InvalidDataSetFormatVersionException, RegisterException,
+			UnknownDataSetFormatException, FormatConversionException {
 
 		DataSet result = null;
 
@@ -711,8 +679,7 @@ public abstract class DataSet extends RepositoryObject {
 				throw new FormatConversionException(
 						"No conversion from relative to absolute dataset format possible.");
 		} else
-			result = targetFormat.convertToThisFormat(this, targetFormat,
-					configStandardToInput);
+			result = targetFormat.convertToThisFormat(this, targetFormat);
 		result.thisInStandardFormat = this;
 		result.originalDataSet = this.originalDataSet;
 		return result;
@@ -739,8 +706,7 @@ public abstract class DataSet extends RepositoryObject {
 	 * @throws RNotAvailableException
 	 * @throws InvalidParameterException
 	 */
-	protected DataSet convertToStandardDirectly(final Context context,
-			final ConversionInputToStandardConfiguration configInputToStandard)
+	protected DataSet convertToStandardDirectly(final Context context)
 			throws IOException, InvalidDataSetFormatVersionException,
 			RegisterException, UnknownDataSetFormatException,
 			InvalidParameterException, RNotAvailableException {
@@ -752,8 +718,7 @@ public abstract class DataSet extends RepositoryObject {
 		if (this.getDataSetFormat().equals(standardFormat)) {
 			result = this;
 		} else
-			result = this.getDataSetFormat().convertToStandardFormat(this,
-					configInputToStandard);
+			result = this.getDataSetFormat().convertToStandardFormat(this);
 		result.thisInStandardFormat = result;
 		this.thisInStandardFormat = result;
 		result.originalDataSet = this.originalDataSet;

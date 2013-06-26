@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 
@@ -39,12 +41,17 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 *            The list of dataset formats to clone.
 	 * @return The cloned list of dataset formats.
 	 */
-	public static List<DataSetFormat> cloneDataSetFormats(
-			final List<DataSetFormat> dataSetFormats) {
-		List<DataSetFormat> result = new ArrayList<DataSetFormat>();
+	public static List<Set<DataSetFormat>> cloneDataSetFormats(
+			final List<Set<DataSetFormat>> dataSetFormats) {
+		List<Set<DataSetFormat>> result = new ArrayList<Set<DataSetFormat>>();
 
-		for (DataSetFormat dataSetFormat : dataSetFormats)
-			result.add(dataSetFormat.clone());
+		for (Set<DataSetFormat> set : dataSetFormats) {
+			Set<DataSetFormat> newSet = new HashSet<DataSetFormat>();
+			for (DataSetFormat dataSetFormat : set) {
+				newSet.add(dataSetFormat.clone());
+			}
+			result.add(newSet);
+		}
 
 		return result;
 	}
@@ -202,15 +209,15 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 * @throws UnknownDataSetFormatException
 	 * @throws RNotAvailableException
 	 */
-	public final DataSet convertToStandardFormat(DataSet dataSet,
-			ConversionInputToStandardConfiguration config) throws IOException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			UnknownDataSetFormatException, RNotAvailableException {
+	public final DataSet convertToStandardFormat(DataSet dataSet)
+			throws IOException, InvalidDataSetFormatVersionException,
+			RegisterException, UnknownDataSetFormatException,
+			RNotAvailableException {
 		final DataSetFormatParser parser = getDataSetFormatParser();
 		if (parser == null)
 			throw new IllegalArgumentException(
 					"Operation only supported for the standard dataset format");
-		return parser.convertToStandardFormat(dataSet, config);
+		return parser.convertToStandardFormat(dataSet);
 	}
 
 	/**
@@ -239,14 +246,14 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 * @throws UnknownDataSetFormatException
 	 */
 	public final DataSet convertToThisFormat(DataSet dataSet,
-			DataSetFormat dataSetFormat, ConversionConfiguration config)
-			throws IOException, InvalidDataSetFormatVersionException,
-			RegisterException, UnknownDataSetFormatException {
+			DataSetFormat dataSetFormat) throws IOException,
+			InvalidDataSetFormatVersionException, RegisterException,
+			UnknownDataSetFormatException {
 		final DataSetFormatParser parser = getDataSetFormatParser();
 		if (parser == null)
 			throw new IllegalArgumentException(
 					"Operation only supported for the standard dataset format");
-		return parser.convertToThisFormat(dataSet, dataSetFormat, config);
+		return parser.convertToThisFormat(dataSet, dataSetFormat);
 	}
 
 	/**

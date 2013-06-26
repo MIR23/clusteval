@@ -1269,7 +1269,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 						"invocationFormatWithoutGoldStandard",
 						"invocationFormatParameterOptimization",
 						"invocationFormatParameterOptimizationWithoutGoldStandard",
-						"expectsNormalizedDataSet", "program_config_id"};
+						"program_config_id"};
 				values = new String[]{
 						"" + this.updateRepositoryId(),
 						"" + program_id,
@@ -1286,7 +1286,6 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 								+ replaceNull(
 										object.getInvocationFormatParameterOptimization(true),
 										""),
-						"" + (object.expectsNormalizedDataSet() ? 1 : 0),
 						""
 								+ getProgramConfigId(object
 										.getRepository()
@@ -1298,17 +1297,12 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 																		.lastIndexOf(
 																				"/") + 1)))};
 			} else {
-				columns = new String[]{
-						"repository_id",
-						"program_id",
-						"run_result_format_id",
-						"name",
-						"absPath",
+				columns = new String[]{"repository_id", "program_id",
+						"run_result_format_id", "name", "absPath",
 						"invocationFormat",
 						"invocationFormatWithoutGoldStandard",
 						"invocationFormatParameterOptimization",
-						"invocationFormatParameterOptimizationWithoutGoldStandard",
-						"expectsNormalizedDataSet"};
+						"invocationFormatParameterOptimizationWithoutGoldStandard"};
 				values = new String[]{
 						"" + this.updateRepositoryId(),
 						"" + program_id,
@@ -1324,8 +1318,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 						""
 								+ replaceNull(
 										object.getInvocationFormatParameterOptimization(true),
-										""),
-						"" + (object.expectsNormalizedDataSet() ? 1 : 0)};
+										"")};
 			}
 
 			int rowId;
@@ -1342,16 +1335,17 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 			} else
 				rowId = insert(this.getTableProgramConfigs(), columns, values);
 
-			for (DataSetFormat dsFormat : object.getCompatibleDataSetFormats()) {
-				int dataset_format_id = getDataSetFormatId(dsFormat.getClass()
-						.getSimpleName());
-
-				insert(this.getTableProgramConfigsCompatibleDataSetFormats(),
-						new String[]{"repository_id", "program_config_id",
-								"dataset_format_id"}, new String[]{
-								"" + updateRepositoryId(), "" + rowId,
-								"" + dataset_format_id});
-			}
+			// TODO
+//			for (DataSetFormat dsFormat : object.getCompatibleDataSetFormats()) {
+//				int dataset_format_id = getDataSetFormatId(dsFormat.getClass()
+//						.getSimpleName());
+//
+//				insert(this.getTableProgramConfigsCompatibleDataSetFormats(),
+//						new String[]{"repository_id", "program_config_id",
+//								"dataset_format_id"}, new String[]{
+//								"" + updateRepositoryId(), "" + rowId,
+//								"" + dataset_format_id});
+//			}
 
 			for (ProgramParameter<?> param : object.getOptimizableParams()) {
 				int program_config_id = getProgramConfigId(object);
@@ -2670,52 +2664,52 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	protected boolean register(DataSetConfig object, final boolean updateOnly) {
 		// TODO: change database structure
 		return true;
-//
-//		try {
-//			int dataset_id = getDataSetId(object.getDataSet());
-//
-//			String[] columns;
-//			String[] values;
-//			if (object.getRepository() instanceof RunResultRepository) {
-//				columns = new String[]{"repository_id", "absPath", "name",
-//						"dataset_id", "dataset_config_id"};
-//				values = new String[]{
-//						"" + this.updateRepositoryId(),
-//						"" + object.getAbsolutePath(),
-//						new File(object.getAbsolutePath()).getName().replace(
-//								".dsconfig", ""),
-//						"" + dataset_id,
-//						""
-//								+ getDataSetConfigId(object
-//										.getRepository()
-//										.getParent()
-//										.getDataSetConfigWithName(
-//												object.getAbsolutePath()
-//														.substring(
-//																object.getAbsolutePath()
-//																		.lastIndexOf(
-//																				"/") + 1)))};
-//			} else {
-//				columns = new String[]{"repository_id", "absPath", "name",
-//						"dataset_id"};
-//				values = new String[]{
-//						"" + this.updateRepositoryId(),
-//						"" + object.getAbsolutePath(),
-//						new File(object.getAbsolutePath()).getName().replace(
-//								".dsconfig", ""), "" + dataset_id};
-//			}
-//			if (updateOnly) {
-//				int rowId = getDataSetConfigId(object);
-//				update(this.getTableDataSetConfigs(), columns, values, rowId);
-//			} else
-//				insert(this.getTableDataSetConfigs(), columns, values);
-//			return true;
-//		} catch (SQLException e) {
-//
-//			e.printStackTrace();
-//		}
-//
-//		return false;
+		//
+		// try {
+		// int dataset_id = getDataSetId(object.getDataSet());
+		//
+		// String[] columns;
+		// String[] values;
+		// if (object.getRepository() instanceof RunResultRepository) {
+		// columns = new String[]{"repository_id", "absPath", "name",
+		// "dataset_id", "dataset_config_id"};
+		// values = new String[]{
+		// "" + this.updateRepositoryId(),
+		// "" + object.getAbsolutePath(),
+		// new File(object.getAbsolutePath()).getName().replace(
+		// ".dsconfig", ""),
+		// "" + dataset_id,
+		// ""
+		// + getDataSetConfigId(object
+		// .getRepository()
+		// .getParent()
+		// .getDataSetConfigWithName(
+		// object.getAbsolutePath()
+		// .substring(
+		// object.getAbsolutePath()
+		// .lastIndexOf(
+		// "/") + 1)))};
+		// } else {
+		// columns = new String[]{"repository_id", "absPath", "name",
+		// "dataset_id"};
+		// values = new String[]{
+		// "" + this.updateRepositoryId(),
+		// "" + object.getAbsolutePath(),
+		// new File(object.getAbsolutePath()).getName().replace(
+		// ".dsconfig", ""), "" + dataset_id};
+		// }
+		// if (updateOnly) {
+		// int rowId = getDataSetConfigId(object);
+		// update(this.getTableDataSetConfigs(), columns, values, rowId);
+		// } else
+		// insert(this.getTableDataSetConfigs(), columns, values);
+		// return true;
+		// } catch (SQLException e) {
+		//
+		// e.printStackTrace();
+		// }
+		//
+		// return false;
 	}
 
 	/*

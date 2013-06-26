@@ -20,7 +20,6 @@ import org.rosuda.REngine.REngineException;
 
 import utils.Pair;
 import utils.Triple;
-import de.clusteval.cluster.ClusterItem;
 import de.clusteval.cluster.Clustering;
 import de.clusteval.cluster.paramOptimization.NoParameterSetFoundException;
 import de.clusteval.cluster.quality.ClusteringQualityMeasure;
@@ -29,14 +28,10 @@ import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.AbsoluteDataSet;
 import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.DataSetConfig;
-import de.clusteval.data.dataset.RelativeDataSet;
-import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
-import de.clusteval.data.dataset.format.ConversionStandardToInputConfiguration;
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.IncompatibleDataSetFormatException;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
-import de.clusteval.data.goldstandard.GoldStandard;
 import de.clusteval.data.goldstandard.GoldStandardConfig;
 import de.clusteval.data.goldstandard.IncompleteGoldStandardException;
 import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
@@ -54,7 +49,6 @@ import de.clusteval.run.result.ClusteringRunResult;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.result.format.RunResultFormat;
 import de.clusteval.run.result.format.RunResultNotFoundException;
-import de.clusteval.utils.FormatConversionException;
 import de.clusteval.utils.InternalAttributeException;
 import de.clusteval.utils.RNotAvailableException;
 import de.clusteval.utils.plot.Plotter;
@@ -221,70 +215,66 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @return True, if compatible, false otherwise.
 	 * @throws IOException
 	 * @throws RegisterException
+	 *             TODO: remove preprocess
 	 */
 	protected boolean preprocessAndCheckCompatibleDataSetFormat()
 			throws IOException, RegisterException {
-
-		ConversionInputToStandardConfiguration configInputToStandard = dataConfig
-				.getDatasetConfig().getConversionInputToStandardConfiguration();
-		ConversionStandardToInputConfiguration configStandardToInput = dataConfig
-				.getDatasetConfig().getConversionStandardToInputConfiguration();
-
 		/*
-		 * Added 18.09.2012: only one conversion operation per dataset at a
-		 * time. otherwise we can have problems
+		 * only one conversion operation per dataset at a time. otherwise we can
+		 * have problems
 		 */
-		File datasetFile = ClustevalBackendServer.getCommonFile(new File(
-				dataConfig.getDatasetConfig().getDataSet().getAbsolutePath()));
-		synchronized (datasetFile) {
+		File datasetConfigFile = ClustevalBackendServer.getCommonFile(new File(
+				dataConfig.getDatasetConfig().getAbsolutePath()));
+		synchronized (datasetConfigFile) {
 			/*
 			 * Check, whether this program can be applied to this dataset, i.e.
 			 * either they are directly compatible or the dataset can be
 			 * converted to another compatible DataSetFormat.
 			 */
-			List<DataSetFormat> compatibleDsFormats = programConfig
+			List<Set<DataSetFormat>> compatibleDsFormatSets = programConfig
 					.getCompatibleDataSetFormats();
 			boolean found = false;
-			// try to find a compatible format we can use and convert
-			for (DataSetFormat compFormat : compatibleDsFormats) {
-				try {
-					DataSet ds = dataConfig
-							.getDatasetConfig()
-							.getDataSet()
-							.preprocessAndConvertTo(this.run.getContext(),
-									compFormat, configInputToStandard,
-									configStandardToInput);
-
-					// added 23.01.2013: rename the new dataset, unique for the
-					// program configuration
-					int indexOfLastExt = ds.getAbsolutePath().lastIndexOf(".");
-					if (indexOfLastExt == -1)
-						indexOfLastExt = ds.getAbsolutePath().length();
-					String newFileName = ds.getAbsolutePath().substring(0,
-							indexOfLastExt)
-							+ "_"
-							+ programConfig.getName()
-							+ ds.getAbsolutePath().substring(indexOfLastExt);
-					// if the new dataset file is the same file as the old one,
-					// we copy it instead of moving
-					if (ds.getAbsolutePath().equals(
-							dataConfig.getDatasetConfig().getDataSet()
-									.getAbsolutePath())) {
-						ds.copyTo(new File(newFileName), false, true);
-					} else
-						ds.move(new File(newFileName), false);
-
-					dataConfig.getDatasetConfig().setDataSet(ds);
-					// found a convertable compatible format
-					found = true;
-					break;
-				} catch (FormatConversionException e) {
-				} catch (InvalidDataSetFormatVersionException e) {
-					e.printStackTrace();
-				} catch (RNotAvailableException e) {
-					e.printStackTrace();
-				}
-			}
+			// TODO: uncommented compatibility
+			// try to find a compatible format set we can use and convert
+			// for (Set<DataSetFormat> compFormat : compatibleDsFormatSets) {
+			// try {
+			// DataSet ds = dataConfig
+			// .getDatasetConfig()
+			// .getDataSet()
+			// .preprocessAndConvertTo(this.run.getContext(),
+			// compFormat, configInputToStandard,
+			// configStandardToInput);
+			//
+			// // added 23.01.2013: rename the new dataset, unique for the
+			// // program configuration
+			// int indexOfLastExt = ds.getAbsolutePath().lastIndexOf(".");
+			// if (indexOfLastExt == -1)
+			// indexOfLastExt = ds.getAbsolutePath().length();
+			// String newFileName = ds.getAbsolutePath().substring(0,
+			// indexOfLastExt)
+			// + "_"
+			// + programConfig.getName()
+			// + ds.getAbsolutePath().substring(indexOfLastExt);
+			// // if the new dataset file is the same file as the old one,
+			// // we copy it instead of moving
+			// if (ds.getAbsolutePath().equals(
+			// dataConfig.getDatasetConfig().getDataSet()
+			// .getAbsolutePath())) {
+			// ds.copyTo(new File(newFileName), false, true);
+			// } else
+			// ds.move(new File(newFileName), false);
+			//
+			// dataConfig.getDatasetConfig().setDataSet(ds);
+			// // found a convertable compatible format
+			// found = true;
+			// break;
+			// } catch (FormatConversionException e) {
+			// } catch (InvalidDataSetFormatVersionException e) {
+			// e.printStackTrace();
+			// } catch (RNotAvailableException e) {
+			// e.printStackTrace();
+			// }
+			// }
 			return found;
 		}
 	}
@@ -312,35 +302,35 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			throws UnknownGoldStandardFormatException,
 			IncompleteGoldStandardException, IllegalArgumentException {
 		// TODO: will there even be a gold standard
-//		DataSet dataSet = dataSetConfig.getDataSet().getInStandardFormat();
-//		File dataSetFile = ClustevalBackendServer.getCommonFile(new File(
-//				dataSet.getAbsolutePath()));
-//		synchronized (dataSetFile) {
-//			GoldStandard goldStandard = goldStandardConfig.getGoldstandard();
-//			File goldStandardFile = ClustevalBackendServer
-//					.getCommonFile(new File(goldStandard.getAbsolutePath()));
-//			synchronized (goldStandardFile) {
-//
-//				/*
-//				 * Check whether all ids in the dataset have a corresponding
-//				 * entry in the gold standard
-//				 */
-//				// dataSet.loadIntoMemory();
-//				goldStandard.loadIntoMemory();
-//
-//				final Set<String> ids = new HashSet<String>(dataSet.getIds());
-//				final Set<ClusterItem> gsItems = goldStandard.getClustering()
-//						.getClusterItems();
-//				final Set<String> gsIds = new HashSet<String>();
-//				for (ClusterItem item : gsItems)
-//					gsIds.add(item.getId());
-//
-//				if (!gsIds.containsAll(ids)) {
-//					ids.removeAll(gsIds);
-//					throw new IncompleteGoldStandardException(ids);
-//				}
-//			}
-//		}
+		// DataSet dataSet = dataSetConfig.getDataSet().getInStandardFormat();
+		// File dataSetFile = ClustevalBackendServer.getCommonFile(new File(
+		// dataSet.getAbsolutePath()));
+		// synchronized (dataSetFile) {
+		// GoldStandard goldStandard = goldStandardConfig.getGoldstandard();
+		// File goldStandardFile = ClustevalBackendServer
+		// .getCommonFile(new File(goldStandard.getAbsolutePath()));
+		// synchronized (goldStandardFile) {
+		//
+		// /*
+		// * Check whether all ids in the dataset have a corresponding
+		// * entry in the gold standard
+		// */
+		// // dataSet.loadIntoMemory();
+		// goldStandard.loadIntoMemory();
+		//
+		// final Set<String> ids = new HashSet<String>(dataSet.getIds());
+		// final Set<ClusterItem> gsItems = goldStandard.getClustering()
+		// .getClusterItems();
+		// final Set<String> gsIds = new HashSet<String>();
+		// for (ClusterItem item : gsItems)
+		// gsIds.add(item.getId());
+		//
+		// if (!gsIds.containsAll(ids)) {
+		// ids.removeAll(gsIds);
+		// throw new IncompleteGoldStandardException(ids);
+		// }
+		// }
+		// }
 	}
 
 	/**
@@ -406,7 +396,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * {@link #parseInvocationLineAndEffectiveParameters(String, String, Map, Map, Map, StringBuilder)}
 	 * 
 	 * <p>
-	 * Replace the input parameter %i% in the invocation line by the absolute
+	 * Replace the input parameter %i_n% in the invocation line by the absolute
 	 * path to the input file.
 	 * 
 	 * @param invocation
@@ -418,12 +408,14 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	protected String[] parseInput(final String[] invocation,
 			final Map<String, String> internalParams) {
-		internalParams.put("i", dataConfig.getDatasetConfig().getDataSet()
-				.getAbsolutePath());
+		List<DataSet> dataSets = dataConfig.getDatasetConfig().getDataSets();
 		String[] parsed = invocation.clone();
-		for (int i = 0; i < parsed.length; i++)
-			parsed[i] = parsed[i].replace("%i%", dataConfig.getDatasetConfig()
-					.getDataSet().getAbsolutePath());
+		for (int i = 0; i < dataSets.size(); i++) {
+			internalParams.put("i_" + i, dataSets.get(i).getAbsolutePath());
+			for (int j = 0; j < parsed.length; j++)
+				parsed[j] = parsed[j].replace("%i_" + i + "%", dataSets.get(i)
+						.getAbsolutePath());
+		}
 		return parsed;
 	}
 
@@ -1071,48 +1063,48 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	protected void setInternalAttributes() throws IllegalArgumentException {
 		// TODO
-//		DataSet ds = this.dataConfig.getDatasetConfig().getDataSet()
-//				.getInStandardFormat();
-//
-//		if (ds instanceof RelativeDataSet) {
-//			RelativeDataSet dataSet = (RelativeDataSet) ds;
-//			this.dataConfig
-//					.getRepository()
-//					.getInternalDoubleAttribute(
-//							"$("
-//									+ this.dataConfig.getDatasetConfig()
-//											.getDataSet().getOriginalDataSet()
-//											.getAbsolutePath()
-//									+ ":minSimilarity)")
-//					.setValue(dataSet.getDataSetContent().getMinValue());
-//			this.dataConfig
-//					.getRepository()
-//					.getInternalDoubleAttribute(
-//							"$("
-//									+ this.dataConfig.getDatasetConfig()
-//											.getDataSet().getOriginalDataSet()
-//											.getAbsolutePath()
-//									+ ":maxSimilarity)")
-//					.setValue(dataSet.getDataSetContent().getMaxValue());
-//			this.dataConfig
-//					.getRepository()
-//					.getInternalDoubleAttribute(
-//							"$("
-//									+ this.dataConfig.getDatasetConfig()
-//											.getDataSet().getOriginalDataSet()
-//											.getAbsolutePath()
-//									+ ":meanSimilarity)")
-//					.setValue(dataSet.getDataSetContent().getMean());
-//		}
-//		this.dataConfig
-//				.getRepository()
-//				.getInternalIntegerAttribute(
-//						"$("
-//								+ this.dataConfig.getDatasetConfig()
-//										.getDataSet().getOriginalDataSet()
-//										.getAbsolutePath()
-//								+ ":numberOfElements)")
-//				.setValue(ds.getIds().size());
+		// DataSet ds = this.dataConfig.getDatasetConfig().getDataSet()
+		// .getInStandardFormat();
+		//
+		// if (ds instanceof RelativeDataSet) {
+		// RelativeDataSet dataSet = (RelativeDataSet) ds;
+		// this.dataConfig
+		// .getRepository()
+		// .getInternalDoubleAttribute(
+		// "$("
+		// + this.dataConfig.getDatasetConfig()
+		// .getDataSet().getOriginalDataSet()
+		// .getAbsolutePath()
+		// + ":minSimilarity)")
+		// .setValue(dataSet.getDataSetContent().getMinValue());
+		// this.dataConfig
+		// .getRepository()
+		// .getInternalDoubleAttribute(
+		// "$("
+		// + this.dataConfig.getDatasetConfig()
+		// .getDataSet().getOriginalDataSet()
+		// .getAbsolutePath()
+		// + ":maxSimilarity)")
+		// .setValue(dataSet.getDataSetContent().getMaxValue());
+		// this.dataConfig
+		// .getRepository()
+		// .getInternalDoubleAttribute(
+		// "$("
+		// + this.dataConfig.getDatasetConfig()
+		// .getDataSet().getOriginalDataSet()
+		// .getAbsolutePath()
+		// + ":meanSimilarity)")
+		// .setValue(dataSet.getDataSetContent().getMean());
+		// }
+		// this.dataConfig
+		// .getRepository()
+		// .getInternalIntegerAttribute(
+		// "$("
+		// + this.dataConfig.getDatasetConfig()
+		// .getDataSet().getOriginalDataSet()
+		// .getAbsolutePath()
+		// + ":numberOfElements)")
+		// .setValue(ds.getIds().size());
 	}
 
 	/*
@@ -1167,27 +1159,30 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 		boolean found = preprocessAndCheckCompatibleDataSetFormat();
 		if (!found) {
+			Set<DataSetFormat> dsFormats = new HashSet<DataSetFormat>();
+			for (DataSet ds : dataConfig.getDatasetConfig().getDataSets()) {
+				dsFormats.add(ds.getDataSetFormat());
+			}
 			IncompatibleDataSetFormatException ex = new IncompatibleDataSetFormatException(
-					"The program \""
-							+ programConfig.getProgram()
-							+ "\" cannot be run with the dataset format \""
-							+ dataConfig.getDatasetConfig().getDataSet()
-									.getDataSetFormat() + "\"");
+					"The program \"" + programConfig.getProgram()
+							+ "\" cannot be run with the dataset formats \""
+							+ dsFormats + "\"");
 			// otherwise throw exception
 			throw ex;
 		}
 
 		try {
 			// Load the dataset into memory
-			DataSet dataSet = this.dataConfig.getDatasetConfig().getDataSet()
-					.getInStandardFormat();
-			dataSet.loadIntoMemory();
+			for (DataSet dataSet : this.dataConfig.getDatasetConfig()
+					.getDataSets())
+				dataSet.getInStandardFormat().loadIntoMemory();
+
 			// if the original dataset is an absolute dataset, load it into
 			// memory as well
-			dataSet = this.dataConfig.getDatasetConfig().getDataSet()
-					.getOriginalDataSet();
-			if (dataSet instanceof AbsoluteDataSet)
-				dataSet.loadIntoMemory();
+			for (DataSet dataSet : this.dataConfig.getDatasetConfig()
+					.getDataSets())
+				if (dataSet.getOriginalDataSet() instanceof AbsoluteDataSet)
+					dataSet.getOriginalDataSet().loadIntoMemory();
 
 			/*
 			 * Check compatibility of dataset with goldstandard
@@ -1266,16 +1261,19 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	protected void afterRun() {
 		super.afterRun();
 		// unload the dataset from memory
-		DataSet dataSet = this.dataConfig.getDatasetConfig().getDataSet()
-				.getInStandardFormat();
-		if (dataSet != null)
-			dataSet.unloadFromMemory();
-		// if the original dataset is an absolute dataset, unload it from memory
+		for (DataSet dataSet : this.dataConfig.getDatasetConfig().getDataSets()) {
+			dataSet = dataSet.getInStandardFormat();
+			if (dataSet != null)
+				dataSet.unloadFromMemory();
+		}
+		// if the original dataset is an absolute dataset, unload it from
+		// memory
 		// as well
-		dataSet = this.dataConfig.getDatasetConfig().getDataSet()
-				.getOriginalDataSet();
-		if (dataSet != null && dataSet instanceof AbsoluteDataSet)
-			dataSet.unloadFromMemory();
+		for (DataSet dataSet : this.dataConfig.getDatasetConfig().getDataSets()) {
+			dataSet = dataSet.getOriginalDataSet();
+			if (dataSet != null && dataSet instanceof AbsoluteDataSet)
+				dataSet.unloadFromMemory();
+		}
 
 		FileUtils.appendStringToFile(
 				this.getRun().getLogFilePath(),

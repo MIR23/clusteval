@@ -202,11 +202,11 @@ public abstract class RProgram extends Program {
 	public abstract String getInvocationFormat();
 
 	/**
-	 * @return A set containing dataset formats, which this r program can take
-	 *         as input.
+	 * @return A set containing sets of dataset formats, which this r program
+	 *         can take as input.
 	 * @throws UnknownDataSetFormatException
 	 */
-	public abstract Set<DataSetFormat> getCompatibleDataSetFormats()
+	public abstract Set<Set<DataSetFormat>> getCompatibleDataSetFormats()
 			throws UnknownDataSetFormatException;
 
 	/**

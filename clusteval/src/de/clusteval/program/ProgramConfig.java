@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -118,10 +119,10 @@ public class ProgramConfig extends RepositoryObject {
 	protected String invocationFormatParameterOptimizationWithoutGoldStandard;
 
 	/**
-	 * This list holds all dataset formats that are compatible with the
+	 * This list holds all sets of dataset formats that are compatible with the
 	 * encapsulated program, i.e. input formats this program is able to read.
 	 */
-	protected List<DataSetFormat> compatibleDataSetFormats;
+	protected List<Set<DataSetFormat>> compatibleDataSetFormats;
 
 	/**
 	 * The output format of the program
@@ -139,13 +140,6 @@ public class ProgramConfig extends RepositoryObject {
 	 * parameter optimization runs (see {@link ParameterOptimizationRun}).
 	 */
 	protected List<ProgramParameter<?>> optimizableParameters;
-
-	/**
-	 * This boolean indicates, whether the encapsulated program requires a
-	 * normalized dataset, i.e. similarities between 0 and 1. This is then
-	 * handled before the data is passed to the clustering method.
-	 */
-	protected boolean expectsNormalizedDataSet;
 
 	/**
 	 * Instantiates a new program config.
@@ -184,8 +178,6 @@ public class ProgramConfig extends RepositoryObject {
 	 *            The parameters of the program.
 	 * @param optimizableParameters
 	 *            The parameters of the program, that can be optimized.
-	 * @param expectsNormalizedDataSet
-	 *            Whether the encapsulated program requires normalized input.
 	 * @throws RegisterException
 	 */
 	public ProgramConfig(
@@ -195,14 +187,14 @@ public class ProgramConfig extends RepositoryObject {
 			final File absPath,
 			final Program program,
 			final RunResultFormat outputFormat,
-			final List<DataSetFormat> compatibleDataSetFormats,
+			final List<Set<DataSetFormat>> compatibleDataSetFormats,
 			final String invocationFormat,
 			final String invocationFormatWithoutGoldStandard,
 			final String invocationFormatParameterOptimization,
 			final String invocationFormatParameterOptimizationWithoutGoldStandard,
 			final List<ProgramParameter<?>> params,
-			final List<ProgramParameter<?>> optimizableParameters,
-			final boolean expectsNormalizedDataSet) throws RegisterException {
+			final List<ProgramParameter<?>> optimizableParameters)
+			throws RegisterException {
 		super(repository, false, changeDate, absPath);
 
 		this.program = program;
@@ -217,15 +209,15 @@ public class ProgramConfig extends RepositoryObject {
 		this.params = params;
 		this.optimizableParameters = optimizableParameters;
 
-		this.expectsNormalizedDataSet = expectsNormalizedDataSet;
-
 		if (register && this.register()) {
 			this.program.register();
 			this.program.addListener(this);
 
-			for (DataSetFormat dsFormat : this.compatibleDataSetFormats) {
-				dsFormat.register();
-				dsFormat.addListener(this);
+			for (Set<DataSetFormat> set : this.compatibleDataSetFormats) {
+				for (DataSetFormat dsFormat : set) {
+					dsFormat.register();
+					dsFormat.addListener(this);
+				}
 			}
 
 			outputFormat.register();
@@ -256,8 +248,6 @@ public class ProgramConfig extends RepositoryObject {
 		this.params = ProgramParameter.cloneParameterList(programConfig.params);
 		this.optimizableParameters = ProgramParameter
 				.cloneParameterList(programConfig.optimizableParameters);
-
-		this.expectsNormalizedDataSet = programConfig.expectsNormalizedDataSet;
 	}
 
 	/*
@@ -290,8 +280,6 @@ public class ProgramConfig extends RepositoryObject {
 	 * <li><b>outputFormat</b>: (see {@link #outputFormat})</li>
 	 * <li><b>compatibleDataSetFormats</b>: (see
 	 * {@link #compatibleDataSetFormats})</li>
-	 * <li><b>expectsNormalizedDataSet</b>: (see
-	 * {@link #expectsNormalizedDataSet})</li>
 	 * <li><b>alias</b>: (see {@link StandaloneProgram#alias})</li>
 	 * <li><b>parameters</b>: (see {@link #params})</li>
 	 * <li><b>optimizationParameters</b>: (see {@link #optimizableParameters})</li>
@@ -375,11 +363,10 @@ public class ProgramConfig extends RepositoryObject {
 		long changeDate;
 		Program programP = null;
 		// initialize compatible dataset formats
-		String[] compatibleDataSetFormatsStr;
+		String compatibleDataSetFormatsStr;
 
 		RunResultFormat runresultFormat;
-		List<DataSetFormat> compatibleDataSetFormats;
-		boolean expectsNormalizedDataSet = false;
+		List<Set<DataSetFormat>> compatibleDataSetFormats;
 		if (type.equals("standalone")) {
 			String program = FileUtils.buildPath(repo.getProgramBasePath(),
 					props.getString("program"));
@@ -395,19 +382,13 @@ public class ProgramConfig extends RepositoryObject {
 			String outputFormat = props.getString("outputFormat");
 
 			compatibleDataSetFormatsStr = props
-					.getStringArray("compatibleDataSetFormats");
+					.getString("compatibleDataSetFormats");
 
-			compatibleDataSetFormats = DataSetFormat.parseFromString(repo,
-					compatibleDataSetFormatsStr);
-
-			if (props.containsKey("expectsNormalizedDataSet"))
-				expectsNormalizedDataSet = props
-						.getBoolean("expectsNormalizedDataSet");
-			else
-				expectsNormalizedDataSet = false;
-
-			for (DataSetFormat format : compatibleDataSetFormats)
-				format.setNormalized(expectsNormalizedDataSet);
+			compatibleDataSetFormats = new ArrayList<Set<DataSetFormat>>();
+			for (String set : compatibleDataSetFormatsStr.split(";")) {
+				compatibleDataSetFormats.add(new HashSet<DataSetFormat>(Arrays
+						.asList(DataSetFormat.parseFromString(repo, set))));
+			}
 
 			runresultFormat = RunResultFormat.parseFromString(repo,
 					outputFormat);
@@ -421,7 +402,7 @@ public class ProgramConfig extends RepositoryObject {
 
 			RProgram rProgram = (RProgram) programP;
 
-			compatibleDataSetFormats = new ArrayList<DataSetFormat>(
+			compatibleDataSetFormats = new ArrayList<Set<DataSetFormat>>(
 					rProgram.getCompatibleDataSetFormats());
 
 			runresultFormat = rProgram.getRunResultFormat();
@@ -489,13 +470,13 @@ public class ProgramConfig extends RepositoryObject {
 					invocationFormat, invocationFormatWithoutGoldStandard,
 					invocationFormatParameterOptimization,
 					invocationFormatParameterOptimizationWithoutGoldStandard,
-					params, optimizableParameters, expectsNormalizedDataSet);
+					params, optimizableParameters);
 		}
 		// RProgram
 		else {
 			result = new RProgramConfig(repo, true, changeDate, absConfigPath,
 					programP, runresultFormat, compatibleDataSetFormats,
-					params, optimizableParameters, expectsNormalizedDataSet);
+					params, optimizableParameters);
 		}
 
 		// add parameter objects for input (i), executable (e), output (o)
@@ -558,15 +539,6 @@ public class ProgramConfig extends RepositoryObject {
 
 		result = repo.getRegisteredObject(result);
 		return result;
-	}
-
-	/**
-	 * @return True, if the encapsulated program requires normalized input data,
-	 *         false otherwise.
-	 * @see #expectsNormalizedDataSet
-	 */
-	public boolean expectsNormalizedDataSet() {
-		return this.expectsNormalizedDataSet;
 	}
 
 	/**
@@ -664,7 +636,7 @@ public class ProgramConfig extends RepositoryObject {
 	 * @return The compatible dataset input formats of the encapsulated program.
 	 * @see #compatibleDataSetFormats
 	 */
-	public List<DataSetFormat> getCompatibleDataSetFormats() {
+	public List<Set<DataSetFormat>> getCompatibleDataSetFormats() {
 		return compatibleDataSetFormats;
 	}
 

@@ -11,8 +11,6 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.data.dataset.format.ConversionInputToStandardConfiguration;
-import de.clusteval.data.dataset.format.ConversionStandardToInputConfiguration;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
 import de.clusteval.data.distance.DistanceMeasure;
@@ -66,47 +64,11 @@ public class DataSetConfig extends RepositoryObject {
 		return result;
 	}
 
-	public static List<ConversionInputToStandardConfiguration> cloneInputToStandardConfigs(
-			final List<ConversionInputToStandardConfiguration> inputToStandardConfigs) {
-		List<ConversionInputToStandardConfiguration> result = new ArrayList<ConversionInputToStandardConfiguration>();
-
-		for (ConversionInputToStandardConfiguration inputToStandardConfig : inputToStandardConfigs) {
-			result.add(inputToStandardConfig.clone());
-		}
-
-		return result;
-	}
-
-	public static List<ConversionStandardToInputConfiguration> cloneStandardToInputConfigs(
-			final List<ConversionStandardToInputConfiguration> standardToInputConfigs) {
-		List<ConversionStandardToInputConfiguration> result = new ArrayList<ConversionStandardToInputConfiguration>();
-
-		for (ConversionStandardToInputConfiguration standardToInputConfig : standardToInputConfigs) {
-			result.add(standardToInputConfig.clone());
-		}
-
-		return result;
-	}
-
 	/**
 	 * A dataset configuration encapsulates a dataset. This attribute stores a
 	 * reference to the dataset wrapper object.
 	 */
 	protected List<DataSet> datasets;
-
-	/**
-	 * This variable holds the configuration needed, when {@link #dataset} is
-	 * converted from its original input format to the internal standard format
-	 * of the framework.
-	 */
-	protected List<ConversionInputToStandardConfiguration> configInputToStandard;
-
-	/**
-	 * This variable holds the configuration needed, when {@link #dataset} is
-	 * converted from the internal standard format of the framework to the input
-	 * format of a program.
-	 */
-	protected List<ConversionStandardToInputConfiguration> configStandardToInput;
 
 	/**
 	 * Instantiates a new dataset configuration.
@@ -131,32 +93,16 @@ public class DataSetConfig extends RepositoryObject {
 	 *            input format of a program.
 	 * @throws RegisterException
 	 */
-	public DataSetConfig(
-			final Repository repository,
-			final long changeDate,
-			final File absPath,
-			final List<DataSet> ds,
-			final List<ConversionInputToStandardConfiguration> configInputToStandard,
-			final List<ConversionStandardToInputConfiguration> configStandardToInput)
+	public DataSetConfig(final Repository repository, final long changeDate,
+			final File absPath, final List<DataSet> ds)
 			throws RegisterException {
 		super(repository, false, changeDate, absPath);
 
 		this.datasets = ds;
-		this.configInputToStandard = configInputToStandard;
-		this.configStandardToInput = configStandardToInput;
 
 		if (this.register()) {
 			for (DataSet dataset : this.datasets)
 				dataset.addListener(this);
-
-			// added 21.03.2013: register only, if this dataset config has been
-			// registered before
-			for (ConversionInputToStandardConfiguration config : this.configInputToStandard) {
-				DistanceMeasure measure = config
-						.getDistanceMeasureAbsoluteToRelative();
-				measure.register();
-				measure.addListener(this);
-			}
 		}
 	}
 
@@ -171,8 +117,6 @@ public class DataSetConfig extends RepositoryObject {
 		super(datasetConfig);
 
 		this.datasets = cloneDataSets(datasetConfig.datasets);
-		this.configInputToStandard = cloneInputToStandardConfigs(datasetConfig.configInputToStandard);
-		this.configStandardToInput = cloneStandardToInputConfigs(datasetConfig.configStandardToInput);
 	}
 
 	/*
@@ -250,8 +194,6 @@ public class DataSetConfig extends RepositoryObject {
 					.getAbsolutePath());
 
 			List<DataSet> dataSets = new ArrayList<DataSet>();
-			List<ConversionInputToStandardConfiguration> inputToStandards = new ArrayList<ConversionInputToStandardConfiguration>();
-			List<ConversionStandardToInputConfiguration> standardToInputs = new ArrayList<ConversionStandardToInputConfiguration>();
 
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
@@ -307,18 +249,10 @@ public class DataSetConfig extends RepositoryObject {
 				} else
 					preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
 
-				ConversionInputToStandardConfiguration configInputToStandard = new ConversionInputToStandardConfiguration(
-						distanceMeasure, preprocessorBeforeDistance,
-						preprocessorAfterDistance);
-				ConversionStandardToInputConfiguration configStandardToInput = new ConversionStandardToInputConfiguration();
-
 				dataSets.add(dataSet);
-				inputToStandards.add(configInputToStandard);
-				standardToInputs.add(configStandardToInput);
 			}
 			DataSetConfig result = new DataSetConfig(repo,
-					absConfigPath.lastModified(), absConfigPath, dataSets,
-					inputToStandards, standardToInputs);
+					absConfigPath.lastModified(), absConfigPath, dataSets);
 			result = repo.getRegisteredObject(result);
 			return result;
 		} catch (ConfigurationException e) {
@@ -403,24 +337,6 @@ public class DataSetConfig extends RepositoryObject {
 						this.notify(newEvent);
 					}
 				}
-
-				// check whether the object was a dataset contained in this
-				// dataset config
-				for (int i = 0; i < configInputToStandard.size(); i++) {
-					ConversionInputToStandardConfiguration config = configInputToStandard
-							.get(i);
-					if (config.getDistanceMeasureAbsoluteToRelative().equals(
-							event.getRemovedObject())) {
-						event.getRemovedObject().removeListener(this);
-						this.log.info("DataSetConfig " + this
-								+ ": Removed, because DistanceMeasure "
-								+ event.getRemovedObject() + " was removed.");
-						RepositoryRemoveEvent newEvent = new RepositoryRemoveEvent(
-								this);
-						this.unregister();
-						this.notify(newEvent);
-					}
-				}
 			}
 		}
 	}
@@ -433,24 +349,6 @@ public class DataSetConfig extends RepositoryObject {
 	@Override
 	public String toString() {
 		return this.absPath.getName().replace(".dsconfig", "");
-	}
-
-	/**
-	 * @return The configuration for conversion from the original input format
-	 *         to the standard format.
-	 * @see #configInputToStandard
-	 */
-	public List<ConversionInputToStandardConfiguration> getConversionInputToStandardConfigurations() {
-		return this.configInputToStandard;
-	}
-
-	/**
-	 * @return The configuration for conversion from standard format to the
-	 *         input format of the clustering method.
-	 * @see #configStandardToInput
-	 */
-	public List<ConversionStandardToInputConfiguration> getConversionStandardToInputConfigurations() {
-		return this.configStandardToInput;
 	}
 
 	/**
