@@ -1,0 +1,232 @@
+gi9837270	1-aminocyclopropane-1-carboxylate deaminase:1.0
+gi16078516	adenine deaminase:1.0
+gi1518868	adenosine deaminase:1.0
+gi3892028	adenosine deaminase:1.0
+gi4557249	adenosine deaminase:1.0
+gi6680636	adenosine deaminase:1.0
+gi15802037	adenosine deaminase:1.0
+gi16129581	adenosine deaminase:1.0
+gi18426812	adenosine deaminase:1.0
+gi20141178	adenosine deaminase:1.0
+gi24113013	adenosine deaminase:1.0
+gi28373486	adenosine deaminase:1.0
+gi171366	allantoinase:1.0
+gi627281	allantoinase:1.0
+gi728827	allantoinase:1.0
+gi6322218	allantoinase:1.0
+gi12644702	ammelide aminohydrolase:1.0
+gi13022196	ammelide aminohydrolase:1.0
+gi171053	AMP deaminase:1.0
+gi178547	AMP deaminase:1.0
+gi399033	AMP deaminase:1.0
+gi608499	AMP deaminase:1.0
+gi644509	AMP deaminase:1.0
+gi995562	AMP deaminase:1.0
+gi2134756	AMP deaminase:1.0
+gi2494043	AMP deaminase:1.0
+gi2494044	AMP deaminase:1.0
+gi4502079	AMP deaminase:1.0
+gi4557311	AMP deaminase:1.0
+gi5922016	AMP deaminase:1.0
+gi5922018	AMP deaminase:1.0
+gi6323606	AMP deaminase:1.0
+gi6753048	AMP deaminase:1.0
+gi7484807	AMP deaminase:1.0
+gi7638159	AMP deaminase:1.0
+gi11359582	AMP deaminase:1.0
+gi13928736	AMP deaminase:1.0
+gi13938134	AMP deaminase:1.0
+gi16945394	AMP deaminase:1.0
+gi18404701	AMP deaminase:1.0
+gi18859679	AMP deaminase:1.0
+gi19111945	AMP deaminase:1.0
+gi20302047	AMP deaminase:1.0
+gi21264318	AMP deaminase:1.0
+gi21294189	AMP deaminase:1.0
+gi21311925	AMP deaminase:1.0
+gi348315	aryldialkylphosphatase:1.0
+gi6141557	aryldialkylphosphatase:1.0
+gi6226558	atrazine chlorohydrolase:1.0
+gi1246354	cytosine deaminase:1.0
+gi1657533	cytosine deaminase:1.0
+gi15595634	cytosine deaminase:1.0
+gi15602430	cytosine deaminase:1.0
+gi15800066	cytosine deaminase:1.0
+gi16120505	cytosine deaminase:1.0
+gi16128322	cytosine deaminase:1.0
+gi16762096	cytosine deaminase:1.0
+gi16766629	cytosine deaminase:1.0
+gi3122248	d-hydantoinase:1.0
+gi3122249	d-hydantoinase:1.0
+gi3334230	d-hydantoinase:1.0
+gi15595638	d-hydantoinase:1.0
+gi18478562	d-hydantoinase:1.0
+gi21362600	d-hydantoinase:1.0
+gi21730171	d-hydantoinase:1.0
+gi22988246	d-hydantoinase:1.0
+gi23062845	d-hydantoinase:1.0
+gi23200220	d-hydantoinase:1.0
+gi1346930	dihydroorotase1:1.0
+gi3122654	dihydroorotase1:1.0
+gi16078614	dihydroorotase1:1.0
+gi7331	dihydroorotase2:1.0
+gi8509	dihydroorotase2:1.0
+gi131696	dihydroorotase2:1.0
+gi191173	dihydroorotase2:1.0
+gi191364	dihydroorotase2:1.0
+gi279582	dihydroorotase2:1.0
+gi400909	dihydroorotase2:1.0
+gi2506025	dihydroorotase2:1.0
+gi3024509	dihydroorotase2:1.0
+gi3915831	dihydroorotase2:1.0
+gi17532699	dihydroorotase2:1.0
+gi21294381	dihydroorotase2:1.0
+gi22832393	dihydroorotase2:1.0
+gi279570	dihydroorotase3:1.0
+gi1651519	dihydroorotase3:1.0
+gi15801179	dihydroorotase3:1.0
+gi16129025	dihydroorotase3:1.0
+gi16760039	dihydroorotase3:1.0
+gi16764519	dihydroorotase3:1.0
+gi24112473	dihydroorotase3:1.0
+gi7531230	glucuronate isomerase:1.0
+gi887833	guanine deaminase:1.0
+gi4758426	guanine deaminase:1.0
+gi6330926	guanine deaminase:1.0
+gi6753960	guanine deaminase:1.0
+gi7533042	guanine deaminase:1.0
+gi11837778	guanine deaminase:1.0
+gi13929094	guanine deaminase:1.0
+gi15803420	guanine deaminase:1.0
+gi15833010	guanine deaminase:1.0
+gi16130785	guanine deaminase:1.0
+gi20270696	guanine deaminase:1.0
+gi3182927	hydroxydechloroatrazine ethylaminohydrolase:1.0
+gi16080988	imidazolonepropionase:1.0
+gi15804904	isoaspartyl dipeptidase:1.0
+gi16132149	isoaspartyl dipeptidase:1.0
+gi16763320	isoaspartyl dipeptidase:1.0
+gi16767756	isoaspartyl dipeptidase:1.0
+gi24115394	isoaspartyl dipeptidase:1.0
+gi3122243	l-hydantoinase:1.0
+gi9931313	l-hydantoinase:1.0
+gi22218649	l-hydantoinase:1.0
+gi11890745	melamine deaminase:1.0
+gi400237	membrane dipeptidase:1.0
+gi8895751	n-acetylgalactosamine-6-phosphate deacetylase:1.0
+gi15803675	n-acetylgalactosamine-6-phosphate deacetylase:1.0
+gi15833269	n-acetylgalactosamine-6-phosphate deacetylase:1.0
+gi15643577	n-acetylglucosamine-6-phosphate deacetylase:1.0
+gi3287876	n-acyl-d-amino-acid deacylase:1.0
+gi3287879	n-acyl-d-amino-acid deacylase:1.0
+gi13194736	n-acyl-d-amino-acid deacylase:1.0
+gi3287737	n-isopropylammelide isopropylaminohydrolase:1.0
+gi2098312	phosphotriesterase:1.0
+gi2392286	phosphotriesterase:1.0
+gi12084365	phosphotriesterase:1.0
+gi13786719	phosphotriesterase:1.0
+gi14719485	phosphotriesterase:1.0
+gi15212234	phosphotriesterase:1.0
+gi17977844	phosphotriesterase:1.0
+gi4033703	s-triazine hydrolase:1.0
+gi17432321	TrzN:1.0
+gi43635	urease:1.0
+gi137070	urease:1.0
+gi137071	urease:1.0
+gi137073	urease:1.0
+gi137074	urease:1.0
+gi167228	urease:1.0
+gi224797	urease:1.0
+gi225714	urease:1.0
+gi227457	urease:1.0
+gi421269	urease:1.0
+gi465008	urease:1.0
+gi586164	urease:1.0
+gi586167	urease:1.0
+gi731075	urease:1.0
+gi886331	urease:1.0
+gi914897	urease:1.0
+gi1073151	urease:1.0
+gi1174887	urease:1.0
+gi1174889	urease:1.0
+gi1174891	urease:1.0
+gi1718044	urease:1.0
+gi2340847	urease:1.0
+gi2501620	urease:1.0
+gi2501623	urease:1.0
+gi2507522	urease:1.0
+gi2624847	urease:1.0
+gi2708800	urease:1.0
+gi3659633	urease:1.0
+gi3688063	urease:1.0
+gi3915207	urease:1.0
+gi4249601	urease:1.0
+gi4545295	urease:1.0
+gi5913962	urease:1.0
+gi6633958	urease:1.0
+gi7245287	urease:1.0
+gi7245484	urease:1.0
+gi7272374	urease:1.0
+gi7320802	urease:1.0
+gi7839375	urease:1.0
+gi9967069	urease:1.0
+gi10336584	urease:1.0
+gi12313641	urease:1.0
+gi13357995	urease:1.0
+gi13474128	urease:1.0
+gi13605430	urease:1.0
+gi13959023	urease:1.0
+gi14192678	urease:1.0
+gi14278353	urease:1.0
+gi14579320	urease:1.0
+gi14599161	urease:1.0
+gi14599413	urease:1.0
+gi14599415	urease:1.0
+gi14599435	urease:1.0
+gi15220459	urease:1.0
+gi15600061	urease:1.0
+gi15608987	urease:1.0
+gi15611138	urease:1.0
+gi15612817	urease:1.0
+gi15800666	urease:1.0
+gi15807978	urease:1.0
+gi15889672	urease:1.0
+gi15925280	urease:1.0
+gi15966223	urease:1.0
+gi16080717	urease:1.0
+gi16122873	urease:1.0
+gi16272483	urease:1.0
+gi16329675	urease:1.0
+gi16974909	urease:1.0
+gi16974911	urease:1.0
+gi17231162	urease:1.0
+gi17402589	urease:1.0
+gi17546751	urease:1.0
+gi17986930	urease:1.0
+gi17987935	urease:1.0
+gi19070377	urease:1.0
+gi19310948	urease:1.0
+gi19338960	urease:1.0
+gi19856524	urease:1.0
+gi21219743	urease:1.0
+gi21637179	urease:1.0
+gi21637192	urease:1.0
+gi21637202	urease:1.0
+gi21637205	urease:1.0
+gi21637208	urease:1.0
+gi21637244	urease:1.0
+gi22125140	urease:1.0
+gi22297549	urease:1.0
+gi22831365	urease:1.0
+gi22976226	urease:1.0
+gi22988607	urease:1.0
+gi23000615	urease:1.0
+gi23020534	urease:1.0
+gi23027998	urease:1.0
+gi23039910	urease:1.0
+gi23058236	urease:1.0
+gi23101955	urease:1.0
+gi23126033	urease:1.0
+gi23136289	urease:1.0
+gi23501177	urease:1.0
+gi23502230	urease:1.0

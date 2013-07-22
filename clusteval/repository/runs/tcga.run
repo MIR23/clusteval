@@ -1,0 +1,26 @@
+programConfig = TransClust_2,MCL_norm,APcluster_1
+dataConfig = tcga
+qualityMeasures = SilhouetteValueRClusteringQualityMeasure,TransClustFClusteringQualityMeasure,TransClustF2ClusteringQualityMeasure,FDRClusteringQualityMeasure,FPRClusteringQualityMeasure,RandIndexClusteringQualityMeasure,SensitivityClusteringQualityMeasure,SpecificityClusteringQualityMeasure,DaviesBouldinIndexRClusteringQualityMeasure,DunnIndexRClusteringQualityMeasure,FowlkesMallowsIndexRClusteringQualityMeasure,JaccardIndexRClusteringQualityMeasure,RandIndexRClusteringQualityMeasure,VMeasureClusteringQualityMeasure
+mode = parameter_optimization
+optimizationMethod = LayeredDivisiveParameterOptimizationMethod
+optimizationCriterion = TransClustF2ClusteringQualityMeasure
+optimizationIterations = 1001
+
+[TransClust_2]
+optimizationParameters = T
+
+[MCL_norm]
+optimizationParameters = I
+
+[APcluster_1]
+optimizationParameters = preference,maxits,convits,dampfact
+optimizationMethod = APParameterOptimizationMethod
+
+[Hierarchical_Clustering]
+optimizationParameters = k
+
+[Spectral_Clustering]
+optimizationParameters = k
+
+[KMedoids_Clustering]
+optimizationParameters = k
