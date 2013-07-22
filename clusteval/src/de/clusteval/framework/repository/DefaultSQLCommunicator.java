@@ -656,7 +656,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected String getTableStatisticsData() {
-		return "statistics_datas";
+		return "statistics_data";
 	}
 
 	/*
@@ -676,7 +676,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected String getTableStatisticsRunData() {
-		return "statistics_run_datas";
+		return "statistics_run_data";
 	}
 
 	/*
