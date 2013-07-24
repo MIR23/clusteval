@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
@@ -19,7 +20,6 @@ import org.rosuda.REngine.Rserve.RserveException;
 import utils.StringExt;
 import de.clusteval.cluster.Clustering;
 import de.clusteval.data.DataConfig;
-import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.framework.MyRengine;
 import de.clusteval.framework.RLibraryNotLoadedException;
@@ -201,12 +201,12 @@ public abstract class RProgram extends Program {
 	 */
 	public abstract String getInvocationFormat();
 
-	/**
-	 * @return A set containing sets of dataset formats, which this r program
-	 *         can take as input.
-	 * @throws UnknownDataSetFormatException
-	 */
-	public abstract Set<Set<DataSetFormat>> getCompatibleDataSetFormats()
+//	/**
+//	 * @return A set containing sets of dataset formats, which this r program
+//	 *         can take as input.
+//	 * @throws UnknownDataSetFormatException
+//	 */
+	public abstract Pattern getCompatibleDataSetFormats()
 			throws UnknownDataSetFormatException;
 
 	/**

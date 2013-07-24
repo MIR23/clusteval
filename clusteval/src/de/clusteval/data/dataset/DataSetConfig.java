@@ -13,10 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
-import de.clusteval.data.distance.DistanceMeasure;
-import de.clusteval.data.distance.UnknownDistanceMeasureException;
-import de.clusteval.data.preprocessing.DataPreprocessor;
-import de.clusteval.data.preprocessing.UnknownDataPreprocessorException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -83,14 +79,6 @@ public class DataSetConfig extends RepositoryObject {
 	 *            The absolute path of this dataset configuration.
 	 * @param ds
 	 *            The encapsulated dataset.
-	 * @param configInputToStandard
-	 *            The configuration needed, when {@link #datasets} is converted
-	 *            from its original input format to the internal standard format
-	 *            of the framework.
-	 * @param configStandardToInput
-	 *            The configuration needed, when {@link #dataset} is converted
-	 *            from the internal standard format of the framework to the
-	 *            input format of a program.
 	 * @throws RegisterException
 	 */
 	public DataSetConfig(final Repository repository, final long changeDate,
@@ -161,23 +149,18 @@ public class DataSetConfig extends RepositoryObject {
 	 * @throws NoRepositoryFoundException
 	 * @throws DataSetNotFoundException
 	 * @throws DataSetConfigNotFoundException
-	 * @throws UnknownDistanceMeasureException
 	 * @throws RegisterException
 	 * @throws UnknownDataSetTypeException
 	 * @throws NumberFormatException
 	 * @throws NoDataSetException
 	 * @return The dataset configuration object.
-	 * @throws UnknownDataPreprocessorException
-	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 */
 	public static DataSetConfig parseFromFile(final File absConfigPath)
 			throws DataSetConfigurationException,
 			UnknownDataSetFormatException, NoRepositoryFoundException,
 			DataSetNotFoundException, DataSetConfigNotFoundException,
-			UnknownDistanceMeasureException, RegisterException,
-			UnknownDataSetTypeException, NumberFormatException,
-			NoDataSetException, UnknownDataPreprocessorException,
-			IncompatibleDataSetConfigPreprocessorException {
+			RegisterException, UnknownDataSetTypeException,
+			NumberFormatException, NoDataSetException {
 
 		if (!absConfigPath.exists())
 			throw new DataSetConfigNotFoundException("Dataset config \""
@@ -203,51 +186,9 @@ public class DataSetConfig extends RepositoryObject {
 				String datasetName = props.getString("datasetName");
 				String datasetFile = props.getString("datasetFile");
 
-				DistanceMeasure distanceMeasure;
-				if (props.containsKey("distanceMeasureAbsoluteToRelative")) {
-					distanceMeasure = DistanceMeasure
-							.parseFromString(
-									repo,
-									props.getString("distanceMeasureAbsoluteToRelative"));
-				} else
-					distanceMeasure = DistanceMeasure.parseFromString(repo,
-							"EuclidianDistanceMeasure");
-
 				DataSet dataSet = DataSet.parseFromFile(new File(FileUtils
 						.buildPath(repo.getDataSetBasePath(), datasetName,
 								datasetFile)));
-
-				// added 12.04.2013
-				List<DataPreprocessor> preprocessorBeforeDistance;
-				if (props.containsKey("preprocessorBeforeDistance")) {
-					preprocessorBeforeDistance = DataPreprocessor
-							.parseFromString(
-									repo,
-									props.getStringArray("preprocessorBeforeDistance"));
-
-					for (DataPreprocessor proc : preprocessorBeforeDistance) {
-						if (!proc.getCompatibleDataSetFormats().contains(
-								dataSet.getDataSetFormat().getClass()
-										.getSimpleName())) {
-							throw new IncompatibleDataSetConfigPreprocessorException(
-									"The data preprocessor "
-											+ proc.getClass().getSimpleName()
-											+ " cannot be applied to a dataset with format "
-											+ dataSet.getDataSetFormat()
-													.getClass().getSimpleName());
-						}
-					}
-				} else
-					preprocessorBeforeDistance = new ArrayList<DataPreprocessor>();
-
-				List<DataPreprocessor> preprocessorAfterDistance;
-				if (props.containsKey("preprocessorAfterDistance")) {
-					preprocessorAfterDistance = DataPreprocessor
-							.parseFromString(
-									repo,
-									props.getStringArray("preprocessorAfterDistance"));
-				} else
-					preprocessorAfterDistance = new ArrayList<DataPreprocessor>();
 
 				dataSets.add(dataSet);
 			}

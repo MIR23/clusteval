@@ -199,8 +199,6 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 * 
 	 * @param dataSet
 	 *            The dataset to convert to the standard format.
-	 * @param config
-	 *            The configuration to use to convert the passed dataset.
 	 * @return The converted dataset.
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
@@ -236,8 +234,6 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 *            The dataset to convert to the standard format.
 	 * @param dataSetFormat
 	 *            The dataset format to convert the dataset to.
-	 * @param config
-	 *            The configuration to use to convert the passed dataset.
 	 * @return The converted dataset.
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.

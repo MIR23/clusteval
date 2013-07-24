@@ -8,12 +8,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
@@ -215,7 +217,6 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @return True, if compatible, false otherwise.
 	 * @throws IOException
 	 * @throws RegisterException
-	 *             TODO: remove preprocess
 	 */
 	protected boolean preprocessAndCheckCompatibleDataSetFormat()
 			throws IOException, RegisterException {
@@ -231,11 +232,23 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			 * either they are directly compatible or the dataset can be
 			 * converted to another compatible DataSetFormat.
 			 */
-			List<Set<DataSetFormat>> compatibleDsFormatSets = programConfig
+			Pattern compatibleDsFormatSets = programConfig
 					.getCompatibleDataSetFormats();
 			boolean found = false;
-			// TODO: uncommented compatibility
-			// try to find a compatible format set we can use and convert
+			List<DataSet> dataSets = dataConfig.getDatasetConfig()
+					.getDataSets();
+			List<String> dataSetFormats = new ArrayList<String>();
+			for (DataSet ds : dataSets) {
+				dataSetFormats.add(ds.getDataSetFormat().getClass().getSimpleName());
+			}
+			Collections.sort(dataSetFormats);
+			StringBuilder sb = new StringBuilder();
+			for (String s : dataSetFormats)
+				sb.append(s);
+			found = compatibleDsFormatSets.matcher(sb.toString()).matches();
+
+			// // TODO: uncommented compatibility
+			// // try to find a compatible format set we can use and convert
 			// for (Set<DataSetFormat> compFormat : compatibleDsFormatSets) {
 			// try {
 			// DataSet ds = dataConfig

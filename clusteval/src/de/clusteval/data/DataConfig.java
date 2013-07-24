@@ -15,17 +15,14 @@ import de.clusteval.data.dataset.DataSetConfig;
 import de.clusteval.data.dataset.DataSetConfigNotFoundException;
 import de.clusteval.data.dataset.DataSetConfigurationException;
 import de.clusteval.data.dataset.DataSetNotFoundException;
-import de.clusteval.data.dataset.IncompatibleDataSetConfigPreprocessorException;
 import de.clusteval.data.dataset.NoDataSetException;
 import de.clusteval.data.dataset.RunResultDataSetConfig;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
-import de.clusteval.data.distance.UnknownDistanceMeasureException;
 import de.clusteval.data.goldstandard.GoldStandardConfig;
 import de.clusteval.data.goldstandard.GoldStandardConfigNotFoundException;
 import de.clusteval.data.goldstandard.GoldStandardConfigurationException;
 import de.clusteval.data.goldstandard.GoldStandardNotFoundException;
-import de.clusteval.data.preprocessing.UnknownDataPreprocessorException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -199,14 +196,11 @@ public class DataConfig extends RepositoryObject {
 	 * @throws GoldStandardConfigNotFoundException
 	 * @throws DataConfigurationException
 	 * @throws DataConfigNotFoundException
-	 * @throws UnknownDistanceMeasureException
 	 * @throws RegisterException
 	 * @throws UnknownDataSetTypeException
 	 * @throws NumberFormatException
 	 * @throws NoDataSetException
 	 * @return The data configuration object.
-	 * @throws UnknownDataPreprocessorException
-	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 */
 	public static DataConfig parseFromFile(final File absConfigPath)
 			throws UnknownDataSetFormatException, NoRepositoryFoundException,
@@ -214,11 +208,9 @@ public class DataConfig extends RepositoryObject {
 			DataSetConfigurationException, DataSetNotFoundException,
 			DataSetConfigNotFoundException,
 			GoldStandardConfigNotFoundException, DataConfigurationException,
-			DataConfigNotFoundException, UnknownDistanceMeasureException,
-			RegisterException, UnknownDataSetTypeException,
-			NumberFormatException, NoDataSetException,
-			UnknownDataPreprocessorException,
-			IncompatibleDataSetConfigPreprocessorException {
+			DataConfigNotFoundException, RegisterException,
+			UnknownDataSetTypeException, NumberFormatException,
+			NoDataSetException {
 
 		if (!absConfigPath.exists())
 			throw new DataConfigNotFoundException("Data config \""

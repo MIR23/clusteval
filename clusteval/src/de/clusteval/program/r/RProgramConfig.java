@@ -5,9 +5,8 @@ package de.clusteval.program.r;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
+import java.util.regex.Pattern;
 
-import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.program.Program;
@@ -56,8 +55,7 @@ public class RProgramConfig extends ProgramConfig {
 	 */
 	public RProgramConfig(Repository repository, final boolean register,
 			long changeDate, File absPath, Program program,
-			RunResultFormat outputFormat,
-			List<Set<DataSetFormat>> compatibleDataSetFormats,
+			RunResultFormat outputFormat, Pattern compatibleDataSetFormats,
 			List<ProgramParameter<?>> params,
 			List<ProgramParameter<?>> optimizableParameters)
 			throws RegisterException {

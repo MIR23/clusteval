@@ -53,6 +53,9 @@ public class DataSetFormatFinder extends JARFinder<DataSetFormat> {
 	@Override
 	protected void removeOldObject(Class<? extends DataSetFormat> object) {
 		repository.unregisterDataSetFormatClass(object);
+		// unregister dataset format parser
+		repository.unregisterDataSetFormatParserClass(repository
+				.getDataSetFormatParser(object.getName()));
 	}
 
 	/*
@@ -211,44 +214,71 @@ class DataSetFormatURLClassLoader extends URLClassLoader {
 				@SuppressWarnings("unchecked")
 				Class<? extends DataSetFormatParser> dataSetFormatParser = (Class<? extends DataSetFormatParser>) result;
 
-				// the class needs to have a version annotation
-				if (!result.isAnnotationPresent(FormatVersion.class)) {
-					ClassNotFoundException ex = new ClassNotFoundException(
-							"The dataset format parser class "
-									+ result.getSimpleName()
-									+ " is missing the version information");
-					throw ex;
-				}
-
-				// get the annotation
-				FormatVersion anno = result.getAnnotation(FormatVersion.class);
-
-				// and the version of the parser needs to correspond to the
-				// newest version of the format
-				int formatVersion;
-				try {
-					formatVersion = this.parent.getRepository()
-							.getCurrentDataSetFormatVersion(
-									dataSetFormatParser.getSimpleName()
-											.replace("Parser", ""));
-
-					if (formatVersion > anno.version())
-						throw new ClassNotFoundException(
-								"The dataset format parser class "
-										+ result.getSimpleName()
-										+ " is outdated (was version "
-										+ anno.version() + " but required is "
-										+ formatVersion + ")");
-				} catch (UnknownDataSetFormatException e) {
-				}
-
 				if (this.parent.getRepository().registerDataSetFormatParser(
-						dataSetFormatParser))
+						dataSetFormatParser)) {
+					parseClassAnnotations(dataSetFormatParser);
+
 					this.parent.getLog().info(
 							"DataSetFormatParser " + name + " loaded");
-
+				}
 			}
 		}
 		return result;
+	}
+
+	public void parseClassAnnotations(
+			Class<? extends DataSetFormatParser> dataSetFormatParser)
+			throws ClassNotFoundException {
+
+		// the class needs to have a version annotation
+		if (!dataSetFormatParser.isAnnotationPresent(FormatVersion.class)) {
+			ClassNotFoundException ex = new ClassNotFoundException(
+					"The dataset format parser class "
+							+ dataSetFormatParser.getSimpleName()
+							+ " is missing the version information");
+			throw ex;
+		}
+
+		// get the annotation
+		FormatVersion anno = dataSetFormatParser
+				.getAnnotation(FormatVersion.class);
+
+		// and the version of the parser needs to correspond to the
+		// newest version of the format
+		int formatVersion;
+		try {
+			formatVersion = this.parent.getRepository()
+					.getCurrentDataSetFormatVersion(
+							dataSetFormatParser.getSimpleName().replace(
+									"Parser", ""));
+
+			if (formatVersion > anno.version())
+				throw new ClassNotFoundException(
+						"The dataset format parser class "
+								+ dataSetFormatParser.getSimpleName()
+								+ " is outdated (was version " + anno.version()
+								+ " but required is " + formatVersion + ")");
+		} catch (UnknownDataSetFormatException e) {
+		}
+
+		// the class needs to have a conversion annotation
+		if (!dataSetFormatParser.isAnnotationPresent(ParserConversions.class)) {
+			ClassNotFoundException ex = new ClassNotFoundException(
+					"The dataset format parser class "
+							+ dataSetFormatParser.getSimpleName()
+							+ " is missing the conversion information");
+			throw ex;
+		}
+
+		// get the conversion annotation
+		ParserConversions anno2 = dataSetFormatParser
+				.getAnnotation(ParserConversions.class);
+		for (StringMapping map : anno2.conversions()) {
+			final String originalFormat = map.key();
+			final String targetFormat = map.value();
+			this.parent.getRepository().addAvailableFormatConversion(
+					originalFormat, targetFormat,
+					dataSetFormatParser.getSimpleName());
+		}
 	}
 }

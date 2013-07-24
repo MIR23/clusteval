@@ -43,6 +43,8 @@ import de.clusteval.data.dataset.DataSetFinderThread;
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.DataSetFormatFinderThread;
 import de.clusteval.data.dataset.format.DataSetFormatParser;
+import de.clusteval.data.dataset.format.ParserConversions;
+import de.clusteval.data.dataset.format.StringMapping;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.generator.DataSetGenerator;
 import de.clusteval.data.dataset.generator.DataSetGeneratorFinderThread;
@@ -116,6 +118,8 @@ import de.clusteval.utils.NamedStringAttribute;
 import de.clusteval.utils.Statistic;
 import de.clusteval.utils.StatisticCalculator;
 import de.clusteval.utils.UnsatisfiedRLibraryException;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import file.FileUtils;
 
 /**
@@ -586,6 +590,8 @@ public class Repository {
 	 * repository. Mapping from Class.getName() to the class.
 	 */
 	protected Map<String, Class<? extends DataSetFormat>> dataSetFormatClasses;
+
+	protected DirectedSparseMultigraph<String, String> dataSetFormatConversions;
 
 	/**
 	 * A map containing all classes of dataset generators registered in this
@@ -1288,23 +1294,23 @@ public class Repository {
 			final DataConfig dataConfig, final ProgramConfig programConfig) {
 		// TODO
 		return old;
-//		String result = old.replaceAll("\\$\\(minSimilarity\\)", "\\$\\("
-//				+ dataConfig.getDatasetConfig().getDataSet()
-//						.getOriginalDataSet().getAbsolutePath()
-//				+ ":minSimilarity\\)");
-//		result = result.replaceAll("\\$\\(maxSimilarity\\)", "\\$\\("
-//				+ dataConfig.getDatasetConfig().getDataSet()
-//						.getOriginalDataSet().getAbsolutePath()
-//				+ ":maxSimilarity\\)");
-//		result = result.replaceAll("\\$\\(meanSimilarity\\)", "\\$\\("
-//				+ dataConfig.getDatasetConfig().getDataSet()
-//						.getOriginalDataSet().getAbsolutePath()
-//				+ ":meanSimilarity\\)");
-//		result = result.replaceAll("\\$\\(numberOfElements\\)", "\\$\\("
-//				+ dataConfig.getDatasetConfig().getDataSet()
-//						.getOriginalDataSet().getAbsolutePath()
-//				+ ":numberOfElements\\)");
-//		return result;
+		// String result = old.replaceAll("\\$\\(minSimilarity\\)", "\\$\\("
+		// + dataConfig.getDatasetConfig().getDataSet()
+		// .getOriginalDataSet().getAbsolutePath()
+		// + ":minSimilarity\\)");
+		// result = result.replaceAll("\\$\\(maxSimilarity\\)", "\\$\\("
+		// + dataConfig.getDatasetConfig().getDataSet()
+		// .getOriginalDataSet().getAbsolutePath()
+		// + ":maxSimilarity\\)");
+		// result = result.replaceAll("\\$\\(meanSimilarity\\)", "\\$\\("
+		// + dataConfig.getDatasetConfig().getDataSet()
+		// .getOriginalDataSet().getAbsolutePath()
+		// + ":meanSimilarity\\)");
+		// result = result.replaceAll("\\$\\(numberOfElements\\)", "\\$\\("
+		// + dataConfig.getDatasetConfig().getDataSet()
+		// .getOriginalDataSet().getAbsolutePath()
+		// + ":numberOfElements\\)");
+		// return result;
 	}
 
 	@Override
@@ -3265,6 +3271,8 @@ public class Repository {
 		this.finderClassLoaders = new ConcurrentHashMap<URL, URLClassLoader>();
 		this.finderWaitingFiles = new ConcurrentHashMap<File, List<File>>();
 		this.finderLoadedJarFileChangeDates = new ConcurrentHashMap<String, Long>();
+
+		this.dataSetFormatConversions = new DirectedSparseMultigraph<String, String>();
 	}
 
 	/**
@@ -5222,7 +5230,43 @@ public class Repository {
 			final Class<? extends DataSetFormatParser> dsFormatParser) {
 		this.dataSetFormatParser.put(
 				dsFormatParser.getName().replace("Parser", ""), dsFormatParser);
+
 		return true;
+	}
+
+	/**
+	 * @param originalFormat
+	 *            The simple name of the source format.
+	 * @param targetFormat
+	 *            The simple name of the target format.
+	 * @param parserSimpleClassName
+	 *            The simple name of the parser class providing the conversion.
+	 * @return True, if the conversion was inserted and new, false otherwise.
+	 */
+	public boolean addAvailableFormatConversion(final String originalFormat,
+			final String targetFormat, final String parserSimpleClassName) {
+		if (!this.dataSetFormatConversions.containsVertex(originalFormat))
+			this.dataSetFormatConversions.addVertex(originalFormat);
+		if (!this.dataSetFormatConversions.containsVertex(targetFormat))
+			this.dataSetFormatConversions.addVertex(targetFormat);
+		return this.dataSetFormatConversions.addEdge(originalFormat + "_"
+				+ targetFormat + "_" + parserSimpleClassName, originalFormat,
+				targetFormat, EdgeType.DIRECTED);
+	}
+
+	/**
+	 * @param originalFormat
+	 *            The simple name of the source format.
+	 * @param targetFormat
+	 *            The simple name of the target format.
+	 * @param parserSimpleClassName
+	 *            The simple name of the parser class providing the conversion.
+	 * @return True, if the conversion was inserted and new, false otherwise.
+	 */
+	public boolean removeAvailableFormatConversion(final String originalFormat,
+			final String targetFormat, final String parserSimpleClassName) {
+		return this.dataSetFormatConversions.removeEdge(originalFormat + "_"
+				+ targetFormat + "_" + parserSimpleClassName);
 	}
 
 	/**
@@ -6322,6 +6366,38 @@ public class Repository {
 			}
 
 			this.sqlCommunicator.unregisterDataSetFormatClass(object);
+		}
+		return result;
+	}
+
+	/**
+	 * This method unregisters the passed object.
+	 * 
+	 * <p>
+	 * If the object has been registered before and was unregistered now, this
+	 * method tells the sql communicator such that he can also handle the
+	 * removal of the object.
+	 * 
+	 * @param object
+	 *            The object to be removed.
+	 * @return True, if the object was remved successfully
+	 */
+	public boolean unregisterDataSetFormatParserClass(
+			final Class<? extends DataSetFormatParser> object) {
+		boolean result = this.dataSetFormatParser.remove(object.getName()
+				.replace("Parser", "")) != null;
+		if (result) {
+			// remove parser conversions
+			ParserConversions anno2 = object
+					.getAnnotation(ParserConversions.class);
+			for (StringMapping map : anno2.conversions()) {
+				final String originalFormat = map.key();
+				final String targetFormat = map.value();
+				this.removeAvailableFormatConversion(originalFormat,
+						targetFormat, object.getSimpleName());
+			}
+
+			this.info("DataSetFormatParser removed: " + object.getSimpleName());
 		}
 		return result;
 	}

@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import de.clusteval.cluster.paramOptimization.InvalidOptimizationParameterException;
 import de.clusteval.context.Context;
 import de.clusteval.context.UnknownContextException;
-import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
@@ -118,11 +117,7 @@ public class ProgramConfig extends RepositoryObject {
 	 */
 	protected String invocationFormatParameterOptimizationWithoutGoldStandard;
 
-	/**
-	 * This list holds all sets of dataset formats that are compatible with the
-	 * encapsulated program, i.e. input formats this program is able to read.
-	 */
-	protected List<Set<DataSetFormat>> compatibleDataSetFormats;
+	protected Pattern compatibleDataSetFormats;
 
 	/**
 	 * The output format of the program
@@ -187,7 +182,7 @@ public class ProgramConfig extends RepositoryObject {
 			final File absPath,
 			final Program program,
 			final RunResultFormat outputFormat,
-			final List<Set<DataSetFormat>> compatibleDataSetFormats,
+			final Pattern compatibleDataSetFormats,
 			final String invocationFormat,
 			final String invocationFormatWithoutGoldStandard,
 			final String invocationFormatParameterOptimization,
@@ -213,12 +208,13 @@ public class ProgramConfig extends RepositoryObject {
 			this.program.register();
 			this.program.addListener(this);
 
-			for (Set<DataSetFormat> set : this.compatibleDataSetFormats) {
-				for (DataSetFormat dsFormat : set) {
-					dsFormat.register();
-					dsFormat.addListener(this);
-				}
-			}
+			// TODO
+			// for (Set<DataSetFormat> set : this.compatibleDataSetFormats) {
+			// for (DataSetFormat dsFormat : set) {
+			// dsFormat.register();
+			// dsFormat.addListener(this);
+			// }
+			// }
 
 			outputFormat.register();
 			outputFormat.addListener(this);
@@ -237,8 +233,9 @@ public class ProgramConfig extends RepositoryObject {
 
 		this.program = programConfig.program.clone();
 		this.outputFormat = programConfig.outputFormat.clone();
-		this.compatibleDataSetFormats = DataSetFormat
-				.cloneDataSetFormats(programConfig.compatibleDataSetFormats);
+		// this.compatibleDataSetFormats = DataSetFormat
+		// .cloneDataSetFormats(programConfig.compatibleDataSetFormats);
+		this.compatibleDataSetFormats = programConfig.compatibleDataSetFormats;
 
 		this.invocationFormat = programConfig.invocationFormat;
 		this.invocationFormatWithoutGoldStandard = programConfig.invocationFormatWithoutGoldStandard;
@@ -366,7 +363,7 @@ public class ProgramConfig extends RepositoryObject {
 		String compatibleDataSetFormatsStr;
 
 		RunResultFormat runresultFormat;
-		List<Set<DataSetFormat>> compatibleDataSetFormats;
+		Pattern compatibleDataSetFormats;
 		if (type.equals("standalone")) {
 			String program = FileUtils.buildPath(repo.getProgramBasePath(),
 					props.getString("program"));
@@ -384,11 +381,17 @@ public class ProgramConfig extends RepositoryObject {
 			compatibleDataSetFormatsStr = props
 					.getString("compatibleDataSetFormats");
 
-			compatibleDataSetFormats = new ArrayList<Set<DataSetFormat>>();
-			for (String set : compatibleDataSetFormatsStr.split(";")) {
-				compatibleDataSetFormats.add(new HashSet<DataSetFormat>(Arrays
-						.asList(DataSetFormat.parseFromString(repo, set))));
+			StringBuilder patternBuilder = new StringBuilder();
+			for (String set : compatibleDataSetFormatsStr.split("\\|")) {
+				String[] subset = set.split("\\&");
+				Arrays.sort(subset);
+				for (String set2 : subset)
+					patternBuilder.append(set2);
+				patternBuilder.append("|");
 			}
+			patternBuilder.deleteCharAt(patternBuilder.length() - 1);
+			compatibleDataSetFormats = Pattern.compile(patternBuilder
+					.toString());
 
 			runresultFormat = RunResultFormat.parseFromString(repo,
 					outputFormat);
@@ -402,8 +405,7 @@ public class ProgramConfig extends RepositoryObject {
 
 			RProgram rProgram = (RProgram) programP;
 
-			compatibleDataSetFormats = new ArrayList<Set<DataSetFormat>>(
-					rProgram.getCompatibleDataSetFormats());
+			compatibleDataSetFormats = rProgram.getCompatibleDataSetFormats();
 
 			runresultFormat = rProgram.getRunResultFormat();
 		} else {
@@ -636,7 +638,7 @@ public class ProgramConfig extends RepositoryObject {
 	 * @return The compatible dataset input formats of the encapsulated program.
 	 * @see #compatibleDataSetFormats
 	 */
-	public List<Set<DataSetFormat>> getCompatibleDataSetFormats() {
+	public Pattern getCompatibleDataSetFormats() {
 		return compatibleDataSetFormats;
 	}
 
@@ -709,18 +711,20 @@ public class ProgramConfig extends RepositoryObject {
 							this);
 					this.unregister();
 					this.notify(newEvent);
-				}
-				// a dataset format class changed
-				else if (this.compatibleDataSetFormats.contains(event
-						.getRemovedObject())) {
-					event.getRemovedObject().removeListener(this);
-					this.log.info("ProgramConfig " + this
-							+ ": Removed, because DataSetFormat "
-							+ event.getRemovedObject() + " has changed.");
-					RepositoryRemoveEvent newEvent = new RepositoryRemoveEvent(
-							this);
-					this.unregister();
-					this.notify(newEvent);
+					// }
+					// a dataset format class changed
+					// TODO
+					// else if (this.compatibleDataSetFormats.contains(event
+					// .getRemovedObject())) {
+					// event.getRemovedObject().removeListener(this);
+					// this.log.info("ProgramConfig " + this
+					// + ": Removed, because DataSetFormat "
+					// + event.getRemovedObject() + " has changed.");
+					// RepositoryRemoveEvent newEvent = new
+					// RepositoryRemoveEvent(
+					// this);
+					// this.unregister();
+					// this.notify(newEvent);
 				} // the runresult format class changed
 				else if (this.outputFormat.equals(event.getRemovedObject())) {
 					event.getRemovedObject().removeListener(this);
