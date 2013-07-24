@@ -118,6 +118,7 @@ import de.clusteval.utils.NamedStringAttribute;
 import de.clusteval.utils.Statistic;
 import de.clusteval.utils.StatisticCalculator;
 import de.clusteval.utils.UnsatisfiedRLibraryException;
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import file.FileUtils;
@@ -5267,6 +5268,25 @@ public class Repository {
 			final String targetFormat, final String parserSimpleClassName) {
 		return this.dataSetFormatConversions.removeEdge(originalFormat + "_"
 				+ targetFormat + "_" + parserSimpleClassName);
+	}
+
+	/**
+	 * @param targetFormat
+	 *            The simple name of the target format.
+	 * @return A set of
+	 */
+	public Map<String, List<String>> getAvailableFormatConversionsTo(
+			final String targetFormat) {
+		Map<String, List<String>> pathsToTarget = new HashMap<String, List<String>>();
+
+		DijkstraShortestPath<String, String> shortestPath = new DijkstraShortestPath<String, String>(
+				this.dataSetFormatConversions);
+		Map<String, Number> m = shortestPath.getDistanceMap(targetFormat);
+		for (String source : m.keySet())
+			pathsToTarget.put(source,
+					shortestPath.getPath(source, targetFormat));
+
+		return pathsToTarget;
 	}
 
 	/**

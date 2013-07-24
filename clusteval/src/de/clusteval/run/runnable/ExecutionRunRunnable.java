@@ -232,63 +232,15 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			 * either they are directly compatible or the dataset can be
 			 * converted to another compatible DataSetFormat.
 			 */
-			Pattern compatibleDsFormatSets = programConfig
-					.getCompatibleDataSetFormats();
-			boolean found = false;
 			List<DataSet> dataSets = dataConfig.getDatasetConfig()
 					.getDataSets();
 			List<String> dataSetFormats = new ArrayList<String>();
 			for (DataSet ds : dataSets) {
-				dataSetFormats.add(ds.getDataSetFormat().getClass().getSimpleName());
+				dataSetFormats.add(ds.getDataSetFormat().getClass()
+						.getSimpleName());
 			}
-			Collections.sort(dataSetFormats);
-			StringBuilder sb = new StringBuilder();
-			for (String s : dataSetFormats)
-				sb.append(s);
-			found = compatibleDsFormatSets.matcher(sb.toString()).matches();
-
-			// // TODO: uncommented compatibility
-			// // try to find a compatible format set we can use and convert
-			// for (Set<DataSetFormat> compFormat : compatibleDsFormatSets) {
-			// try {
-			// DataSet ds = dataConfig
-			// .getDatasetConfig()
-			// .getDataSet()
-			// .preprocessAndConvertTo(this.run.getContext(),
-			// compFormat, configInputToStandard,
-			// configStandardToInput);
-			//
-			// // added 23.01.2013: rename the new dataset, unique for the
-			// // program configuration
-			// int indexOfLastExt = ds.getAbsolutePath().lastIndexOf(".");
-			// if (indexOfLastExt == -1)
-			// indexOfLastExt = ds.getAbsolutePath().length();
-			// String newFileName = ds.getAbsolutePath().substring(0,
-			// indexOfLastExt)
-			// + "_"
-			// + programConfig.getName()
-			// + ds.getAbsolutePath().substring(indexOfLastExt);
-			// // if the new dataset file is the same file as the old one,
-			// // we copy it instead of moving
-			// if (ds.getAbsolutePath().equals(
-			// dataConfig.getDatasetConfig().getDataSet()
-			// .getAbsolutePath())) {
-			// ds.copyTo(new File(newFileName), false, true);
-			// } else
-			// ds.move(new File(newFileName), false);
-			//
-			// dataConfig.getDatasetConfig().setDataSet(ds);
-			// // found a convertable compatible format
-			// found = true;
-			// break;
-			// } catch (FormatConversionException e) {
-			// } catch (InvalidDataSetFormatVersionException e) {
-			// e.printStackTrace();
-			// } catch (RNotAvailableException e) {
-			// e.printStackTrace();
-			// }
-			// }
-			return found;
+			return programConfig
+					.checkCompatibilityToDataSetFormats(dataSetFormats);
 		}
 	}
 

@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
@@ -117,7 +117,7 @@ public class ProgramConfig extends RepositoryObject {
 	 */
 	protected String invocationFormatParameterOptimizationWithoutGoldStandard;
 
-	protected Pattern compatibleDataSetFormats;
+	protected List<String> compatibleDataSetFormats;
 
 	/**
 	 * The output format of the program
@@ -182,7 +182,7 @@ public class ProgramConfig extends RepositoryObject {
 			final File absPath,
 			final Program program,
 			final RunResultFormat outputFormat,
-			final Pattern compatibleDataSetFormats,
+			final List<String> compatibleDataSetFormats,
 			final String invocationFormat,
 			final String invocationFormatWithoutGoldStandard,
 			final String invocationFormatParameterOptimization,
@@ -360,10 +360,9 @@ public class ProgramConfig extends RepositoryObject {
 		long changeDate;
 		Program programP = null;
 		// initialize compatible dataset formats
-		String compatibleDataSetFormatsStr;
 
 		RunResultFormat runresultFormat;
-		Pattern compatibleDataSetFormats;
+		List<String> compatibleDataSetFormats;
 		if (type.equals("standalone")) {
 			String program = FileUtils.buildPath(repo.getProgramBasePath(),
 					props.getString("program"));
@@ -378,20 +377,8 @@ public class ProgramConfig extends RepositoryObject {
 
 			String outputFormat = props.getString("outputFormat");
 
-			compatibleDataSetFormatsStr = props
-					.getString("compatibleDataSetFormats");
-
-			StringBuilder patternBuilder = new StringBuilder();
-			for (String set : compatibleDataSetFormatsStr.split("\\|")) {
-				String[] subset = set.split("\\&");
-				Arrays.sort(subset);
-				for (String set2 : subset)
-					patternBuilder.append(set2);
-				patternBuilder.append("|");
-			}
-			patternBuilder.deleteCharAt(patternBuilder.length() - 1);
-			compatibleDataSetFormats = Pattern.compile(patternBuilder
-					.toString());
+			compatibleDataSetFormats = Arrays.asList(props.getString(
+					"compatibleDataSetFormats").split("\\|"));
 
 			runresultFormat = RunResultFormat.parseFromString(repo,
 					outputFormat);
@@ -599,6 +586,67 @@ public class ProgramConfig extends RepositoryObject {
 
 	/**
 	 * 
+	 * @return True, if the provided input formats are compatibly with this
+	 *         program configuration.
+	 * @see #compatibleDataSetFormats
+	 */
+	public boolean checkCompatibilityToDataSetFormats(
+			final List<String> inputFormats) {
+
+		Set<Map<String, String>> possibleMappings = new HashSet<Map<String, String>>();
+
+		// we iterate over all possible sets of input formats this program
+		// configuration supports
+		for (String requiredFormatsStr : this.compatibleDataSetFormats) {
+			// optional input formats will end with '?'
+			List<String> requiredFormats = Arrays.asList(requiredFormatsStr
+					.split("\\&"));
+			List<String> optionalFormats = new ArrayList<String>();
+			for (String f : requiredFormats)
+				if (f.endsWith("?")) {
+					optionalFormats.add(f.replace("?", ""));
+				}
+			for (String f : optionalFormats) {
+				requiredFormats.remove(f + "?");
+				requiredFormats.add(f);
+			}
+
+			// build up a mapping from provided input formats to required input
+			// formats
+			Map<String, String> mapping = new HashMap<String, String>();
+
+			// for every required format we check, which formats can be
+			// converted to it
+			boolean stillValid = true;
+			for (String requiredFormat : requiredFormats) {
+				Map<String, List<String>> pathsToRequiredFormat = this.repository
+						.getAvailableFormatConversionsTo(requiredFormat);
+
+				// check whether we have got any of these inputs
+				Set<String> compatibleSourceFormats = new HashSet<String>(
+						pathsToRequiredFormat.keySet());
+				compatibleSourceFormats.retainAll(inputFormats);
+
+				// if there is no compatible source formats for this format we
+				// check whether it is optional
+				if (compatibleSourceFormats.isEmpty()
+						&& !optionalFormats.contains(requiredFormat)) {
+					stillValid = false;
+					break;
+				}
+				// TODO: greedy, just take the first one
+				mapping.put(compatibleSourceFormats.toArray(new String[0])[0],
+						requiredFormat);
+			}
+			if (stillValid)
+				possibleMappings.add(mapping);
+		}
+
+		return false;
+	}
+
+	/**
+	 * 
 	 * @return The list of optimizable parameters of the encapsulated program.
 	 * @see #optimizableParameters
 	 */
@@ -631,15 +679,6 @@ public class ProgramConfig extends RepositoryObject {
 	 */
 	public Program getProgram() {
 		return program;
-	}
-
-	/**
-	 * 
-	 * @return The compatible dataset input formats of the encapsulated program.
-	 * @see #compatibleDataSetFormats
-	 */
-	public Pattern getCompatibleDataSetFormats() {
-		return compatibleDataSetFormats;
 	}
 
 	/**

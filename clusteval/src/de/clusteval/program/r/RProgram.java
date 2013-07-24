@@ -9,9 +9,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
@@ -201,12 +201,12 @@ public abstract class RProgram extends Program {
 	 */
 	public abstract String getInvocationFormat();
 
-//	/**
-//	 * @return A set containing sets of dataset formats, which this r program
-//	 *         can take as input.
-//	 * @throws UnknownDataSetFormatException
-//	 */
-	public abstract Pattern getCompatibleDataSetFormats()
+	// /**
+	// * @return A set containing sets of dataset formats, which this r program
+	// * can take as input.
+	// * @throws UnknownDataSetFormatException
+	// */
+	public abstract List<String> getCompatibleDataSetFormats()
 			throws UnknownDataSetFormatException;
 
 	/**
