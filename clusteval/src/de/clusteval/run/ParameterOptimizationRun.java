@@ -33,8 +33,6 @@ import de.clusteval.data.dataset.DataSetConfigurationException;
 import de.clusteval.data.dataset.DataSetNotFoundException;
 import de.clusteval.data.dataset.IncompatibleDataSetConfigPreprocessorException;
 import de.clusteval.data.dataset.NoDataSetException;
-import de.clusteval.data.dataset.format.AbsoluteDataSetFormat;
-import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
 import de.clusteval.data.distance.UnknownDistanceMeasureException;

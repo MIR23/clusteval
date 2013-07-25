@@ -10,11 +10,9 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 import de.clusteval.context.Context;
-import de.clusteval.data.dataset.format.AbsoluteDataSetFormat;
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.DataSetFormatParser;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
-import de.clusteval.data.dataset.format.RelativeDataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.DataSetType;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
@@ -48,7 +46,7 @@ import de.clusteval.utils.RNotAvailableException;
  * @author Christian Wiwie
  * 
  */
-public abstract class DataSet extends RepositoryObject {
+public class DataSet extends RepositoryObject {
 
 	/**
 	 * Every data set needs an alias, that is used to represent the data set as
@@ -195,7 +193,14 @@ public abstract class DataSet extends RepositoryObject {
 	}
 
 	@Override
-	public abstract DataSet clone();
+	public DataSet clone() {
+		try {
+			return new DataSet(this);
+		} catch (RegisterException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * This method parses a dataset from a raw data file. First the method
@@ -308,16 +313,8 @@ public abstract class DataSet extends RepositoryObject {
 			LoggerFactory.getLogger(DataSet.class).debug(
 					"Parsing dataset \"" + absPath + "\"");
 
-			/*
-			 * Either the format is absolute or relative
-			 */
-			if (RelativeDataSetFormat.class.isAssignableFrom(dsFormat
-					.getClass()))
-				result = new RelativeDataSet(repo, true, changeDate, absPath,
-						alias, (RelativeDataSetFormat) dsFormat, dsType);
-			else
-				result = new AbsoluteDataSet(repo, true, changeDate, absPath,
-						alias, (AbsoluteDataSetFormat) dsFormat, dsType);
+			result = new DataSet(repo, true, changeDate, absPath, alias,
+					(DataSetFormat) dsFormat, dsType);
 			result = repo.getRegisteredObject(result);
 			LoggerFactory.getLogger(DataSet.class).debug("Dataset parsed");
 			return result;
@@ -472,17 +469,17 @@ public abstract class DataSet extends RepositoryObject {
 	 * 
 	 * @return true, if is in memory
 	 */
-	public abstract boolean isInMemory();
+	public boolean isInMemory() {
+		// TODO
+		return false;
+	}
 
 	/**
 	 * Load this dataset into memory. When this method is invoked, it parses the
 	 * dataset file on the filesystem using the
 	 * {@link DataSetFormatParser#parse(DataSet)} method corresponding to the
 	 * dataset format of this dataset. Then the contents of the dataset is
-	 * stored in a member variable. Depending on whether this dataset is
-	 * relative or absolute, this member variable varies: For absolute datasets
-	 * the data is stored in {@link AbsoluteDataSet#dataMatrix}, for relative
-	 * datasets in {@link RelativeDataSet#similarities}
+	 * stored in a member variable.
 	 * 
 	 * @return true, if successful
 	 * @throws UnknownDataSetFormatException
@@ -490,9 +487,12 @@ public abstract class DataSet extends RepositoryObject {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public abstract boolean loadIntoMemory()
-			throws UnknownDataSetFormatException, IllegalArgumentException,
-			IOException, InvalidDataSetFormatVersionException;
+	public boolean loadIntoMemory() throws UnknownDataSetFormatException,
+			IllegalArgumentException, IOException,
+			InvalidDataSetFormatVersionException {
+		// TODO
+		return false;
+	}
 
 	/**
 	 * This method writes the contents of this dataset to the file denoted by
@@ -515,7 +515,10 @@ public abstract class DataSet extends RepositoryObject {
 	 * 
 	 * @return The content of this dataset.
 	 */
-	public abstract Object getDataSetContent();
+	public Object getDataSetContent() {
+		// TODO
+		return null;
+	}
 
 	/**
 	 * This method sets the content of this dataset in memory to a new object.
@@ -526,14 +529,20 @@ public abstract class DataSet extends RepositoryObject {
 	 * @return True, if the content of this dataset has been updated to the new
 	 *         object.
 	 */
-	public abstract boolean setDataSetContent(Object newContent);
+	public boolean setDataSetContent(Object newContent) {
+		// TODO
+		return false;
+	}
 
 	/**
 	 * Unload the contents of this dataset from memory.
 	 * 
 	 * @return true, if successful
 	 */
-	public abstract boolean unloadFromMemory();
+	public boolean unloadFromMemory() {
+		// TODO
+		return false;
+	}
 
 	/**
 	 * This method converts this dataset to a target format:
@@ -564,14 +573,6 @@ public abstract class DataSet extends RepositoryObject {
 		synchronized (sourceFile) {
 			DataSet result = null;
 			DataSetFormat sourceFormat = this.getDataSetFormat();
-
-			// check if we can convert from source to target format
-			// right now no conversion from relative to absolute possible
-			if (sourceFormat instanceof RelativeDataSetFormat
-					&& targetFormat instanceof AbsoluteDataSetFormat) {
-				throw new FormatConversionException(
-						"No conversion from relative to absolute dataset format possible.");
-			}
 
 			// check, whether dataset format parsers are registered.
 			if ((!sourceFormat.equals(context.getStandardInputFormat()) && !this
@@ -668,17 +669,7 @@ public abstract class DataSet extends RepositoryObject {
 		// if the target format is an absolute format, then the conversion is
 		// only possible, if the original data set was an absolute data set.
 		// Then we return the original data set.
-		else if (this.getDataSetFormat() instanceof RelativeDataSetFormat
-				&& targetFormat instanceof AbsoluteDataSetFormat) {
-			if (this.getOriginalDataSet().getDataSetFormat() instanceof AbsoluteDataSetFormat) {
-				this.originalDataSet.copyTo(
-						new File(this.originalDataSet.getAbsolutePath()
-								+ ".conv"), false, true);
-				result = this.originalDataSet;
-			} else
-				throw new FormatConversionException(
-						"No conversion from relative to absolute dataset format possible.");
-		} else
+		else
 			result = targetFormat.convertToThisFormat(this, targetFormat);
 		result.thisInStandardFormat = this;
 		result.originalDataSet = this.originalDataSet;
@@ -823,5 +814,8 @@ public abstract class DataSet extends RepositoryObject {
 	/**
 	 * @return The object ids contained in the dataset.
 	 */
-	public abstract List<String> getIds();
+	public List<String> getIds() {
+		// TODO
+		return null;
+	}
 }

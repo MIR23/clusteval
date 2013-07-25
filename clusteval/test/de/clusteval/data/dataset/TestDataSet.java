@@ -17,7 +17,6 @@ import org.junit.Test;
 import de.clusteval.context.UnknownContextException;
 import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
-import de.clusteval.data.dataset.format.RelativeDataSetFormat;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.DataSetType;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
@@ -65,8 +64,7 @@ public class TestDataSet extends TestRepositoryObject {
 
 		// adding a data set equal to another one already registered does
 		// not register the second object.
-		this.repositoryObject = new RelativeDataSet(
-				(RelativeDataSet) this.repositoryObject);
+		this.repositoryObject = new DataSet((DataSet) this.repositoryObject);
 		Assert.assertEquals(this.repository
 				.getRegisteredObject((DataSet) this.repositoryObject),
 				this.repositoryObject);
@@ -162,7 +160,7 @@ public class TestDataSet extends TestRepositoryObject {
 						"testCaseRepository/data/datasets/DS1/Zachary_karate_club_similarities.txt")
 						.getAbsoluteFile());
 		Assert.assertEquals(
-				new RelativeDataSet(
+				new DataSet(
 						repository,
 						false,
 						new File(
@@ -170,11 +168,11 @@ public class TestDataSet extends TestRepositoryObject {
 								.getAbsoluteFile().lastModified(),
 						new File(
 								"testCaseRepository/data/datasets/DS1/Zachary_karate_club_similarities.txt")
-								.getAbsoluteFile(), "zachary",
-						(RelativeDataSetFormat) (DataSetFormat.parseFromString(
-								repository, "RowSimDataSetFormat")),
-						DataSetType.parseFromString(repository,
-								"PPIDataSetType")), this.repositoryObject);
+								.getAbsoluteFile(), "zachary", DataSetFormat
+								.parseFromString(repository,
+										"RowSimDataSetFormat"), DataSetType
+								.parseFromString(repository, "PPIDataSetType")),
+				this.repositoryObject);
 	}
 
 	/**

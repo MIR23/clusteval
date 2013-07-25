@@ -8,14 +8,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
@@ -27,7 +25,6 @@ import de.clusteval.cluster.paramOptimization.NoParameterSetFoundException;
 import de.clusteval.cluster.quality.ClusteringQualityMeasure;
 import de.clusteval.cluster.quality.ClusteringQualitySet;
 import de.clusteval.data.DataConfig;
-import de.clusteval.data.dataset.AbsoluteDataSet;
 import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.DataSetConfig;
 import de.clusteval.data.dataset.format.DataSetFormat;
@@ -1144,10 +1141,11 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 			// if the original dataset is an absolute dataset, load it into
 			// memory as well
-			for (DataSet dataSet : this.dataConfig.getDatasetConfig()
-					.getDataSets())
-				if (dataSet.getOriginalDataSet() instanceof AbsoluteDataSet)
-					dataSet.getOriginalDataSet().loadIntoMemory();
+//			for (DataSet dataSet : this.dataConfig.getDatasetConfig()
+//					.getDataSets())
+//				if (dataSet.getOriginalDataSet() instanceof AbsoluteDataSet)
+//					dataSet.getOriginalDataSet().loadIntoMemory();
+			// TODO: needed?
 
 			/*
 			 * Check compatibility of dataset with goldstandard
@@ -1234,11 +1232,12 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		// if the original dataset is an absolute dataset, unload it from
 		// memory
 		// as well
-		for (DataSet dataSet : this.dataConfig.getDatasetConfig().getDataSets()) {
-			dataSet = dataSet.getOriginalDataSet();
-			if (dataSet != null && dataSet instanceof AbsoluteDataSet)
-				dataSet.unloadFromMemory();
-		}
+//		for (DataSet dataSet : this.dataConfig.getDatasetConfig().getDataSets()) {
+//			dataSet = dataSet.getOriginalDataSet();
+//			if (dataSet != null && dataSet instanceof AbsoluteDataSet)
+//				dataSet.unloadFromMemory();
+//		}
+		// TODO: needed?
 
 		FileUtils.appendStringToFile(
 				this.getRun().getLogFilePath(),

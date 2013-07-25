@@ -1,8 +1,0 @@
-07_23_2013-13_51_46	Starting run "tcga"
-07_23_2013-13_51_46	Starting runThread "[Run:tcga] (MCL_norm,tcga)"
-07_23_2013-13_51_47	Starting runThread "[Run:tcga] (APcluster_1,tcga)"
-07_23_2013-13_52_16	Finished runThread "[Run:tcga] (MCL_norm,tcga)" (Duration 29s 967ms)
-07_23_2013-13_52_16	Starting runThread "[Run:tcga] (TransClust_2,tcga)"
-07_23_2013-13_52_24	Finished runThread "[Run:tcga] (APcluster_1,tcga)" (Duration 37s 455ms)
-07_23_2013-13_53_09	Finished runThread "[Run:tcga] (TransClust_2,tcga)" (Duration 52s 488ms)
-07_23_2013-13_53_09	Finished run "tcga" (Duration 1m 22s 502ms)

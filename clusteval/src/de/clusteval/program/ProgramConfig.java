@@ -586,6 +586,7 @@ public class ProgramConfig extends RepositoryObject {
 
 	/**
 	 * 
+	 * @param inputFormats
 	 * @return True, if the provided input formats are compatibly with this
 	 *         program configuration.
 	 * @see #compatibleDataSetFormats
@@ -642,7 +643,7 @@ public class ProgramConfig extends RepositoryObject {
 				possibleMappings.add(mapping);
 		}
 
-		return false;
+		return !possibleMappings.isEmpty();
 	}
 
 	/**
