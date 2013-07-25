@@ -616,6 +616,9 @@ public class ProgramConfig extends RepositoryObject {
 			// formats
 			Map<String, String> mapping = new HashMap<String, String>();
 
+			List<String> remainingInputFormats = new ArrayList<String>(
+					inputFormats);
+
 			// for every required format we check, which formats can be
 			// converted to it
 			boolean stillValid = true;
@@ -626,7 +629,7 @@ public class ProgramConfig extends RepositoryObject {
 				// check whether we have got any of these inputs
 				Set<String> compatibleSourceFormats = new HashSet<String>(
 						pathsToRequiredFormat.keySet());
-				compatibleSourceFormats.retainAll(inputFormats);
+				compatibleSourceFormats.retainAll(remainingInputFormats);
 
 				// if there is no compatible source formats for this format we
 				// check whether it is optional
@@ -636,8 +639,11 @@ public class ProgramConfig extends RepositoryObject {
 					break;
 				}
 				// TODO: greedy, just take the first one
-				mapping.put(compatibleSourceFormats.toArray(new String[0])[0],
-						requiredFormat);
+				String sourceFormat = compatibleSourceFormats
+						.toArray(new String[0])[0];
+				mapping.put(sourceFormat, requiredFormat);
+
+				remainingInputFormats.remove(sourceFormat);
 			}
 			if (stillValid)
 				possibleMappings.add(mapping);
