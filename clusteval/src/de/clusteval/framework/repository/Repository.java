@@ -5278,6 +5278,9 @@ public class Repository {
 	public Map<String, List<String>> getAvailableFormatConversionsTo(
 			final String targetFormat) {
 		Map<String, List<String>> pathsToTarget = new HashMap<String, List<String>>();
+		
+		if (!(this.dataSetFormatConversions.containsVertex(targetFormat)))
+			return pathsToTarget;
 
 		DijkstraShortestPath<String, String> shortestPath = new DijkstraShortestPath<String, String>(
 				this.dataSetFormatConversions);
