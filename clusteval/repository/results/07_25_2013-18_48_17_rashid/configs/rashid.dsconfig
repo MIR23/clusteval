@@ -1,0 +1,7 @@
+[file1]
+datasetName = rashid
+datasetFile = N1.edgelist
+
+[file2]
+datasetName = rashid
+datasetFile = N2.edgelist
