@@ -9,11 +9,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
@@ -1121,7 +1119,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 		boolean found = preprocessAndCheckCompatibleDataSetFormat();
 		if (!found) {
-			Set<DataSetFormat> dsFormats = new HashSet<DataSetFormat>();
+			List<DataSetFormat> dsFormats = new ArrayList<DataSetFormat>();
 			for (DataSet ds : dataConfig.getDatasetConfig().getDataSets()) {
 				dsFormats.add(ds.getDataSetFormat());
 			}
