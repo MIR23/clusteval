@@ -600,8 +600,8 @@ public class ProgramConfig extends RepositoryObject {
 		// configuration supports
 		for (String requiredFormatsStr : this.compatibleDataSetFormats) {
 			// optional input formats will end with '?'
-			List<String> requiredFormats = Arrays.asList(requiredFormatsStr
-					.split("\\&"));
+			List<String> requiredFormats = new ArrayList<String>(
+					Arrays.asList(requiredFormatsStr.split("\\&")));
 			List<String> optionalFormats = new ArrayList<String>();
 			for (String f : requiredFormats)
 				if (f.endsWith("?")) {
@@ -633,10 +633,12 @@ public class ProgramConfig extends RepositoryObject {
 
 				// if there is no compatible source formats for this format we
 				// check whether it is optional
-				if (compatibleSourceFormats.isEmpty()
-						&& !optionalFormats.contains(requiredFormat)) {
-					stillValid = false;
-					break;
+				if (compatibleSourceFormats.isEmpty()) {
+					if (!optionalFormats.contains(requiredFormat)) {
+						stillValid = false;
+						break;
+					}
+					continue;
 				}
 				// TODO: greedy, just take the first one
 				String sourceFormat = compatibleSourceFormats
