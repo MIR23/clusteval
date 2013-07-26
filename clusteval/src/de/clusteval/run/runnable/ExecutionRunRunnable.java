@@ -234,8 +234,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				dataSetFormats.add(ds.getDataSetFormat().getClass()
 						.getSimpleName());
 			}
-			return programConfig
-					.checkCompatibilityToDataSetFormats(dataSetFormats);
+			return ProgramConfig.checkCompatibilityToDataSetFormats(this
+					.getRun().getRepository(), programConfig, dataSetFormats);
 		}
 	}
 
@@ -1139,10 +1139,10 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 			// if the original dataset is an absolute dataset, load it into
 			// memory as well
-//			for (DataSet dataSet : this.dataConfig.getDatasetConfig()
-//					.getDataSets())
-//				if (dataSet.getOriginalDataSet() instanceof AbsoluteDataSet)
-//					dataSet.getOriginalDataSet().loadIntoMemory();
+			// for (DataSet dataSet : this.dataConfig.getDatasetConfig()
+			// .getDataSets())
+			// if (dataSet.getOriginalDataSet() instanceof AbsoluteDataSet)
+			// dataSet.getOriginalDataSet().loadIntoMemory();
 			// TODO: needed?
 
 			/*
@@ -1230,11 +1230,12 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		// if the original dataset is an absolute dataset, unload it from
 		// memory
 		// as well
-//		for (DataSet dataSet : this.dataConfig.getDatasetConfig().getDataSets()) {
-//			dataSet = dataSet.getOriginalDataSet();
-//			if (dataSet != null && dataSet instanceof AbsoluteDataSet)
-//				dataSet.unloadFromMemory();
-//		}
+		// for (DataSet dataSet :
+		// this.dataConfig.getDatasetConfig().getDataSets()) {
+		// dataSet = dataSet.getOriginalDataSet();
+		// if (dataSet != null && dataSet instanceof AbsoluteDataSet)
+		// dataSet.unloadFromMemory();
+		// }
 		// TODO: needed?
 
 		FileUtils.appendStringToFile(
