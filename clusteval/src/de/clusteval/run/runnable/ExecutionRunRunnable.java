@@ -234,8 +234,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				dataSetFormats.add(ds.getDataSetFormat().getClass()
 						.getSimpleName());
 			}
-			return ProgramConfig.checkCompatibilityToDataSetFormats(this
-					.getRun().getRepository(), programConfig, dataSetFormats);
+			return programConfig
+					.checkCompatibilityToDataSetFormats(dataSetFormats);
 		}
 	}
 

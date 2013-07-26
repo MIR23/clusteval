@@ -5216,6 +5216,8 @@ public class Repository {
 				Collections.synchronizedList(new ArrayList<DataSetFormat>()));
 
 		this.sqlCommunicator.registerDataSetFormatClass(object);
+		
+		this.dataSetFormatConversions.addVertex(object.getSimpleName());
 
 		return true;
 	}

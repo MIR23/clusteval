@@ -1,6 +1,0 @@
-// dataSetFormat = MatrixDataSetFormat
-// dataSetType = OtherDataSetType
-// dataSetFormatVersion = 1
-id1	1	4	1
-id2	2	5	4
-id3	3	7	2

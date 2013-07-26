@@ -15,6 +15,7 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Pair;
 import de.clusteval.cluster.paramOptimization.InvalidOptimizationParameterException;
 import de.clusteval.context.Context;
 import de.clusteval.context.UnknownContextException;
@@ -586,23 +587,28 @@ public class ProgramConfig extends RepositoryObject {
 
 	/**
 	 * 
-	 * @param repo
-	 *            The repository to check for available format conversions
-	 * @param programConfig
 	 * @param inputFormats
 	 * @return True, if the provided input formats are compatibly with this
 	 *         program configuration.
 	 * @see #compatibleDataSetFormats
 	 */
-	public static boolean checkCompatibilityToDataSetFormats(
-			final Repository repo, final ProgramConfig programConfig,
+	public boolean checkCompatibilityToDataSetFormats(
+			final List<String> inputFormats) {
+		return !getCompatibleDataSetFormats(inputFormats).isEmpty();
+	}
+
+	/**
+	 * @param inputFormats
+	 * @return
+	 */
+	public Set<List<Pair<String, String>>> getCompatibleDataSetFormats(
 			final List<String> inputFormats) {
 
-		Set<Map<String, String>> possibleMappings = new HashSet<Map<String, String>>();
+		Set<List<Pair<String, String>>> possibleMappings = new HashSet<List<Pair<String, String>>>();
 
 		// we iterate over all possible sets of input formats this program
 		// configuration supports
-		for (String requiredFormatsStr : programConfig.compatibleDataSetFormats) {
+		for (String requiredFormatsStr : this.compatibleDataSetFormats) {
 			// optional input formats will end with '?'
 			List<String> requiredFormats = new ArrayList<String>(
 					Arrays.asList(requiredFormatsStr.split("\\&")));
@@ -618,7 +624,7 @@ public class ProgramConfig extends RepositoryObject {
 
 			// build up a mapping from provided input formats to required input
 			// formats
-			Map<String, String> mapping = new HashMap<String, String>();
+			List<Pair<String, String>> mapping = new ArrayList<Pair<String, String>>();
 
 			List<String> remainingInputFormats = new ArrayList<String>(
 					inputFormats);
@@ -627,7 +633,7 @@ public class ProgramConfig extends RepositoryObject {
 			// converted to it
 			boolean stillValid = true;
 			for (String requiredFormat : requiredFormats) {
-				Map<String, List<String>> pathsToRequiredFormat = repo
+				Map<String, List<String>> pathsToRequiredFormat = this.repository
 						.getAvailableFormatConversionsTo(requiredFormat);
 
 				// check whether we have got any of these inputs
@@ -647,7 +653,7 @@ public class ProgramConfig extends RepositoryObject {
 				// TODO: greedy, just take the first one
 				String sourceFormat = compatibleSourceFormats
 						.toArray(new String[0])[0];
-				mapping.put(sourceFormat, requiredFormat);
+				mapping.add(Pair.getPair(sourceFormat, requiredFormat));
 
 				remainingInputFormats.remove(sourceFormat);
 			}
@@ -655,7 +661,7 @@ public class ProgramConfig extends RepositoryObject {
 				possibleMappings.add(mapping);
 		}
 
-		return !possibleMappings.isEmpty();
+		return possibleMappings;
 	}
 
 	/**

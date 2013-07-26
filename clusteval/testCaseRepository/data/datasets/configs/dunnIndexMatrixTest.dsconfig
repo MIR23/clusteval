@@ -1,3 +1,0 @@
-datasetName = dunnIndexTestMatrix
-datasetFile = dunnIndexMatrixTest.txt
-distanceMeasureAbsoluteToRelative = AbsoluteDistanceMeasure
