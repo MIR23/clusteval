@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.clusteval.data.dataset.DataSet;
-import de.clusteval.framework.repository.RegisterException;
-import de.clusteval.utils.RNotAvailableException;
 
 /**
  * @author Christian Wiwie
@@ -52,59 +50,6 @@ public abstract class DataSetFormatParser {
 		/** The Sim matrix. */
 		SimMatrix
 	}
-
-	/**
-	 * Convert the given dataset with this dataset format and the given version
-	 * using the passed configuration.
-	 * 
-	 * <p>
-	 * This method validates, that the passed dataset has the correct format and
-	 * that the version of the format is supported.
-	 * 
-	 * @param dataSet
-	 *            The dataset to convert to the standard format.
-	 * @param config
-	 *            The configuration to use to convert the passed dataset.
-	 * @return The converted dataset.
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws RegisterException
-	 * @throws UnknownDataSetFormatException
-	 * @throws RNotAvailableException
-	 */
-	protected abstract DataSet convertToStandardFormat(DataSet dataSet)
-			throws IOException, InvalidDataSetFormatVersionException,
-			RegisterException, UnknownDataSetFormatException,
-			RNotAvailableException;
-
-	/**
-	 * Convert the given dataset to the given dataset format (this format) using
-	 * the passed configuration.
-	 * 
-	 * <p>
-	 * The passed dataset format object has to be of this class and is used only
-	 * for its version and normalize attributes.
-	 * 
-	 * <p>
-	 * This method validates, that the passed dataset format to convert the
-	 * dataset to is correct and that the version of the format is supported.
-	 * 
-	 * @param dataSet
-	 *            The dataset to convert to the standard format.
-	 * @param config
-	 *            The configuration to use to convert the passed dataset.
-	 * @return The converted dataset.
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws RegisterException
-	 * @throws UnknownDataSetFormatException
-	 */
-	protected abstract DataSet convertToThisFormat(DataSet dataSet,
-			DataSetFormat dataSetFormat) throws IOException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			UnknownDataSetFormatException;
 
 	/**
 	 * @param dataSet

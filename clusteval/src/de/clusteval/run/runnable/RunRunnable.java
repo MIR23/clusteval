@@ -190,6 +190,7 @@ public abstract class RunRunnable implements Runnable {
 	 * @throws IncompatibleDataSetFormatException
 	 * @throws UnknownGoldStandardFormatException
 	 * @throws IncompleteGoldStandardException
+	 * @throws RNotAvailableException
 	 */
 
 	@SuppressWarnings("unused")
@@ -197,7 +198,8 @@ public abstract class RunRunnable implements Runnable {
 			InvalidDataSetFormatVersionException, IllegalArgumentException,
 			IOException, RegisterException, InternalAttributeException,
 			IncompatibleDataSetFormatException,
-			UnknownGoldStandardFormatException, IncompleteGoldStandardException {
+			UnknownGoldStandardFormatException,
+			IncompleteGoldStandardException, RNotAvailableException {
 
 	}
 

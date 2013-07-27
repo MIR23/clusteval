@@ -5216,7 +5216,7 @@ public class Repository {
 				Collections.synchronizedList(new ArrayList<DataSetFormat>()));
 
 		this.sqlCommunicator.registerDataSetFormatClass(object);
-		
+
 		this.dataSetFormatConversions.addVertex(object.getSimpleName());
 
 		return true;
@@ -5244,17 +5244,24 @@ public class Repository {
 	 *            The simple name of the target format.
 	 * @param parserSimpleClassName
 	 *            The simple name of the parser class providing the conversion.
+	 * @param methodName
 	 * @return True, if the conversion was inserted and new, false otherwise.
 	 */
 	public boolean addAvailableFormatConversion(final String originalFormat,
-			final String targetFormat, final String parserSimpleClassName) {
+			final String targetFormat, final String parserSimpleClassName,
+			final String methodName) {
 		if (!this.dataSetFormatConversions.containsVertex(originalFormat))
 			this.dataSetFormatConversions.addVertex(originalFormat);
 		if (!this.dataSetFormatConversions.containsVertex(targetFormat))
 			this.dataSetFormatConversions.addVertex(targetFormat);
-		return this.dataSetFormatConversions.addEdge(originalFormat + "_"
-				+ targetFormat + "_" + parserSimpleClassName, originalFormat,
-				targetFormat, EdgeType.DIRECTED);
+		boolean result = this.dataSetFormatConversions.addEdge(originalFormat
+				+ "_" + targetFormat + "_" + parserSimpleClassName + "_"
+				+ methodName, originalFormat, targetFormat, EdgeType.DIRECTED);
+		if (result)
+			this.log.info("New format conversion available: " + originalFormat
+					+ "->" + targetFormat + " (" + parserSimpleClassName + "."
+					+ methodName + ")");
+		return result;
 	}
 
 	/**
@@ -5280,7 +5287,7 @@ public class Repository {
 	public Map<String, List<String>> getAvailableFormatConversionsTo(
 			final String targetFormat) {
 		Map<String, List<String>> pathsToTarget = new HashMap<String, List<String>>();
-		
+
 		if (!(this.dataSetFormatConversions.containsVertex(targetFormat)))
 			return pathsToTarget;
 

@@ -510,53 +510,6 @@ public class TestDataSet extends TestRepositoryObject {
 	}
 
 	/**
-	 * Test method for
-	 * {@link data.dataset.DataSet#convertToDirectly(data.dataset.format.DataSetFormat)}
-	 * .
-	 * 
-	 * @throws UnknownDataSetFormatException
-	 * @throws NoRepositoryFoundException
-	 * @throws IOException
-	 * @throws DataSetNotFoundException
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws DataSetConfigurationException
-	 * @throws RegisterException
-	 * @throws RNotAvailableException
-	 * @throws InvalidParameterException
-	 */
-	@Test
-	public void testConvertToDirectly() throws NoRepositoryFoundException,
-			UnknownDataSetFormatException, IOException,
-			DataSetNotFoundException, InvalidDataSetFormatVersionException,
-			DataSetConfigurationException, RegisterException,
-			UnknownDataSetTypeException, NoDataSetException,
-			UnknownDistanceMeasureException, InvalidParameterException,
-			RNotAvailableException {
-
-		File targetFile = new File(
-				"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip.SimMatrix")
-				.getAbsoluteFile();
-		if (targetFile.exists())
-			targetFile.delete();
-
-		this.repositoryObject = DataSet
-				.parseFromFile(new File(
-						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim")
-						.getAbsoluteFile());
-		DataSetAttributeFilterer filterer = new DataSetAttributeFilterer(
-				"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim");
-		filterer.process();
-		((DataSet) this.repositoryObject)
-				.setAbsolutePath(new File(
-						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip")
-						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).convertToStandardDirectly(context);
-		Assert.assertTrue(targetFile.exists());
-
-		targetFile.delete();
-	}
-
-	/**
 	 * Test method for {@link data.dataset.DataSet#getInStandardFormat()}.
 	 * 
 	 * @throws UnknownDataSetFormatException
@@ -578,23 +531,7 @@ public class TestDataSet extends TestRepositoryObject {
 			UnknownDataSetTypeException, NoDataSetException,
 			UnknownDistanceMeasureException, InvalidParameterException,
 			RNotAvailableException {
-
-		this.repositoryObject = DataSet
-				.parseFromFile(new File(
-						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim")
-						.getAbsoluteFile());
-		DataSetAttributeFilterer filterer = new DataSetAttributeFilterer(
-				"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim");
-		filterer.process();
-		((DataSet) this.repositoryObject)
-				.setAbsolutePath(new File(
-						"testCaseRepository/data/datasets/rowSimTest/rowSimTestFile.sim.strip")
-						.getAbsoluteFile());
-		((DataSet) this.repositoryObject).convertToStandardDirectly(context);
-		DataSet standard = ((DataSet) this.repositoryObject)
-				.getInStandardFormat();
-		Assert.assertEquals(DataSetFormat.parseFromString(repository,
-				"SimMatrixDataSetFormat"), standard.getDataSetFormat());
+		// TODO
 	}
 
 	@Test

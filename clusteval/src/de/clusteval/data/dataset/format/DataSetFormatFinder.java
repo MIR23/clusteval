@@ -4,12 +4,14 @@
 package de.clusteval.data.dataset.format;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 
+import de.clusteval.data.dataset.DataSet;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.utils.FormatVersion;
@@ -261,24 +263,33 @@ class DataSetFormatURLClassLoader extends URLClassLoader {
 		} catch (UnknownDataSetFormatException e) {
 		}
 
-		// the class needs to have a conversion annotation
-		if (!dataSetFormatParser.isAnnotationPresent(ParserConversions.class)) {
-			ClassNotFoundException ex = new ClassNotFoundException(
-					"The dataset format parser class "
-							+ dataSetFormatParser.getSimpleName()
-							+ " is missing the conversion information");
-			throw ex;
-		}
+		Method[] methods = dataSetFormatParser.getDeclaredMethods();
+		for (Method m : methods) {
+			if (m.isAnnotationPresent(ParserConversions.class)) {
+				if (!m.getParameterTypes()[0].getSimpleName().equals("DataSet")
+						|| !m.getParameterTypes()[1].getSimpleName().equals(
+								"DataSetFormat")) {
+					this.parent
+							.getLog()
+							.info("Ignoring format conversion method "
+									+ dataSetFormatParser.getSimpleName()
+									+ "."
+									+ m.getName()
+									+ " because it does not take the right parameters.");
+					continue;
+				}
 
-		// get the conversion annotation
-		ParserConversions anno2 = dataSetFormatParser
-				.getAnnotation(ParserConversions.class);
-		for (StringMapping map : anno2.conversions()) {
-			final String originalFormat = map.key();
-			final String targetFormat = map.value();
-			this.parent.getRepository().addAvailableFormatConversion(
-					originalFormat, targetFormat,
-					dataSetFormatParser.getSimpleName());
+				ParserConversions anno2 = m
+						.getAnnotation(ParserConversions.class);
+				for (StringMapping map : anno2.conversions()) {
+					final String originalFormat = map.key();
+					final String targetFormat = map.value();
+					this.parent.getRepository().addAvailableFormatConversion(
+							originalFormat, targetFormat,
+							dataSetFormatParser.getSimpleName(), m.getName());
+				}
+
+			}
 		}
 	}
 }

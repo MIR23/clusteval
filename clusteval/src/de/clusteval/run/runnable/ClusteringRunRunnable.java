@@ -70,7 +70,8 @@ public class ClusteringRunRunnable extends ExecutionRunRunnable {
 			UnknownDataSetFormatException, IOException,
 			InvalidDataSetFormatVersionException, RegisterException,
 			InternalAttributeException, IncompatibleDataSetFormatException,
-			UnknownGoldStandardFormatException, IncompleteGoldStandardException {
+			UnknownGoldStandardFormatException,
+			IncompleteGoldStandardException, RNotAvailableException {
 		super.beforeRun();
 
 		if (!new File(completeQualityOutput).exists() || !isResume)

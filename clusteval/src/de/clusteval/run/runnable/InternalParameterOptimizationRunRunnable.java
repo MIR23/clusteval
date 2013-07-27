@@ -68,7 +68,8 @@ public class InternalParameterOptimizationRunRunnable
 			UnknownDataSetFormatException, IOException,
 			InvalidDataSetFormatVersionException, RegisterException,
 			InternalAttributeException, IncompatibleDataSetFormatException,
-			UnknownGoldStandardFormatException, IncompleteGoldStandardException {
+			UnknownGoldStandardFormatException,
+			IncompleteGoldStandardException, RNotAvailableException {
 		super.beforeRun();
 		if (!new File(completeQualityOutput).exists() || !isResume)
 			writeHeaderIntoCompleteFile(completeQualityOutput);

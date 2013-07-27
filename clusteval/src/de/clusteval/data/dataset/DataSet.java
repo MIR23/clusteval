@@ -2,6 +2,7 @@ package de.clusteval.data.dataset;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.List;
@@ -575,31 +576,31 @@ public class DataSet extends RepositoryObject {
 			DataSetFormat sourceFormat = this.getDataSetFormat();
 
 			// check, whether dataset format parsers are registered.
-			if ((!sourceFormat.equals(context.getStandardInputFormat()) && !this
-					.getRepository().isRegisteredForDataSetFormat(
-							sourceFormat.getClass()))
-					|| (!targetFormat.equals(context.getStandardInputFormat()) && !this
-							.getRepository().isRegisteredForDataSetFormat(
-									targetFormat.getClass())))
-				throw new FormatConversionException(
-						"No conversion from "
-								+ sourceFormat
-								+ " to "
-								+ targetFormat
-								+ " via internal standard format "
-								+ context.getStandardInputFormat()
-								+ " possible, because of missing dataset format parsers.");
+//			if ((!sourceFormat.equals(context.getStandardInputFormat()) && !this
+//					.getRepository().isRegisteredForDataSetFormat(
+//							sourceFormat.getClass()))
+//					|| (!targetFormat.equals(context.getStandardInputFormat()) && !this
+//							.getRepository().isRegisteredForDataSetFormat(
+//									targetFormat.getClass())))
+//				throw new FormatConversionException(
+//						"No conversion from "
+//								+ sourceFormat
+//								+ " to "
+//								+ targetFormat
+//								+ " via internal standard format "
+//								+ context.getStandardInputFormat()
+//								+ " possible, because of missing dataset format parsers.");
 
 			// 13.04.2013: update the original dataset of the dataset to itself
 			this.originalDataSet = this;
 
 			// convert the input format to the standard format
 			try {
-				DataSetFormat standardFormat = context.getStandardInputFormat();
+//				DataSetFormat standardFormat = context.getStandardInputFormat();
 				// DataSetFormat.parseFromString(
 				// repository, context.getStandardInputFormat().getClass()
 				// .getSimpleName());
-				standardFormat.setNormalized(targetFormat.getNormalized());
+//				standardFormat.setNormalized(targetFormat.getNormalized());
 
 				// Remove dataset attributes from file and write the result to
 				// dataSet.getAbsolutePath() + ".strip"
@@ -612,15 +613,8 @@ public class DataSet extends RepositoryObject {
 				}
 				this.setAbsolutePath(strippedFilePath);
 
-				result = this.convertToStandardDirectly(context);
-
-				/*
-				 * This temporary dataset is now in our standard format. Store
-				 * it and convert it to the target format.
-				 */
 				try {
-					result = result.convertStandardToDirectly(context,
-							targetFormat);
+					result = this.convertTo(targetFormat);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -633,87 +627,58 @@ public class DataSet extends RepositoryObject {
 		}
 	}
 
-	/**
-	 * This method is a helper method to convert a dataset in a internal
-	 * standard format to a target format directly, that means using one
-	 * conversion step.
-	 * 
-	 * @param targetFormat
-	 *            This is the format, the dataset is expected to be in after the
-	 *            conversion process. After the dataset is converted to the
-	 *            internal format, it is converted to the target format.
-	 * @param configStandardToInput
-	 *            This is the configuration that is used during the conversion
-	 *            from the internal standard format to the target format.
-	 * @return The dataset in the target format.
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws RegisterException
-	 * @throws UnknownDataSetFormatException
-	 * @throws FormatConversionException
-	 */
-	protected DataSet convertStandardToDirectly(final Context context,
-			final DataSetFormat targetFormat) throws IOException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			UnknownDataSetFormatException, FormatConversionException {
-
-		DataSet result = null;
-
-		// if the target format is equal to the standard format, we simply
-		// return the old dataset
-		DataSetFormat standardFormat = context.getStandardInputFormat();
-		if (targetFormat.equals(standardFormat)) {
-			result = this;
-		}
-		// if the target format is an absolute format, then the conversion is
-		// only possible, if the original data set was an absolute data set.
-		// Then we return the original data set.
-		else
-			result = targetFormat.convertToThisFormat(this, targetFormat);
-		result.thisInStandardFormat = this;
-		result.originalDataSet = this.originalDataSet;
-		return result;
-	}
-
-	/**
-	 * This method is a helper method to convert a dataset in its original
-	 * format to a internal standard format directly, that means using one
-	 * conversion step.
-	 * 
-	 * @param dsFormat
-	 *            This is the format, the dataset is expected to be in after the
-	 *            conversion process. After the dataset is converted to the
-	 *            internal format, it is converted to the target format.
-	 * @param configInputToStandard
-	 *            This is the configuration that is used during the conversion
-	 *            from the original format to the internal standard format.
-	 * @return The dataset in the target format.
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws RegisterException
-	 * @throws UnknownDataSetFormatException
-	 * @throws RNotAvailableException
-	 * @throws InvalidParameterException
-	 */
-	protected DataSet convertToStandardDirectly(final Context context)
+	protected DataSet convertTo(final DataSetFormat targetFormat)
 			throws IOException, InvalidDataSetFormatVersionException,
 			RegisterException, UnknownDataSetFormatException,
 			InvalidParameterException, RNotAvailableException {
-		DataSet result = null;
 
-		// if the source format is equal to the standard format, we simply
-		// return the old dataset
-		DataSetFormat standardFormat = context.getStandardInputFormat();
-		if (this.getDataSetFormat().equals(standardFormat)) {
-			result = this;
-		} else
-			result = this.getDataSetFormat().convertToStandardFormat(this);
-		result.thisInStandardFormat = result;
-		this.thisInStandardFormat = result;
-		result.originalDataSet = this.originalDataSet;
-		return result;
+		Map<String, List<String>> conversions = this.repository
+				.getAvailableFormatConversionsTo(targetFormat.getClass()
+						.getSimpleName());
+
+		String sourceFormat = this.getDataSetFormat().getClass()
+				.getSimpleName();
+
+		if (!(conversions.keySet().contains(sourceFormat)))
+			throw new IllegalArgumentException(
+					"Operation only supported for the standard dataset format");
+
+		List<String> conversionPath = conversions.get(sourceFormat);
+
+		DataSet converted = this;
+		for (String conversion : conversionPath) {
+			String[] split = conversion.split("_");
+			String targetFormatStr = split[1];
+			String parserClassSimpleName = split[2];
+			String parserMethodStr = split[3];
+			Class<? extends DataSetFormatParser> parser = this.repository
+					.getDataSetFormatParser(parserClassSimpleName);
+			try {
+				converted = (DataSet) parser.getMethod(parserMethodStr,
+						DataSet.class, DataSetFormat.class).invoke(
+						parser.newInstance(),
+						converted,
+						this.repository.getDataSetFormatClass(targetFormatStr)
+								.newInstance());
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			}
+			// TODO
+			converted.thisInStandardFormat = converted;
+			this.thisInStandardFormat = converted;
+			converted.originalDataSet = this.originalDataSet;
+		}
+		return converted;
 	}
 
 	/*

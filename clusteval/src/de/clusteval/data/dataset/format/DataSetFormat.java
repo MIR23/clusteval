@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.LoggerFactory;
@@ -199,6 +200,7 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 * 
 	 * @param dataSet
 	 *            The dataset to convert to the standard format.
+	 * @param targetFormat
 	 * @return The converted dataset.
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
@@ -207,49 +209,53 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 * @throws UnknownDataSetFormatException
 	 * @throws RNotAvailableException
 	 */
-	public final DataSet convertToStandardFormat(DataSet dataSet)
+	public final DataSet convertTo(DataSet dataSet, DataSetFormat targetFormat)
 			throws IOException, InvalidDataSetFormatVersionException,
 			RegisterException, UnknownDataSetFormatException,
 			RNotAvailableException {
-		final DataSetFormatParser parser = getDataSetFormatParser();
-		if (parser == null)
-			throw new IllegalArgumentException(
-					"Operation only supported for the standard dataset format");
-		return parser.convertToStandardFormat(dataSet);
-	}
+		Map<String, List<String>> conversions = this.repository
+				.getAvailableFormatConversionsTo(targetFormat.getClass()
+						.getSimpleName());
 
-	/**
-	 * Convert the given dataset to the given dataset format (this format) using
-	 * the passed configuration.
-	 * 
-	 * <p>
-	 * The passed dataset format object has to be of this class and is used only
-	 * for its version and normalize attributes.
-	 * 
-	 * <p>
-	 * This method validates, that the passed dataset format to convert the
-	 * dataset to is correct and that the version of the format is supported.
-	 * 
-	 * @param dataSet
-	 *            The dataset to convert to the standard format.
-	 * @param dataSetFormat
-	 *            The dataset format to convert the dataset to.
-	 * @return The converted dataset.
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws RegisterException
-	 * @throws UnknownDataSetFormatException
-	 */
-	public final DataSet convertToThisFormat(DataSet dataSet,
-			DataSetFormat dataSetFormat) throws IOException,
-			InvalidDataSetFormatVersionException, RegisterException,
-			UnknownDataSetFormatException {
-		final DataSetFormatParser parser = getDataSetFormatParser();
-		if (parser == null)
+		String sourceFormat = dataSet.getDataSetFormat().getClass()
+				.getSimpleName();
+
+		if (!(conversions.keySet().contains(sourceFormat)))
 			throw new IllegalArgumentException(
 					"Operation only supported for the standard dataset format");
-		return parser.convertToThisFormat(dataSet, dataSetFormat);
+
+		List<String> conversionPath = conversions.get(sourceFormat);
+
+		DataSet converted = dataSet;
+		for (String conversion : conversionPath) {
+			String[] split = conversion.split("_");
+			String targetFormatStr = split[1];
+			String parserClassSimpleName = split[2];
+			String parserMethodStr = split[3];
+			Class<? extends DataSetFormatParser> parser = this.repository
+					.getDataSetFormatParser(parserClassSimpleName);
+			try {
+				converted = (DataSet) parser.getMethod(parserMethodStr,
+						DataSet.class, DataSetFormat.class).invoke(
+						parser.newInstance(),
+						converted,
+						this.repository.getDataSetFormatClass(targetFormatStr)
+								.newInstance());
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			}
+		}
+		return converted;
 	}
 
 	/**

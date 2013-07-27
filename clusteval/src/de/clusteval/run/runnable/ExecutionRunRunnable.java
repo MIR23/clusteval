@@ -9,9 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
@@ -46,6 +49,7 @@ import de.clusteval.run.result.ClusteringRunResult;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.result.format.RunResultFormat;
 import de.clusteval.run.result.format.RunResultNotFoundException;
+import de.clusteval.utils.FormatConversionException;
 import de.clusteval.utils.InternalAttributeException;
 import de.clusteval.utils.RNotAvailableException;
 import de.clusteval.utils.plot.Plotter;
@@ -212,9 +216,15 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @return True, if compatible, false otherwise.
 	 * @throws IOException
 	 * @throws RegisterException
+	 * @throws FormatConversionException
+	 * @throws RNotAvailableException
+	 * @throws UnknownDataSetFormatException
+	 * @throws InvalidDataSetFormatVersionException
 	 */
 	protected boolean preprocessAndCheckCompatibleDataSetFormat()
-			throws IOException, RegisterException {
+			throws IOException, RegisterException,
+			InvalidDataSetFormatVersionException,
+			UnknownDataSetFormatException, RNotAvailableException {
 		/*
 		 * only one conversion operation per dataset at a time. otherwise we can
 		 * have problems
@@ -234,8 +244,80 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				dataSetFormats.add(ds.getDataSetFormat().getClass()
 						.getSimpleName());
 			}
-			return programConfig
-					.checkCompatibilityToDataSetFormats(dataSetFormats);
+			Set<List<Pair<String, String>>> conversions = programConfig
+					.getCompatibleDataSetFormats(dataSetFormats);
+			if (conversions.isEmpty())
+				return false;
+
+			// find largest mapping
+			List<Pair<String, String>> mapping = conversions.iterator().next();
+			Iterator<List<Pair<String, String>>> it = conversions.iterator();
+			while (it.hasNext()) {
+				List<Pair<String, String>> m = it.next();
+				if (m.size() > mapping.size())
+					mapping = m;
+			}
+
+			Set<Pair<String, String>> remainingMappings = new HashSet<Pair<String, String>>(
+					mapping);
+
+			// for every dataset, find the target format in the mapping
+			for (int i = 0; i < dataSets.size(); i++) {
+				DataSet ds = dataSets.get(i);
+				Iterator<Pair<String, String>> it2 = remainingMappings
+						.iterator();
+				while (it2.hasNext()) {
+					Pair<String, String> p = it2.next();
+					if (p.getFirst().equals(
+							ds.getDataSetFormat().getClass().getSimpleName())) {
+
+						// convert the dataset to the target format
+						DataSet converted;
+						try {
+							converted = ds.preprocessAndConvertTo(this.getRun()
+									.getContext(), DataSetFormat
+									.parseFromString(this.getRun()
+											.getRepository(), p.getSecond()));
+							// remove this mapping
+							remainingMappings.remove(p);
+
+							// added 23.01.2013: rename the new dataset, unique
+							// for
+							// the program configuration
+							int indexOfLastExt = converted.getAbsolutePath()
+									.lastIndexOf(".");
+							if (indexOfLastExt == -1)
+								indexOfLastExt = converted.getAbsolutePath()
+										.length();
+							String newFileName = converted.getAbsolutePath()
+									.substring(0, indexOfLastExt)
+									+ "_"
+									+ programConfig.getName()
+									+ converted.getAbsolutePath().substring(
+											indexOfLastExt);
+							// if the new dataset file is the same file as the
+							// old
+							// one, we copy it instead of moving
+							if (converted.getAbsolutePath().equals(
+									ds.getAbsolutePath())) {
+								converted.copyTo(new File(newFileName), false,
+										true);
+							} else
+								converted.move(new File(newFileName), false);
+
+							dataConfig.getDatasetConfig().getDataSets()
+									.set(i, converted);
+
+							break;
+						} catch (FormatConversionException e) {
+							e.printStackTrace();
+							// try next format conversion
+						}
+					}
+				}
+			}
+
+			return true;
 		}
 	}
 
@@ -1078,7 +1160,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			InvalidDataSetFormatVersionException, IllegalArgumentException,
 			IOException, RegisterException, InternalAttributeException,
 			IncompatibleDataSetFormatException,
-			UnknownGoldStandardFormatException, IncompleteGoldStandardException {
+			UnknownGoldStandardFormatException,
+			IncompleteGoldStandardException, RNotAvailableException {
 		this.log.info("Run " + this.getRun() + " (" + this.programConfig + ","
 				+ this.dataConfig + ") " + (!isResume ? "started" : "RESUMED")
 				+ " (asynchronously)");
