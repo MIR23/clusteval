@@ -15,7 +15,6 @@ import java.util.Set;
 import org.junit.runners.model.RunnerScheduler;
 
 import utils.Pair;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
@@ -27,6 +26,7 @@ import de.clusteval.framework.repository.RepositoryReplaceEvent;
 import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.runnable.ExecutionRunRunnable;
 import de.clusteval.run.runnable.RunRunnable;

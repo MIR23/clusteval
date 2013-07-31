@@ -6,7 +6,7 @@ package de.clusteval.run.runnable;
 import java.io.File;
 import java.io.IOException;
 
-import de.clusteval.cluster.paramOptimization.NoParameterSetFoundException;
+import de.clusteval.paramOptimization.NoParameterSetFoundException;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.format.IncompatibleDataSetFormatException;
 import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;

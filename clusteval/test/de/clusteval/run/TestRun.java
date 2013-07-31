@@ -11,12 +11,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
 
 import de.clusteval.data.DataConfig;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.Run;
 import de.clusteval.utils.TestRepositoryObject;

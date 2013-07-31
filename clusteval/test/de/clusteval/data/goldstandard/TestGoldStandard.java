@@ -11,9 +11,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.clusteval.cluster.Cluster;
-import de.clusteval.cluster.ClusterItem;
-import de.clusteval.cluster.Clustering;
 
 import de.clusteval.data.goldstandard.GoldStandard;
 import de.clusteval.data.goldstandard.GoldStandardNotFoundException;
@@ -27,6 +24,9 @@ import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.StubSQLCommunicator;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
+import de.clusteval.graphmatching.Cluster;
+import de.clusteval.graphmatching.ClusterItem;
+import de.clusteval.graphmatching.Clustering;
 import de.clusteval.utils.TestRepositoryObject;
 
 /**

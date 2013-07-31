@@ -12,6 +12,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.clusteval.graphmatching.Cluster;
+import de.clusteval.graphmatching.ClusterItem;
+import de.clusteval.graphmatching.Clustering;
+
 /**
  * @author Christian Wiwie
  * 

@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import utils.Pair;
-import de.clusteval.cluster.Clustering;
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethod;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
-import de.clusteval.cluster.quality.ClusteringQualitySet;
+import de.clusteval.paramOptimization.ParameterOptimizationMethod;
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
@@ -28,6 +25,7 @@ import de.clusteval.data.goldstandard.GoldStandard;
 import de.clusteval.data.goldstandard.GoldStandardConfig;
 import de.clusteval.data.statistics.DataStatistic;
 import de.clusteval.framework.repository.config.MysqlConfig;
+import de.clusteval.graphmatching.Clustering;
 import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.ParameterSet;
@@ -35,6 +33,8 @@ import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.StringProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.ClusteringQualitySet;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -45,7 +45,7 @@ import de.clusteval.run.Run;
 import de.clusteval.run.RunAnalysisRun;
 import de.clusteval.run.RunDataAnalysisRun;
 import de.clusteval.run.result.AnalysisRunResult;
-import de.clusteval.run.result.ClusteringRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.DataAnalysisRunResult;
 import de.clusteval.run.result.ExecutionRunResult;
 import de.clusteval.run.result.ParameterOptimizationResult;
@@ -3027,7 +3027,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	public boolean register(RunResult object) {
 		String type = null;
 		String resultsPath = null;
-		if (object instanceof ClusteringRunResult) {
+		if (object instanceof GraphMatchingRunResult) {
 			type = "Clustering";
 			resultsPath = object.absPath.getParentFile().getParentFile()
 					.getAbsolutePath();
@@ -3109,7 +3109,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 * @see utils.SQLCommunicator#register(run.result.ClusteringRunResult)
 	 */
 	@Override
-	public boolean register(ClusteringRunResult object) {
+	public boolean register(GraphMatchingRunResult object) {
 		this.register((ExecutionRunResult) object);
 
 		try {

@@ -8,16 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.clusteval.cluster.Clustering;
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethod;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
-import de.clusteval.cluster.quality.ClusteringQualityMeasureValue;
-import de.clusteval.cluster.quality.ClusteringQualitySet;
+import de.clusteval.paramOptimization.ParameterOptimizationMethod;
+import de.clusteval.graphmatching.Clustering;
 
 import utils.StringExt;
 import utils.parse.TextFileParser;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.ClusteringQualityMeasureValue;
+import de.clusteval.quality.ClusteringQualitySet;
 import de.clusteval.run.ParameterOptimizationRun;
 
 /**

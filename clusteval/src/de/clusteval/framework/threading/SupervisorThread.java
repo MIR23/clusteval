@@ -14,12 +14,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethodFinderThread;
-import de.clusteval.cluster.quality.ClusteringQualityMeasureFinderThread;
+import de.clusteval.paramOptimization.ParameterOptimizationMethodFinderThread;
 import de.clusteval.data.dataset.DataSetConfigFinderThread;
 import de.clusteval.data.dataset.format.DataSetFormatFinderThread;
 import de.clusteval.data.statistics.DataStatisticFinderThread;
 import de.clusteval.framework.repository.Repository;
+import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
 import de.clusteval.run.RunFinderThread;
 import de.clusteval.run.result.format.RunResultFormatFinderThread;
 import de.clusteval.run.statistics.RunStatisticFinderThread;

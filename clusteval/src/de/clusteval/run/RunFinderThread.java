@@ -3,7 +3,7 @@
  */
 package de.clusteval.run;
 
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethodFinderThread;
+import de.clusteval.paramOptimization.ParameterOptimizationMethodFinderThread;
 import de.clusteval.context.ContextFinderThread;
 import de.clusteval.data.dataset.DataSetConfigFinderThread;
 import de.clusteval.data.goldstandard.GoldStandardConfigFinderThread;

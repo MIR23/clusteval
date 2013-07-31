@@ -21,10 +21,7 @@ import org.rosuda.REngine.REngineException;
 
 import utils.Pair;
 import utils.Triple;
-import de.clusteval.cluster.Clustering;
-import de.clusteval.cluster.paramOptimization.NoParameterSetFoundException;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
-import de.clusteval.cluster.quality.ClusteringQualitySet;
+import de.clusteval.paramOptimization.NoParameterSetFoundException;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.DataSetConfig;
@@ -38,14 +35,17 @@ import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
 import de.clusteval.framework.ClustevalBackendServer;
 import de.clusteval.framework.RLibraryNotLoadedException;
 import de.clusteval.framework.repository.RegisterException;
+import de.clusteval.graphmatching.Clustering;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.r.RProgram;
+import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.ClusteringQualitySet;
 import de.clusteval.run.ExecutionRun;
 import de.clusteval.run.MissingParameterValueException;
 import de.clusteval.run.Run;
-import de.clusteval.run.result.ClusteringRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.result.format.RunResultFormat;
 import de.clusteval.run.result.format.RunResultNotFoundException;
@@ -130,7 +130,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * this runnable. The runnable is responsible for adding new results to this
 	 * object during the execution.
 	 */
-	protected ClusteringRunResult result;
+	protected GraphMatchingRunResult result;
 
 	/**
 	 * This number indicates the current iteration performed by the runnable
@@ -701,12 +701,12 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * result format by invoking {@link #convertResult()}.
 	 * <p>
 	 * Next the qualities of the converted result file are assessed in
-	 * {@link #assessQualities(ClusteringRunResult)}.
+	 * {@link #assessQualities(GraphMatchingRunResult)}.
 	 * <p>
 	 * Then it invokes {@link #writeQualitiesToFile(List)}, which writes the
 	 * assessed cluster qualities into files on the filesystem.
 	 * <p>
-	 * In {@link #afterClustering(ClusteringRunResult)} all actions are
+	 * In {@link #afterClustering(GraphMatchingRunResult)} all actions are
 	 * performed, that require the clustering process to be finished beforehand.
 	 * <p>
 	 * Last the result is added to the list of run results of the corresponding
@@ -770,7 +770,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				+ this.dataConfig + ") Log-File is located at: \""
 				+ logFile.getAbsolutePath() + "\"");
 
-		this.result = new ClusteringRunResult(this.getRun().getRepository(),
+		this.result = new GraphMatchingRunResult(this.getRun().getRepository(),
 				System.currentTimeMillis(), clusteringResultFile, dataConfig,
 				programConfig, format, runThreadIdentString, run);
 		try {
@@ -804,7 +804,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			if (checkForInterrupted())
 				return;
 
-			ClusteringRunResult convertedResult = this.convertResult();
+			GraphMatchingRunResult convertedResult = this.convertResult();
 
 			if (convertedResult != null) {
 				this.log.debug(this.getRun() + " (" + this.programConfig + ","
@@ -852,7 +852,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	/**
 	 * This method is responsible for assessing the qualities of a clustering
 	 * run result. It takes the clusterings and passes them to
-	 * {@link ClusteringRunResult#assessQuality(List)}.
+	 * {@link GraphMatchingRunResult#assessQuality(List)}.
 	 * 
 	 * @param convertedResult
 	 *            The clustering result converted to the default format, such
@@ -861,7 +861,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @throws RunResultNotFoundException
 	 */
 	protected List<Pair<ParameterSet, ClusteringQualitySet>> assessQualities(
-			ClusteringRunResult convertedResult)
+			GraphMatchingRunResult convertedResult)
 			throws RunResultNotFoundException {
 		this.log.debug(this.getRun() + " (" + this.programConfig + ","
 				+ this.dataConfig + ") Assessing quality of results...");
@@ -892,7 +892,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	}
 
 	/**
-	 * Helper method of {@link #assessQualities(ClusteringRunResult)}, invoked
+	 * Helper method of {@link #assessQualities(GraphMatchingRunResult)}, invoked
 	 * to write the assessed clustering qualities into files.
 	 * 
 	 * @param qualities
@@ -943,7 +943,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @throws SecurityException
 	 * @throws RunResultConversionException
 	 */
-	protected ClusteringRunResult convertResult()
+	protected GraphMatchingRunResult convertResult()
 			throws NoRunResultFormatParserException,
 			RunResultNotFoundException, RunResultConversionException {
 		/*
@@ -953,7 +953,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				+ this.dataConfig + ") Converting result files...");
 
 		try {
-			ClusteringRunResult convertedResult = result.convertTo(this
+			GraphMatchingRunResult convertedResult = result.convertTo(this
 					.getRun().getContext().getStandardOutputFormat(),
 					internalParams, effectiveParams);
 			synchronized (this.getRun().getResults()) {
@@ -1082,7 +1082,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	@SuppressWarnings("unused")
 	protected void afterClustering(
-			final ClusteringRunResult clusteringRunResult,
+			final GraphMatchingRunResult clusteringRunResult,
 			final List<Pair<ParameterSet, ClusteringQualitySet>> qualities) {
 	}
 

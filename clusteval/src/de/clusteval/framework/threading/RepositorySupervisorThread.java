@@ -5,9 +5,7 @@ package de.clusteval.framework.threading;
 
 import java.util.Map;
 
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethodFinderThread;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
-import de.clusteval.cluster.quality.ClusteringQualityMeasureFinderThread;
+import de.clusteval.paramOptimization.ParameterOptimizationMethodFinderThread;
 import de.clusteval.context.ContextFinderThread;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.DataConfigFinderThread;
@@ -34,6 +32,8 @@ import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramConfigFinderThread;
 import de.clusteval.program.r.RProgram;
 import de.clusteval.program.r.RProgramFinderThread;
+import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
 import de.clusteval.run.Run;
 import de.clusteval.run.RunFinderThread;
 import de.clusteval.run.result.RunResult;

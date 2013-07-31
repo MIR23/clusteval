@@ -18,10 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import utils.ProgressPrinter;
-import de.clusteval.cluster.paramOptimization.IncompatibleParameterOptimizationMethodException;
-import de.clusteval.cluster.paramOptimization.InvalidOptimizationParameterException;
-import de.clusteval.cluster.paramOptimization.UnknownParameterOptimizationMethodException;
-import de.clusteval.cluster.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.paramOptimization.IncompatibleParameterOptimizationMethodException;
+import de.clusteval.paramOptimization.InvalidOptimizationParameterException;
+import de.clusteval.paramOptimization.UnknownParameterOptimizationMethodException;
 import de.clusteval.context.Context;
 import de.clusteval.context.IncompatibleContextException;
 import de.clusteval.context.UnknownContextException;
@@ -54,7 +53,8 @@ import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.run.result.ClusteringRunResult;
+import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.result.RunResult;
 import de.clusteval.run.result.format.RunResultFormat;
@@ -287,7 +287,7 @@ public abstract class Run extends RepositoryObject {
 	/**
 	 * After this run was performed using the {@link #perform()} method, all the
 	 * results are stored in this list. If this run is a ExecutionRun this list
-	 * contains one {@link ClusteringRunResult} object for every executed
+	 * contains one {@link GraphMatchingRunResult} object for every executed
 	 * combination of program and dataset.
 	 */
 	protected List<RunResult> results;

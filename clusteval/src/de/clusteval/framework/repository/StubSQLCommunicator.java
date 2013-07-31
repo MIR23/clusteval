@@ -5,8 +5,7 @@ package de.clusteval.framework.repository;
 
 import java.sql.SQLException;
 
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethod;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
+import de.clusteval.paramOptimization.ParameterOptimizationMethod;
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
@@ -22,6 +21,7 @@ import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.StringProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -32,7 +32,7 @@ import de.clusteval.run.Run;
 import de.clusteval.run.RunAnalysisRun;
 import de.clusteval.run.RunDataAnalysisRun;
 import de.clusteval.run.result.AnalysisRunResult;
-import de.clusteval.run.result.ClusteringRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.DataAnalysisRunResult;
 import de.clusteval.run.result.ExecutionRunResult;
 import de.clusteval.run.result.ParameterOptimizationResult;
@@ -1034,7 +1034,7 @@ public class StubSQLCommunicator extends SQLCommunicator {
 	 * )
 	 */
 	@Override
-	public boolean register(ClusteringRunResult object) {
+	public boolean register(GraphMatchingRunResult object) {
 		return false;
 	}
 

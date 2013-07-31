@@ -161,4 +161,13 @@ public abstract class RunResultFormat extends RepositoryObject {
 				+ this.getClass().getSimpleName() + " failed");
 		return null;
 	}
+
+	/**
+	 * @param absPath
+	 *            The absolute file path passed to the program to store the
+	 *            runresult belonging to this runresult format.
+	 * @return The absolute path to the file in which the program has stored the
+	 *         runresult (not necessarily the passed path).
+	 */
+	public abstract File getRunResultFile(final File absPath);
 }

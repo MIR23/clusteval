@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import utils.parse.TextFileParser;
-import de.clusteval.run.result.ClusteringRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 
 /**
  * @author Christian Wiwie
@@ -20,7 +20,7 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	protected Map<String, String> internalParams;
 
 	/** The result. */
-	protected ClusteringRunResult result;
+	protected GraphMatchingRunResult result;
 
 	/**
 	 * Instantiates a new run result format parser.
@@ -75,7 +75,7 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	 * 
 	 * @return the run result
 	 */
-	public ClusteringRunResult getRunResult() {
+	public GraphMatchingRunResult getRunResult() {
 		return this.result;
 	}
 

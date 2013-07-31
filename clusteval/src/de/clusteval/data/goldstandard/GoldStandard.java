@@ -4,9 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.clusteval.cluster.Cluster;
-import de.clusteval.cluster.ClusterItem;
-import de.clusteval.cluster.Clustering;
 
 import utils.text.TextFileMapParser;
 import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
@@ -14,6 +11,9 @@ import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.repository.RepositoryObject;
+import de.clusteval.graphmatching.Cluster;
+import de.clusteval.graphmatching.ClusterItem;
+import de.clusteval.graphmatching.Clustering;
 
 /**
  * A wrapper class for a goldstandard on the filesystem.

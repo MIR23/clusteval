@@ -6,7 +6,6 @@ package de.clusteval.framework.repository;
 import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.DataSetConfig;
@@ -22,6 +21,7 @@ import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.StringProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
 import de.clusteval.run.Run;
 import de.clusteval.utils.Finder;
 import file.FileUtils;

@@ -11,10 +11,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.cluster.paramOptimization.IncompatibleParameterOptimizationMethodException;
-import de.clusteval.cluster.paramOptimization.InvalidOptimizationParameterException;
-import de.clusteval.cluster.paramOptimization.UnknownParameterOptimizationMethodException;
-import de.clusteval.cluster.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.paramOptimization.IncompatibleParameterOptimizationMethodException;
+import de.clusteval.paramOptimization.InvalidOptimizationParameterException;
+import de.clusteval.paramOptimization.UnknownParameterOptimizationMethodException;
 import de.clusteval.context.IncompatibleContextException;
 import de.clusteval.context.UnknownContextException;
 import de.clusteval.data.DataConfigNotFoundException;
@@ -46,6 +45,7 @@ import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
+import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
 import de.clusteval.run.InvalidRunModeException;
@@ -175,7 +175,7 @@ public abstract class RunResult extends RepositoryObject {
 		final Run run = Run.parseFromFile(runFile);
 
 		if (run instanceof ClusteringRun) {
-			return ClusteringRunResult.parseFromRunResultFolder(
+			return GraphMatchingRunResult.parseFromRunResultFolder(
 					(ClusteringRun) run, childRepository, runResultFolder,
 					result);
 		} else if (run instanceof ParameterOptimizationRun) {

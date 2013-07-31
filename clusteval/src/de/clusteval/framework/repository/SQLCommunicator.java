@@ -15,8 +15,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.cluster.paramOptimization.ParameterOptimizationMethod;
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
+import de.clusteval.paramOptimization.ParameterOptimizationMethod;
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
@@ -32,6 +31,7 @@ import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.StringProgramParameter;
+import de.clusteval.quality.ClusteringQualityMeasure;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -42,7 +42,7 @@ import de.clusteval.run.Run;
 import de.clusteval.run.RunAnalysisRun;
 import de.clusteval.run.RunDataAnalysisRun;
 import de.clusteval.run.result.AnalysisRunResult;
-import de.clusteval.run.result.ClusteringRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.DataAnalysisRunResult;
 import de.clusteval.run.result.ExecutionRunResult;
 import de.clusteval.run.result.ParameterOptimizationResult;
@@ -774,8 +774,8 @@ public abstract class SQLCommunicator {
 	 */
 	public boolean register(RunResult object) {
 		if (object instanceof ExecutionRunResult) {
-			if (object instanceof ClusteringRunResult) {
-				return register((ClusteringRunResult) object);
+			if (object instanceof GraphMatchingRunResult) {
+				return register((GraphMatchingRunResult) object);
 			} else if (object instanceof ParameterOptimizationResult) {
 				return register((ParameterOptimizationResult) object);
 			}
@@ -801,7 +801,7 @@ public abstract class SQLCommunicator {
 	 * @param object
 	 * @return True, if the object was registered successfully.
 	 */
-	public abstract boolean register(ClusteringRunResult object);
+	public abstract boolean register(GraphMatchingRunResult object);
 
 	/**
 	 * @param object

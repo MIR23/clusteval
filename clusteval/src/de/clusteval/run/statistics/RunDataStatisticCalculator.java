@@ -13,10 +13,9 @@ import java.util.List;
 import org.apache.commons.configuration.ConfigurationException;
 import org.rosuda.REngine.REngineException;
 
-import de.clusteval.cluster.paramOptimization.IncompatibleParameterOptimizationMethodException;
-import de.clusteval.cluster.paramOptimization.InvalidOptimizationParameterException;
-import de.clusteval.cluster.paramOptimization.UnknownParameterOptimizationMethodException;
-import de.clusteval.cluster.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.paramOptimization.IncompatibleParameterOptimizationMethodException;
+import de.clusteval.paramOptimization.InvalidOptimizationParameterException;
+import de.clusteval.paramOptimization.UnknownParameterOptimizationMethodException;
 import de.clusteval.context.IncompatibleContextException;
 import de.clusteval.context.UnknownContextException;
 
@@ -49,6 +48,7 @@ import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
+import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.RunException;
 import de.clusteval.run.result.AnalysisRunResultException;

@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import utils.Pair;
-import de.clusteval.cluster.paramOptimization.InvalidOptimizationParameterException;
+import de.clusteval.paramOptimization.InvalidOptimizationParameterException;
 import de.clusteval.context.Context;
 import de.clusteval.context.UnknownContextException;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;

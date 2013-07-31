@@ -18,13 +18,13 @@ import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RserveException;
 
 import utils.StringExt;
-import de.clusteval.cluster.Clustering;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.framework.MyRengine;
 import de.clusteval.framework.RLibraryNotLoadedException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
+import de.clusteval.graphmatching.Clustering;
 import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.run.result.format.RunResultFormat;

@@ -10,7 +10,6 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.cluster.quality.ClusteringQualityMeasure;
 import de.clusteval.data.dataset.DataSetConfig;
 import de.clusteval.data.dataset.DataSetConfigNotFoundException;
 import de.clusteval.data.dataset.DataSetConfigurationException;
@@ -31,6 +30,7 @@ import de.clusteval.framework.repository.RepositoryObject;
 import de.clusteval.framework.repository.RepositoryRemoveEvent;
 import de.clusteval.framework.repository.RepositoryReplaceEvent;
 import de.clusteval.framework.repository.RunResultRepository;
+import de.clusteval.quality.ClusteringQualityMeasure;
 import file.FileUtils;
 
 /**
