@@ -11,6 +11,7 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
+import utils.Pair;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
@@ -50,11 +51,13 @@ public class DataSetConfig extends RepositoryObject {
 	 *            The list of data sets to clone.
 	 * @return The list containing the cloned objects of the input list.
 	 */
-	public static List<DataSet> cloneDataSets(final List<DataSet> dataSets) {
-		List<DataSet> result = new ArrayList<DataSet>();
+	public static List<Pair<String, DataSet>> cloneDataSets(
+			final List<Pair<String, DataSet>> dataSets) {
+		List<Pair<String, DataSet>> result = new ArrayList<Pair<String, DataSet>>();
 
-		for (DataSet dataSet : dataSets) {
-			result.add(dataSet.clone());
+		for (Pair<String, DataSet> dataSet : dataSets) {
+			result.add(Pair.getPair(dataSet.getFirst() + "", dataSet
+					.getSecond().clone()));
 		}
 
 		return result;
@@ -64,7 +67,7 @@ public class DataSetConfig extends RepositoryObject {
 	 * A dataset configuration encapsulates a dataset. This attribute stores a
 	 * reference to the dataset wrapper object.
 	 */
-	protected List<DataSet> datasets;
+	protected List<Pair<String, DataSet>> datasets;
 
 	/**
 	 * Instantiates a new dataset configuration.
@@ -82,15 +85,15 @@ public class DataSetConfig extends RepositoryObject {
 	 * @throws RegisterException
 	 */
 	public DataSetConfig(final Repository repository, final long changeDate,
-			final File absPath, final List<DataSet> ds)
+			final File absPath, final List<Pair<String, DataSet>> ds)
 			throws RegisterException {
 		super(repository, false, changeDate, absPath);
 
 		this.datasets = ds;
 
 		if (this.register()) {
-			for (DataSet dataset : this.datasets)
-				dataset.addListener(this);
+			for (Pair<String, DataSet> dataset : this.datasets)
+				dataset.getSecond().addListener(this);
 		}
 	}
 
@@ -176,7 +179,7 @@ public class DataSetConfig extends RepositoryObject {
 			Repository repo = Repository.getRepositoryForPath(absConfigPath
 					.getAbsolutePath());
 
-			List<DataSet> dataSets = new ArrayList<DataSet>();
+			List<Pair<String, DataSet>> dataSets = new ArrayList<Pair<String, DataSet>>();
 
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
@@ -190,7 +193,7 @@ public class DataSetConfig extends RepositoryObject {
 						.buildPath(repo.getDataSetBasePath(), datasetName,
 								datasetFile)));
 
-				dataSets.add(dataSet);
+				dataSets.add(Pair.getPair(section, dataSet));
 			}
 			DataSetConfig result = new DataSetConfig(repo,
 					absConfigPath.lastModified(), absConfigPath, dataSets);
@@ -206,7 +209,7 @@ public class DataSetConfig extends RepositoryObject {
 	/**
 	 * @return The dataset, this configuration belongs to.
 	 */
-	public List<DataSet> getDataSets() {
+	public List<Pair<String, DataSet>> getDataSets() {
 		return datasets;
 	}
 
@@ -245,7 +248,7 @@ public class DataSetConfig extends RepositoryObject {
 				// check whether the object was a dataset contained in this
 				// dataset config
 				for (int i = 0; i < datasets.size(); i++) {
-					DataSet dataset = datasets.get(i);
+					DataSet dataset = datasets.get(i).getSecond();
 					if (event.getOld().equals(dataset)) {
 						event.getOld().removeListener(this);
 						this.log.info("DataSetConfig "
@@ -253,7 +256,8 @@ public class DataSetConfig extends RepositoryObject {
 								+ ": Dataset reloaded due to modifications in filesystem");
 						event.getReplacement().addListener(this);
 						// added 06.07.2012
-						this.datasets.set(i, (DataSet) event.getReplacement());
+						this.datasets.get(i).setSecond(
+								(DataSet) event.getReplacement());
 						break;
 					}
 				}
@@ -266,7 +270,7 @@ public class DataSetConfig extends RepositoryObject {
 				// check whether the object was a dataset contained in this
 				// dataset config
 				for (int i = 0; i < datasets.size(); i++) {
-					DataSet dataset = datasets.get(i);
+					DataSet dataset = datasets.get(i).getSecond();
 					if (event.getRemovedObject().equals(dataset)) {
 						event.getRemovedObject().removeListener(this);
 						this.log.info("DataSetConfig " + this
@@ -296,7 +300,7 @@ public class DataSetConfig extends RepositoryObject {
 	 * @param datasets
 	 *            The new datasets
 	 */
-	public void setDataSets(List<DataSet> datasets) {
+	public void setDataSets(List<Pair<String,DataSet>> datasets) {
 		this.datasets = datasets;
 	}
 }

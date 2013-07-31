@@ -11,6 +11,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import utils.Pair;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
 import de.clusteval.data.distance.UnknownDistanceMeasureException;
@@ -157,11 +158,12 @@ public class TestDataSetConfig extends TestRepositoryObject {
 		DataSetConfig gsConfig = DataSetConfig.parseFromFile(new File(
 				"testCaseRepository/data/datasets/configs/astral_1.dsconfig")
 				.getAbsoluteFile());
-		List<DataSet> dataSets = new ArrayList<DataSet>();
-		dataSets.add(DataSet
-				.parseFromFile(new File(
+		List<Pair<String, DataSet>> dataSets = new ArrayList<Pair<String, DataSet>>();
+		dataSets.add(Pair.getPair(
+				"blast",
+				DataSet.parseFromFile(new File(
 						"testCaseRepository/data/datasets/astral_1_161/blastResults.txt")
-						.getAbsoluteFile()));
+						.getAbsoluteFile())));
 		Assert.assertEquals(
 				new DataSetConfig(
 						repository,
@@ -259,7 +261,7 @@ public class TestDataSetConfig extends TestRepositoryObject {
 		DataSetConfig dsConfig = DataSetConfig.parseFromFile(new File(
 				"testCaseRepository/data/datasets/configs/astral_1.dsconfig")
 				.getAbsoluteFile());
-		List<DataSet> ds = dsConfig.getDataSets();
+		List<Pair<String, DataSet>> ds = dsConfig.getDataSets();
 		DataSet expected = DataSet
 				.parseFromFile(new File(
 						"testCaseRepository/data/datasets/astral_1_161/blastResults.txt")
@@ -294,19 +296,19 @@ public class TestDataSetConfig extends TestRepositoryObject {
 		DataSetConfig dsConfig = DataSetConfig.parseFromFile(new File(
 				"testCaseRepository/data/datasets/configs/astral_1.dsconfig")
 				.getAbsoluteFile());
-		List<DataSet> ds = dsConfig.getDataSets();
+		List<Pair<String, DataSet>> ds = dsConfig.getDataSets();
 		DataSet expected = DataSet
 				.parseFromFile(new File(
 						"testCaseRepository/data/datasets/astral_1_161/blastResults.txt")
 						.getAbsoluteFile());
 		Assert.assertEquals(expected, ds);
 
-		List<DataSet> override = new ArrayList<DataSet>();
+		List<Pair<String, DataSet>> override = new ArrayList<Pair<String, DataSet>>();
 		DataSet newDs = DataSet
 				.parseFromFile(new File(
 						"testCaseRepository/data/datasets/DS1/Zachary_karate_club_similarities.txt")
 						.getAbsoluteFile());
-		override.add(newDs);
+		override.add(Pair.getPair("DS1", newDs));
 		dsConfig.setDataSets(override);
 		Assert.assertEquals(override, dsConfig.getDataSets());
 	}

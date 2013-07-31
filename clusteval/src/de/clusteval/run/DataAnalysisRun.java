@@ -197,7 +197,7 @@ public class DataAnalysisRun extends AnalysisRun<DataStatistic> {
 
 		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
 			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
-					.get(i);
+					.get(i).getSecond();
 			String input = dataSet.getAbsolutePath();
 
 			/*
@@ -310,7 +310,7 @@ public class DataAnalysisRun extends AnalysisRun<DataStatistic> {
 
 		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
 			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
-					.get(i);
+					.get(i).getSecond();
 			String input = dataSet.getAbsolutePath();
 
 			/*

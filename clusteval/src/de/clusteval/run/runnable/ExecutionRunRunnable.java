@@ -237,11 +237,11 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			 * either they are directly compatible or the dataset can be
 			 * converted to another compatible DataSetFormat.
 			 */
-			List<DataSet> dataSets = dataConfig.getDatasetConfig()
-					.getDataSets();
+			List<Pair<String, DataSet>> dataSets = dataConfig
+					.getDatasetConfig().getDataSets();
 			List<String> dataSetFormats = new ArrayList<String>();
-			for (DataSet ds : dataSets) {
-				dataSetFormats.add(ds.getDataSetFormat().getClass()
+			for (Pair<String, DataSet> ds : dataSets) {
+				dataSetFormats.add(ds.getSecond().getDataSetFormat().getClass()
 						.getSimpleName());
 			}
 			Set<List<Pair<String, String>>> conversions = programConfig
@@ -258,12 +258,12 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 					mapping = m;
 			}
 
-			Set<Pair<String, String>> remainingMappings = new HashSet<Pair<String, String>>(
+			List<Pair<String, String>> remainingMappings = new ArrayList<Pair<String, String>>(
 					mapping);
 
 			// for every dataset, find the target format in the mapping
 			for (int i = 0; i < dataSets.size(); i++) {
-				DataSet ds = dataSets.get(i);
+				DataSet ds = dataSets.get(i).getSecond();
 				Iterator<Pair<String, String>> it2 = remainingMappings
 						.iterator();
 				while (it2.hasNext()) {
@@ -305,8 +305,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 							} else
 								converted.move(new File(newFileName), false);
 
-							dataConfig.getDatasetConfig().getDataSets()
-									.set(i, converted);
+							dataConfig.getDatasetConfig().getDataSets().get(i)
+									.setSecond(converted);
 
 							break;
 						} catch (FormatConversionException e) {
@@ -450,13 +450,16 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	protected String[] parseInput(final String[] invocation,
 			final Map<String, String> internalParams) {
-		List<DataSet> dataSets = dataConfig.getDatasetConfig().getDataSets();
+		List<Pair<String, DataSet>> dataSets = dataConfig.getDatasetConfig()
+				.getDataSets();
 		String[] parsed = invocation.clone();
 		for (int i = 0; i < dataSets.size(); i++) {
-			internalParams.put("i_" + i, dataSets.get(i).getAbsolutePath());
+			internalParams.put("i{" + dataSets.get(i).getFirst() + "}",
+					dataSets.get(i).getSecond().getAbsolutePath());
 			for (int j = 0; j < parsed.length; j++)
-				parsed[j] = parsed[j].replace("%i_" + i + "%", dataSets.get(i)
-						.getAbsolutePath());
+				parsed[j] = parsed[j].replace("%i{"
+						+ dataSets.get(i).getFirst() + "}%", dataSets.get(i)
+						.getSecond().getAbsolutePath());
 		}
 		return parsed;
 	}
@@ -1203,8 +1206,9 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		boolean found = preprocessAndCheckCompatibleDataSetFormat();
 		if (!found) {
 			List<DataSetFormat> dsFormats = new ArrayList<DataSetFormat>();
-			for (DataSet ds : dataConfig.getDatasetConfig().getDataSets()) {
-				dsFormats.add(ds.getDataSetFormat());
+			for (Pair<String, DataSet> ds : dataConfig.getDatasetConfig()
+					.getDataSets()) {
+				dsFormats.add(ds.getSecond().getDataSetFormat());
 			}
 			IncompatibleDataSetFormatException ex = new IncompatibleDataSetFormatException(
 					"The program \"" + programConfig.getProgram()
@@ -1216,9 +1220,9 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 		try {
 			// Load the dataset into memory
-			for (DataSet dataSet : this.dataConfig.getDatasetConfig()
-					.getDataSets())
-				dataSet.getInStandardFormat().loadIntoMemory();
+			for (Pair<String, DataSet> dataSet : this.dataConfig
+					.getDatasetConfig().getDataSets())
+				dataSet.getSecond().loadIntoMemory();
 
 			// if the original dataset is an absolute dataset, load it into
 			// memory as well
@@ -1305,10 +1309,9 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	protected void afterRun() {
 		super.afterRun();
 		// unload the dataset from memory
-		for (DataSet dataSet : this.dataConfig.getDatasetConfig().getDataSets()) {
-			dataSet = dataSet.getInStandardFormat();
-			if (dataSet != null)
-				dataSet.unloadFromMemory();
+		for (Pair<String, DataSet> dataSet : this.dataConfig.getDatasetConfig()
+				.getDataSets()) {
+			dataSet.getSecond().unloadFromMemory();
 		}
 		// if the original dataset is an absolute dataset, unload it from
 		// memory

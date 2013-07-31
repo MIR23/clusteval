@@ -34,21 +34,10 @@
 	<classpathentry kind="lib" path="lib/apacheCommons/commons-logging-adapters-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/apacheCommons/commons-logging-api-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-	<classpathentry kind="lib" path="lib/jung2/jung-algorithms-2.0.1.jar" sourcepath="lib/jung2/jung-algorithms-2.0.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/chris/git/clustevalGraphMatch/clusteval/lib/jung2/apidocs/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jung2/jung-api-2.0.1.jar" sourcepath="lib/jung2/jung-api-2.0.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/chris/git/clustevalGraphMatch/clusteval/lib/jung2/apidocs/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jung2/jung-graph-impl-2.0.1.jar" sourcepath="lib/jung2/jung-graph-impl-2.0.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/chris/git/clustevalGraphMatch/clusteval/lib/jung2/apidocs/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="lib/jung2/jung-algorithms-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jung2/jung-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jung2/jung-graph-impl-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jung2/collections-generic-4.01.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

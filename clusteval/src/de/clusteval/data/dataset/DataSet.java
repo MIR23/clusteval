@@ -75,14 +75,6 @@ public class DataSet extends RepositoryObject {
 	/**
 	 * When a dataset is used during a run, it first is converted to the
 	 * internal standard format and afterwards into the format required by the
-	 * clustering method. This attribute holds the version of this dataset in
-	 * the standard format.
-	 */
-	protected DataSet thisInStandardFormat;
-
-	/**
-	 * When a dataset is used during a run, it first is converted to the
-	 * internal standard format and afterwards into the format required by the
 	 * clustering method. This attribute holds the original unconverted dataset.
 	 */
 	protected DataSet originalDataSet;
@@ -161,12 +153,6 @@ public class DataSet extends RepositoryObject {
 
 	@SuppressWarnings("unused")
 	private void createAndRegisterInternalAttributes() throws RegisterException {
-		new NamedDoubleAttribute(this.repository, this.getAbsolutePath()
-				+ ":meanSimilarity", new Double(Float.NEGATIVE_INFINITY));
-		new NamedDoubleAttribute(this.repository, this.getAbsolutePath()
-				+ ":minSimilarity", new Double(Float.NEGATIVE_INFINITY));
-		new NamedDoubleAttribute(this.repository, this.getAbsolutePath()
-				+ ":maxSimilarity", new Double(Float.NEGATIVE_INFINITY));
 		new NamedIntegerAttribute(this.repository, this.getAbsolutePath()
 				+ ":numberOfElements", new Integer(Integer.MIN_VALUE));
 	}
@@ -576,31 +562,34 @@ public class DataSet extends RepositoryObject {
 			DataSetFormat sourceFormat = this.getDataSetFormat();
 
 			// check, whether dataset format parsers are registered.
-//			if ((!sourceFormat.equals(context.getStandardInputFormat()) && !this
-//					.getRepository().isRegisteredForDataSetFormat(
-//							sourceFormat.getClass()))
-//					|| (!targetFormat.equals(context.getStandardInputFormat()) && !this
-//							.getRepository().isRegisteredForDataSetFormat(
-//									targetFormat.getClass())))
-//				throw new FormatConversionException(
-//						"No conversion from "
-//								+ sourceFormat
-//								+ " to "
-//								+ targetFormat
-//								+ " via internal standard format "
-//								+ context.getStandardInputFormat()
-//								+ " possible, because of missing dataset format parsers.");
+			// if ((!sourceFormat.equals(context.getStandardInputFormat()) &&
+			// !this
+			// .getRepository().isRegisteredForDataSetFormat(
+			// sourceFormat.getClass()))
+			// || (!targetFormat.equals(context.getStandardInputFormat()) &&
+			// !this
+			// .getRepository().isRegisteredForDataSetFormat(
+			// targetFormat.getClass())))
+			// throw new FormatConversionException(
+			// "No conversion from "
+			// + sourceFormat
+			// + " to "
+			// + targetFormat
+			// + " via internal standard format "
+			// + context.getStandardInputFormat()
+			// + " possible, because of missing dataset format parsers.");
 
 			// 13.04.2013: update the original dataset of the dataset to itself
 			this.originalDataSet = this;
 
 			// convert the input format to the standard format
 			try {
-//				DataSetFormat standardFormat = context.getStandardInputFormat();
+				// DataSetFormat standardFormat =
+				// context.getStandardInputFormat();
 				// DataSetFormat.parseFromString(
 				// repository, context.getStandardInputFormat().getClass()
 				// .getSimpleName());
-//				standardFormat.setNormalized(targetFormat.getNormalized());
+				// standardFormat.setNormalized(targetFormat.getNormalized());
 
 				// Remove dataset attributes from file and write the result to
 				// dataSet.getAbsolutePath() + ".strip"
@@ -674,8 +663,6 @@ public class DataSet extends RepositoryObject {
 				e.printStackTrace();
 			}
 			// TODO
-			converted.thisInStandardFormat = converted;
-			this.thisInStandardFormat = converted;
 			converted.originalDataSet = this.originalDataSet;
 		}
 		return converted;
@@ -750,14 +737,6 @@ public class DataSet extends RepositoryObject {
 	 */
 	public String getAlias() {
 		return this.alias;
-	}
-
-	/**
-	 * @return This dataset in the internal standard format.
-	 * @see #thisInStandardFormat
-	 */
-	public DataSet getInStandardFormat() {
-		return this.thisInStandardFormat;
 	}
 
 	/**

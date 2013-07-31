@@ -1,7 +1,15 @@
-[file1]
+[edgelist1]
 datasetName = rashid
 datasetFile = N1.edgelist
 
-[file2]
+[edgelist2]
 datasetName = rashid
 datasetFile = N2.edgelist
+
+[sigs1]
+datasetName = rashid
+datasetFile = N1.sigs
+
+[sigs2]
+datasetName = rashid
+datasetFile = N2.sigs

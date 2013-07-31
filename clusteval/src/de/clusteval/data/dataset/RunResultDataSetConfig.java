@@ -14,6 +14,7 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
+import utils.Pair;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -32,7 +33,8 @@ public class RunResultDataSetConfig extends DataSetConfig {
 	 * @throws RegisterException
 	 */
 	public RunResultDataSetConfig(Repository repository, long changeDate,
-			File absPath, List<DataSet> ds) throws RegisterException {
+			File absPath, List<Pair<String, DataSet>> ds)
+			throws RegisterException {
 		super(repository, changeDate, absPath, ds);
 	}
 
@@ -86,7 +88,7 @@ public class RunResultDataSetConfig extends DataSetConfig {
 			Repository repo = Repository.getRepositoryForPath(absConfigPath
 					.getAbsolutePath());
 
-			List<DataSet> dataSets = new ArrayList<DataSet>();
+			List<Pair<String, DataSet>> dataSets = new ArrayList<Pair<String, DataSet>>();
 
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
@@ -100,7 +102,7 @@ public class RunResultDataSetConfig extends DataSetConfig {
 				DataSet dataSet = repo.getDataSetWithName(datasetName + "/"
 						+ datasetFile);
 
-				dataSets.add(dataSet);
+				dataSets.add(Pair.getPair(section, dataSet));
 			}
 			DataSetConfig result = new DataSetConfig(repo,
 					absConfigPath.lastModified(), absConfigPath, dataSets);

@@ -346,7 +346,7 @@ public abstract class ExecutionRun extends Run {
 		// 22.06.2013: move the dataset files
 		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
 			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
-					.get(i);
+					.get(i).getSecond();
 			String input = dataSet.getAbsolutePath();
 
 			/*
@@ -371,7 +371,7 @@ public abstract class ExecutionRun extends Run {
 				dataSet.copyTo(new File(movedInput));
 
 			// update the paths to dataset in the copied data config
-			newDataConfig.getDatasetConfig().getDataSets().get(i)
+			newDataConfig.getDatasetConfig().getDataSets().get(i).getSecond()
 					.setAbsolutePath(new File(movedInput));
 		}
 
@@ -483,7 +483,7 @@ public abstract class ExecutionRun extends Run {
 		// 22.06.2013: move the dataset files
 		for (int i = 0; i < dataConfig.getDatasetConfig().getDataSets().size(); i++) {
 			DataSet dataSet = dataConfig.getDatasetConfig().getDataSets()
-					.get(i);
+					.get(i).getSecond();
 			String input = dataSet.getAbsolutePath();
 
 			/*
@@ -512,7 +512,7 @@ public abstract class ExecutionRun extends Run {
 			 */
 			dataSet.setAbsolutePath(new File(movedInput));
 
-			newDataConfig.getDatasetConfig().getDataSets().get(i)
+			newDataConfig.getDatasetConfig().getDataSets().get(i).getSecond()
 					.setAbsolutePath(new File(movedInput));
 		}
 
