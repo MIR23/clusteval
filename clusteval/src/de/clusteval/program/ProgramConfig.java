@@ -591,12 +591,16 @@ public class ProgramConfig extends RepositoryObject {
 
 	/**
 	 * 
+	 * @param repo
+	 *            The repository to check for available format conversions
+	 * @param programConfig
 	 * @param inputFormats
 	 * @return True, if the provided input formats are compatibly with this
 	 *         program configuration.
 	 * @see #compatibleDataSetFormats
 	 */
-	public boolean checkCompatibilityToDataSetFormats(
+	public static boolean checkCompatibilityToDataSetFormats(
+			final Repository repo, final ProgramConfig programConfig,
 			final List<String> inputFormats) {
 		return !getCompatibleDataSetFormats(inputFormats).isEmpty();
 	}
@@ -612,7 +616,7 @@ public class ProgramConfig extends RepositoryObject {
 
 		// we iterate over all possible sets of input formats this program
 		// configuration supports
-		for (String requiredFormatsStr : this.compatibleDataSetFormats) {
+		for (String requiredFormatsStr : programConfig.compatibleDataSetFormats) {
 			// optional input formats will end with '?'
 			List<String> requiredFormats = new ArrayList<String>(
 					Arrays.asList(requiredFormatsStr.split("\\&")));
@@ -637,7 +641,7 @@ public class ProgramConfig extends RepositoryObject {
 			// converted to it
 			boolean stillValid = true;
 			for (String requiredFormat : requiredFormats) {
-				Map<String, List<String>> pathsToRequiredFormat = this.repository
+				Map<String, List<String>> pathsToRequiredFormat = repo
 						.getAvailableFormatConversionsTo(requiredFormat);
 
 				// check whether we have got any of these inputs
