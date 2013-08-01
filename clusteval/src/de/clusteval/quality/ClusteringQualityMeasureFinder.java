@@ -20,7 +20,7 @@ import de.clusteval.utils.RecursiveSubDirectoryIterator;
  */
 public class ClusteringQualityMeasureFinder
 		extends
-			JARFinder<ClusteringQualityMeasure> {
+			JARFinder<QualityMeasure> {
 
 	/**
 	 * Instantiates a new clustering quality measure finder.
@@ -42,7 +42,7 @@ public class ClusteringQualityMeasureFinder
 	 * @see utils.JARFinder#getRegisteredObjectSet()
 	 */
 	@Override
-	protected Collection<Class<? extends ClusteringQualityMeasure>> getRegisteredObjectSet() {
+	protected Collection<Class<? extends QualityMeasure>> getRegisteredObjectSet() {
 		return this.repository.getClusteringQualityMeasureClasses();
 	}
 
@@ -53,7 +53,7 @@ public class ClusteringQualityMeasureFinder
 	 */
 	@Override
 	protected void removeOldObject(
-			Class<? extends ClusteringQualityMeasure> object) {
+			Class<? extends QualityMeasure> object) {
 		this.repository.unregisterClusteringQualityMeasureClass(object);
 	}
 
@@ -120,7 +120,7 @@ public class ClusteringQualityMeasureFinder
 	 */
 	@Override
 	protected Class<?> getClassToFind() {
-		return ClusteringQualityMeasure.class;
+		return QualityMeasure.class;
 	}
 
 	/*
@@ -195,7 +195,7 @@ class ClusteringQualityMeasureURLClassLoader extends URLClassLoader {
 					&& !name.equals("de.clusteval.cluster.quality.ClusteringQualityMeasureR")
 					&& name.endsWith("ClusteringQualityMeasure")) {
 				@SuppressWarnings("unchecked")
-				Class<? extends ClusteringQualityMeasure> qualityMeasure = (Class<? extends ClusteringQualityMeasure>) result;
+				Class<? extends QualityMeasure> qualityMeasure = (Class<? extends QualityMeasure>) result;
 
 				if (this.parent.getRepository()
 						.registerClusteringQualityMeasureClass(qualityMeasure))

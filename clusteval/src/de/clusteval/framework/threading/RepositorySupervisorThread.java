@@ -32,7 +32,7 @@ import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramConfigFinderThread;
 import de.clusteval.program.r.RProgram;
 import de.clusteval.program.r.RProgramFinderThread;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
 import de.clusteval.run.Run;
 import de.clusteval.run.RunFinderThread;
@@ -76,7 +76,7 @@ import de.clusteval.run.statistics.RunStatisticFinderThread;
  * {@link RunResultFormat}).</li>
  * <li><b>ClusteringQualityMeasureFinderThread</b>: A thread which checks
  * {@link Repository#clusteringQualityMeasureBasePath} for new clustering
- * quality measures (see {@link ClusteringQualityMeasure}).</li>
+ * quality measures (see {@link QualityMeasure}).</li>
  * <li><b>ParameterOptimizationMethodFinderThread</b>: A thread which checks
  * {@link Repository#parameterOptimizationMethodBasePath} for new parameter
  * optimization methods (see {@link DataSetFormat}).</li>

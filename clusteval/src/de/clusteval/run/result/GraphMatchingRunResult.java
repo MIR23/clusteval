@@ -40,7 +40,7 @@ import de.clusteval.framework.repository.RepositoryAlreadyExistsException;
 import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
@@ -72,7 +72,7 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 	/** The result format. */
 	protected RunResultFormat resultFormat;
 
-	protected Pair<ParameterSet, Clustering> clustering;
+	protected Pair<ParameterSet, GraphMatching> graphmatching;
 
 	/**
 	 * Instantiates a new clustering result.
@@ -116,8 +116,8 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 		super(other);
 
 		this.resultFormat = other.resultFormat.clone();
-		this.clustering = Pair.getPair(other.clustering.getFirst(),
-				other.clustering.getSecond());
+		this.graphmatching = Pair.getPair(other.graphmatching.getFirst(),
+				other.graphmatching.getSecond());
 	}
 
 	/*
@@ -240,8 +240,8 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 	/**
 	 * @return The clustering corresponding to this clustering run result.
 	 */
-	public Pair<ParameterSet, Clustering> getClustering() {
-		return this.clustering;
+	public Pair<ParameterSet, GraphMatching> getGraphMatching() {
+		return this.graphmatching;
 	}
 
 	/**
@@ -458,13 +458,13 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 	public void loadIntoMemory() {
 		if (absPath.exists()) {
 			try {
-				final Pair<Map<String, Double>, Clustering> pair = Clustering
+				final Pair<Map<String, Double>, GraphMatching> pair = GraphMatching
 						.parseFromFile(repository, absPath, true);
 
 				ParameterSet paramSet = new ParameterSet();
 				for (String param : pair.getFirst().keySet())
 					paramSet.put(param, pair.getFirst().get(param));
-				this.clustering = Pair.getPair(paramSet, pair.getSecond());
+				this.graphmatching = Pair.getPair(paramSet, pair.getSecond());
 			} catch (Exception e) {
 			}
 		}
@@ -477,6 +477,6 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 	 */
 	@Override
 	public void unloadFromMemory() {
-		this.clustering = null;
+		this.graphmatching = null;
 	}
 }

@@ -15,9 +15,9 @@ import utils.parse.TextFileParser;
 import utils.text.TextFileMapParser;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.Repository;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualityMeasureValue;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualityMeasureValue;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 
 /**
@@ -34,7 +34,7 @@ public class ClusteringParser extends TextFileParser {
 	/**
 	 * This variable holds the results after parsing
 	 */
-	protected Pair<Map<String, Double>, Clustering> result;
+	protected Pair<Map<String, Double>, GraphMatching> result;
 
 	/**
 	 * A temporary variable of no use after parsing.
@@ -72,52 +72,52 @@ public class ClusteringParser extends TextFileParser {
 	 */
 	@Override
 	protected void processLine(String[] key, String[] value) {
-
-		String parameterString = key[0];
-
-		if (this.currentLine == 0) {
-			String[] params = parameterString.split(",");
-			for (String param : params)
-				this.params.add(param.intern());
-			return;
-		}
-
-		Clustering result;
-		try {
-
-			Repository repo = Repository.getRepositoryForPath(absoluteFilePath);
-			if (repo.getParent() != null)
-				repo = repo.getParent();
-
-			result = new Clustering();
-			String[] params = parameterString.split(",");
-
-			Map<String, Double> paramValues = new HashMap<String, Double>();
-			for (int pos = 0; pos < this.params.size(); pos++) {
-				paramValues.put(this.params.get(pos), Double.valueOf(Double
-						.valueOf(params[pos]).doubleValue()));
-			}
-
-			String clusteringString = value[0];
-			String[] clusters = clusteringString.split(";");
-			int no = 1;
-			for (String cluster : clusters) {
-				Cluster c = new Cluster((no++ + "").intern());
-				String[] items = cluster.split(",");
-				for (String item : items) {
-					String[] itemSplit = item.split(":");
-					c.add(new ClusterItem(itemSplit[0].intern()), Float
-							.valueOf(Float.valueOf(itemSplit[1]).floatValue()));
-				}
-				result.addCluster(c);
-			}
-
-			this.result = Pair.getPair(paramValues, result);
-		} catch (NoRepositoryFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+// TODO
+//		String parameterString = key[0];
+//
+//		if (this.currentLine == 0) {
+//			String[] params = parameterString.split(",");
+//			for (String param : params)
+//				this.params.add(param.intern());
+//			return;
+//		}
+//
+//		GraphMatching result;
+//		try {
+//
+//			Repository repo = Repository.getRepositoryForPath(absoluteFilePath);
+//			if (repo.getParent() != null)
+//				repo = repo.getParent();
+//
+//			result = new GraphMatching();
+//			String[] params = parameterString.split(",");
+//
+//			Map<String, Double> paramValues = new HashMap<String, Double>();
+//			for (int pos = 0; pos < this.params.size(); pos++) {
+//				paramValues.put(this.params.get(pos), Double.valueOf(Double
+//						.valueOf(params[pos]).doubleValue()));
+//			}
+//
+//			String clusteringString = value[0];
+//			String[] clusters = clusteringString.split(";");
+//			int no = 1;
+//			for (String cluster : clusters) {
+//				Cluster c = new Cluster((no++ + "").intern());
+//				String[] items = cluster.split(",");
+//				for (String item : items) {
+//					String[] itemSplit = item.split(":");
+//					c.add(new ClusterItem(itemSplit[0].intern()), Float
+//							.valueOf(Float.valueOf(itemSplit[1]).floatValue()));
+//				}
+//				result.addCluster(c);
+//			}
+//
+//			this.result = Pair.getPair(paramValues, result);
+//		} catch (NoRepositoryFoundException e) {
+//			e.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	/*
@@ -128,40 +128,41 @@ public class ClusteringParser extends TextFileParser {
 	@Override
 	public void finishProcess() {
 		// parse qualities
-		if (parseQualities) {
-			final File qualityFile = new File(this.absoluteFilePath.replace(
-					".conv", ".qual"));
-			if (qualityFile.exists()) {
-				try {
-					TextFileMapParser parser = new TextFileMapParser(
-							qualityFile.getAbsolutePath(), 0, 1);
-					parser.process();
-					Map<String, String> result = parser.getResult();
-					ClusteringQualitySet qualitySet = new ClusteringQualitySet();
-					for (String measure : result.keySet()) {
-						ClusteringQualityMeasure clMeasure;
-						clMeasure = ClusteringQualityMeasure.parseFromString(
-								this.repository, measure);
-						qualitySet.put(clMeasure, ClusteringQualityMeasureValue
-								.getForDouble(Double.parseDouble(result
-										.get(measure))));
-					}
-					this.result.getSecond().setQualities(qualitySet);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (UnknownClusteringQualityMeasureException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		super.finishProcess();
+		//TODO
+//		if (parseQualities) {
+//			final File qualityFile = new File(this.absoluteFilePath.replace(
+//					".conv", ".qual"));
+//			if (qualityFile.exists()) {
+//				try {
+//					TextFileMapParser parser = new TextFileMapParser(
+//							qualityFile.getAbsolutePath(), 0, 1);
+//					parser.process();
+//					Map<String, String> result = parser.getResult();
+//					QualitySet qualitySet = new QualitySet();
+//					for (String measure : result.keySet()) {
+//						QualityMeasure clMeasure;
+//						clMeasure = QualityMeasure.parseFromString(
+//								this.repository, measure);
+//						qualitySet.put(clMeasure, QualityMeasureValue
+//								.getForDouble(Double.parseDouble(result
+//										.get(measure))));
+//					}
+//					this.result.getSecond().setQualities(qualitySet);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				} catch (UnknownClusteringQualityMeasureException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//
+//		super.finishProcess();
 	}
 
 	/**
 	 * @return A map containing parameter sets and corresponding clusterings.
 	 */
-	public Pair<Map<String, Double>, Clustering> getClusterings() {
+	public Pair<Map<String, Double>, GraphMatching> getClusterings() {
 		return this.result;
 	}
 }

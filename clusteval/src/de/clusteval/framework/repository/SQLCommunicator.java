@@ -31,7 +31,7 @@ import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.StringProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -463,7 +463,7 @@ public abstract class SQLCommunicator {
 			final Class<? extends ParameterOptimizationMethod> object);
 
 	protected abstract boolean unregisterClusteringQualityMeasureClass(
-			final Class<? extends ClusteringQualityMeasure> object);
+			final Class<? extends QualityMeasure> object);
 
 	protected abstract boolean unregisterDataStatisticClass(
 			final Class<? extends DataStatistic> object);
@@ -840,7 +840,7 @@ public abstract class SQLCommunicator {
 			Class<? extends ParameterOptimizationMethod> paramOptMethod);
 
 	protected abstract boolean registerClusteringQualityMeasureClass(
-			Class<? extends ClusteringQualityMeasure> clusteringQualityMeasure);
+			Class<? extends QualityMeasure> clusteringQualityMeasure);
 
 	protected abstract boolean registerDataStatisticClass(
 			Class<? extends DataStatistic> dataStatistic);

@@ -21,8 +21,8 @@ import de.clusteval.framework.repository.RepositoryObject;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.run.ParameterOptimizationRun;
 import de.clusteval.run.Run;
 import de.clusteval.run.result.GraphMatchingRunResult;
@@ -64,7 +64,7 @@ import de.clusteval.utils.InternalAttributeException;
  * <li>Use {@link #next()} to get the next parameter set.</li>
  * <li>Pass the assessed qualities of
  * {@link ExecutionRunRunnable#assessQualities(GraphMatchingRunResult)} to
- * {@link #giveQualityFeedback(ClusteringQualitySet)}.</li>
+ * {@link #giveQualityFeedback(QualitySet)}.</li>
  * <li>At the end use {@link #getResult()} to get the results of the iterations</li>
  * </ul>
  * 
@@ -139,7 +139,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 	 * This quality measure is called the optimization criterion and is stored
 	 * in this attribute.
 	 */
-	protected ClusteringQualityMeasure optimizationCriterion;
+	protected QualityMeasure optimizationCriterion;
 
 	/**
 	 * This object holds the results that are calculated throughout execution of
@@ -190,7 +190,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 			final ParameterOptimizationRun run,
 			final ProgramConfig programConfig, final DataConfig dataConfig,
 			final List<ProgramParameter<?>> params,
-			final ClusteringQualityMeasure optimizationCriterion,
+			final QualityMeasure optimizationCriterion,
 			final int[] iterationPerParameter, final boolean isResume)
 			throws RegisterException {
 		super(repository, false, changeDate, absPath);
@@ -307,7 +307,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 	 * @return The quality measure used as the optimization criterion (see
 	 *         {@link #optimizationCriterion}).
 	 */
-	public final ClusteringQualityMeasure getOptimizationCriterion() {
+	public final QualityMeasure getOptimizationCriterion() {
 		return this.optimizationCriterion;
 	}
 
@@ -325,7 +325,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 	 *            The clustering qualities for the clustering of the last
 	 *            iteration.
 	 */
-	public void giveQualityFeedback(final ClusteringQualitySet qualities) {
+	public void giveQualityFeedback(final QualitySet qualities) {
 		ParameterSet last = result.getParameterSets().get(
 				result.getParameterSets().size() - 1);
 		this.result.put(this.getCurrentCount() + 1, last, qualities);
@@ -407,7 +407,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 	 * 
 	 * <p>
 	 * If this method is invoked twice, without
-	 * {@link #giveQualityFeedback(ClusteringQualitySet)} being invoked in
+	 * {@link #giveQualityFeedback(QualitySet)} being invoked in
 	 * between, a {@link IllegalStateException} is thrown.
 	 * 
 	 * @param forcedParameterSet
@@ -448,7 +448,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 				// take first parameter set to simulate skipping
 				ParameterSet paramSet = this.getResult().getParameterSets()
 						.get(0);
-				ClusteringQualitySet qualitySet = this.getResult()
+				QualitySet qualitySet = this.getResult()
 						.get(paramSet);
 				this.next(paramSet, this.currentCount + 1);
 				this.giveQualityFeedback(qualitySet);
@@ -526,7 +526,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 			final String parameterOptimizationMethod, final Run run,
 			final ProgramConfig programConfig, final DataConfig dataConfig,
 			final List<ProgramParameter<?>> params,
-			final ClusteringQualityMeasure optimizationCriterion,
+			final QualityMeasure optimizationCriterion,
 			final int[] iterationCount, final boolean isResume)
 			throws UnknownParameterOptimizationMethodException {
 
@@ -539,7 +539,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 							long.class, File.class,
 							ParameterOptimizationRun.class,
 							ProgramConfig.class, DataConfig.class, List.class,
-							ClusteringQualityMeasure.class, int[].class,
+							QualityMeasure.class, int[].class,
 							boolean.class);
 			// changed 21.03.2013: do not register new parameter optimization
 			// methods here, because run is not set yet

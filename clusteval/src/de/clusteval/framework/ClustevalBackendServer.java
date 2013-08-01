@@ -83,7 +83,7 @@ import de.clusteval.program.Program;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.RUN_STATUS;
@@ -753,7 +753,7 @@ public class ClustevalBackendServer implements IBackendServer {
 				String programConfig = r.getMethod().getProgramConfig()
 						.getName();
 				Map<String, Double> measureToOptimalQuality = new HashMap<String, Double>();
-				for (ClusteringQualityMeasure measure : r
+				for (QualityMeasure measure : r
 						.getOptimalParameterSets().keySet()) {
 					measureToOptimalQuality.put(measure.getClass()
 							.getSimpleName(),

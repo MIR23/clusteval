@@ -45,7 +45,7 @@ import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.result.format.UnknownRunResultFormatException;
 import de.clusteval.run.runnable.ClusteringRunRunnable;
@@ -85,7 +85,7 @@ public class ClusteringRun extends ExecutionRun {
 	public ClusteringRun(Repository repository, final Context context,
 			long changeDate, File absPath, List<ProgramConfig> programConfigs,
 			List<DataConfig> dataConfigs,
-			List<ClusteringQualityMeasure> qualityMeasures,
+			List<QualityMeasure> qualityMeasures,
 			List<Map<ProgramParameter<?>, String>> parameterValues)
 			throws RegisterException {
 		super(repository, context, true, changeDate, absPath, programConfigs,
@@ -100,7 +100,7 @@ public class ClusteringRun extends ExecutionRun {
 				programConfig.addListener(this);
 			}
 
-			for (ClusteringQualityMeasure measure : this.qualityMeasures) {
+			for (QualityMeasure measure : this.qualityMeasures) {
 				// added 21.03.2013: measures are only registered here, if this
 				// run has been registered
 				measure.register();
@@ -269,7 +269,7 @@ public class ClusteringRun extends ExecutionRun {
 		 * The quality measures that should be calculated for every pair of
 		 * programconfig+dataconfig.
 		 */
-		List<ClusteringQualityMeasure> qualityMeasures = new LinkedList<ClusteringQualityMeasure>();
+		List<QualityMeasure> qualityMeasures = new LinkedList<QualityMeasure>();
 		/*
 		 * A list with parameter values that are set in the run config. They
 		 * will overwrite the default values of the program config.
@@ -342,7 +342,7 @@ public class ClusteringRun extends ExecutionRun {
 		List<UnknownClusteringQualityMeasureException> thrownExceptions = new ArrayList<UnknownClusteringQualityMeasureException>();
 		for (String qualityMeasure : props.getStringArray("qualityMeasures")) {
 			try {
-				qualityMeasures.add(ClusteringQualityMeasure.parseFromString(
+				qualityMeasures.add(QualityMeasure.parseFromString(
 						repo, qualityMeasure));
 			} catch (UnknownClusteringQualityMeasureException e) {
 				thrownExceptions.add(e);

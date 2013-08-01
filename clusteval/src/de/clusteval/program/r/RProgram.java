@@ -24,7 +24,7 @@ import de.clusteval.framework.MyRengine;
 import de.clusteval.framework.RLibraryNotLoadedException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.run.result.format.RunResultFormat;
@@ -315,15 +315,17 @@ public abstract class RProgram extends Program {
 			Map<String, String> effectiveParams,
 			Map<String, String> internalParams) throws RserveException,
 			REXPMismatchException {
-		Clustering resultClustering = Clustering.parseFromFuzzyCoeffMatrix(ids,
-				getFuzzyCoeffMatrixFromExecResult());
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("k\tClustering\n");
-
-		sb.append(getParameterValueForResultFile(effectiveParams) + "\t");
-		sb.append(resultClustering.toFormattedString());
-		return sb.toString();
+		// TODO
+//		GraphMatching resultClustering = GraphMatching.parseFromFuzzyCoeffMatrix(ids,
+//				getFuzzyCoeffMatrixFromExecResult());
+//
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("k\tClustering\n");
+//
+//		sb.append(getParameterValueForResultFile(effectiveParams) + "\t");
+//		sb.append(resultClustering.toFormattedString());
+//		return sb.toString();
+		return "";
 	}
 
 	/**

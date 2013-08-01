@@ -16,7 +16,7 @@ import de.clusteval.data.DataConfig;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.Run;
 import de.clusteval.utils.TestRepositoryObject;
@@ -35,7 +35,7 @@ public class TestRun extends TestRepositoryObject {
 		Run run = new ClusteringRun(this.repository, context,
 				System.currentTimeMillis(), new File("test"),
 				new ArrayList<ProgramConfig>(), new ArrayList<DataConfig>(),
-				new ArrayList<ClusteringQualityMeasure>(),
+				new ArrayList<QualityMeasure>(),
 				new ArrayList<Map<ProgramParameter<?>, String>>());
 		Assert.assertTrue(run == this.repository.getRegisteredObject(run));
 	}

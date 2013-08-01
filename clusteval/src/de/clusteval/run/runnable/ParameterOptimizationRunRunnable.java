@@ -25,9 +25,9 @@ import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualityMeasureValue;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualityMeasureValue;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.run.ParameterOptimizationRun;
 import de.clusteval.run.Run;
 import de.clusteval.run.result.NoRunResultFormatParserException;
@@ -303,7 +303,7 @@ public class ParameterOptimizationRunRunnable extends ExecutionRunRunnable {
 		}
 		sb.append("\t");
 		for (int i = 0; i < this.getRun().getQualityMeasures().size(); i++) {
-			sb.append(ClusteringQualityMeasureValue.getForNotTerminated());
+			sb.append(QualityMeasureValue.getForNotTerminated());
 			sb.append("\t");
 		}
 		sb.deleteCharAt(sb.length() - 1);
@@ -311,11 +311,11 @@ public class ParameterOptimizationRunRunnable extends ExecutionRunRunnable {
 
 		FileUtils.appendStringToFile(completeQualityOutput, sb.toString());
 
-		ClusteringQualitySet minimalQualities = new ClusteringQualitySet();
-		for (ClusteringQualityMeasure measure : this.getRun()
+		QualitySet minimalQualities = new QualitySet();
+		for (QualityMeasure measure : this.getRun()
 				.getQualityMeasures())
 			minimalQualities.put(measure,
-					ClusteringQualityMeasureValue.getForNotTerminated());
+					QualityMeasureValue.getForNotTerminated());
 		if (this.optimizationMethod instanceof IDivergingParameterOptimizationMethod) {
 			((IDivergingParameterOptimizationMethod) this.optimizationMethod)
 					.giveFeedbackNotTerminated(minimalQualities);
@@ -333,7 +333,7 @@ public class ParameterOptimizationRunRunnable extends ExecutionRunRunnable {
 	@Override
 	// 04.04.2013: adding iteration number into complete file
 	protected void writeQualitiesToFile(
-			List<Triple<ParameterSet, ClusteringQualitySet, Long>> qualities) {
+			List<Triple<ParameterSet, QualitySet, Long>> qualities) {
 		// in this case, the list contains only one element
 		this.optimizationMethod.giveQualityFeedback(qualities.get(0)
 				.getSecond());

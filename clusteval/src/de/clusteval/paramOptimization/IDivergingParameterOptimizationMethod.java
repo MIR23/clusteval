@@ -3,7 +3,7 @@
  */
 package de.clusteval.paramOptimization;
 
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualitySet;
 
 
 /**
@@ -14,5 +14,5 @@ public interface IDivergingParameterOptimizationMethod {
 	/**
 	 * @param minimalQualities
 	 */
-	public void giveFeedbackNotTerminated(ClusteringQualitySet minimalQualities);
+	public void giveFeedbackNotTerminated(QualitySet minimalQualities);
 }

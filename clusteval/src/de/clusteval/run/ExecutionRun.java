@@ -26,7 +26,7 @@ import de.clusteval.framework.repository.RepositoryReplaceEvent;
 import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.runnable.ExecutionRunRunnable;
 import de.clusteval.run.runnable.RunRunnable;
@@ -102,7 +102,7 @@ public abstract class ExecutionRun extends Run {
 	 * During execution of this run for every clustering that is calculated a
 	 * set of clustering quality measures is calculated.
 	 */
-	protected List<ClusteringQualityMeasure> qualityMeasures;
+	protected List<QualityMeasure> qualityMeasures;
 
 	/**
 	 * The parameter values for every pair of program and data configuration.
@@ -139,7 +139,7 @@ public abstract class ExecutionRun extends Run {
 			final boolean register, final long changeDate, final File absPath,
 			final List<ProgramConfig> programConfigs,
 			final List<DataConfig> dataConfigs,
-			final List<ClusteringQualityMeasure> qualityMeasures,
+			final List<QualityMeasure> qualityMeasures,
 			final List<Map<ProgramParameter<?>, String>> parameterValues)
 			throws RegisterException {
 		super(repository, context, changeDate, absPath);
@@ -158,7 +158,7 @@ public abstract class ExecutionRun extends Run {
 				programConfig.addListener(this);
 			}
 
-			for (ClusteringQualityMeasure measure : this.qualityMeasures) {
+			for (QualityMeasure measure : this.qualityMeasures) {
 				// added 21.03.2013: measures are only registered here, if this
 				// run has been registered
 				measure.register();
@@ -178,7 +178,7 @@ public abstract class ExecutionRun extends Run {
 		super(other);
 
 		this.parameterValues = cloneParameterValues(other.parameterValues);
-		this.qualityMeasures = ClusteringQualityMeasure
+		this.qualityMeasures = QualityMeasure
 				.cloneQualityMeasures(other.qualityMeasures);
 
 		initRunPairs(
@@ -603,15 +603,15 @@ public abstract class ExecutionRun extends Run {
 	 */
 	protected static void checkCompatibilityQualityMeasuresDataConfigs(
 			final List<DataConfig> dataConfigs,
-			final List<ClusteringQualityMeasure> qualityMeasures)
+			final List<QualityMeasure> qualityMeasures)
 			throws RunException {
 		/*
 		 * Check whether some dataconfigs don't have goldstandards but quality
 		 * measures require them
 		 */
 
-		Set<ClusteringQualityMeasure> qualityMeasuresRequireGS = new HashSet<ClusteringQualityMeasure>();
-		for (ClusteringQualityMeasure qualityMeasure : qualityMeasures)
+		Set<QualityMeasure> qualityMeasuresRequireGS = new HashSet<QualityMeasure>();
+		for (QualityMeasure qualityMeasure : qualityMeasures)
 			if (qualityMeasure.requiresGoldstandard())
 				qualityMeasuresRequireGS.add(qualityMeasure);
 
@@ -698,7 +698,7 @@ public abstract class ExecutionRun extends Run {
 	 * @return A list containing all clustering quality measures to be evaluated
 	 *         during execution of this run.
 	 */
-	public List<ClusteringQualityMeasure> getQualityMeasures() {
+	public List<QualityMeasure> getQualityMeasures() {
 		return this.qualityMeasures;
 	}
 

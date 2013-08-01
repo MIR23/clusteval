@@ -50,7 +50,7 @@ import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.result.format.UnknownRunResultFormatException;
 import de.clusteval.run.runnable.ExecutionRunRunnable;
@@ -195,7 +195,7 @@ public class ParameterOptimizationRun extends ExecutionRun {
 			final Context context, final long changeDate, final File absPath,
 			final List<ProgramConfig> programConfigs,
 			final List<DataConfig> dataConfigs,
-			final List<ClusteringQualityMeasure> qualityMeasures,
+			final List<QualityMeasure> qualityMeasures,
 			final List<Map<ProgramParameter<?>, String>> parameterValues,
 			final List<List<ProgramParameter<?>>> optimizationParameters,
 			final List<ParameterOptimizationMethod> optimizationMethods)
@@ -217,7 +217,7 @@ public class ParameterOptimizationRun extends ExecutionRun {
 			for (ParameterOptimizationMethod method : this.optimizationMethods)
 				method.addListener(this);
 
-			for (ClusteringQualityMeasure measure : this.qualityMeasures) {
+			for (QualityMeasure measure : this.qualityMeasures) {
 				// added 21.03.2013: measures are only registered here, if this
 				// run has been registered
 				measure.register();
@@ -331,7 +331,7 @@ public class ParameterOptimizationRun extends ExecutionRun {
 	 * (see {@link ExecutionRun#qualityMeasures})</li>
 	 * <li><b>optimizationMethod</b>: The default parameter optimization method
 	 * for all program configurations without an explicit optimization method.</li>
-	 * <li><b>optimizationCriterion</b> = {@link ClusteringQualityMeasure}</li>
+	 * <li><b>optimizationCriterion</b> = {@link QualityMeasure}</li>
 	 * <li><b>optimizationIterations</b> = Number of iterations for a pair of
 	 * program and data configuration</li>
 	 * </ul>
@@ -439,7 +439,7 @@ public class ParameterOptimizationRun extends ExecutionRun {
 		 * The quality measures that should be calculated for every pair of
 		 * programconfig+dataconfig.
 		 */
-		List<ClusteringQualityMeasure> qualityMeasures = new LinkedList<ClusteringQualityMeasure>();
+		List<QualityMeasure> qualityMeasures = new LinkedList<QualityMeasure>();
 		/*
 		 * A list with parameter values that are set in the run config. They
 		 * will overwrite the default values of the program config.
@@ -601,7 +601,7 @@ public class ParameterOptimizationRun extends ExecutionRun {
 		List<UnknownClusteringQualityMeasureException> thrownExceptions = new ArrayList<UnknownClusteringQualityMeasureException>();
 		for (String qualityMeasure : props.getStringArray("qualityMeasures")) {
 			try {
-				qualityMeasures.add(ClusteringQualityMeasure.parseFromString(
+				qualityMeasures.add(QualityMeasure.parseFromString(
 						repo, qualityMeasure));
 			} catch (UnknownClusteringQualityMeasureException e) {
 				thrownExceptions.add(e);
@@ -612,10 +612,10 @@ public class ParameterOptimizationRun extends ExecutionRun {
 			throw thrownExceptions.get(0);
 		}
 
-		ClusteringQualityMeasure optimizationCriterion = null;
+		QualityMeasure optimizationCriterion = null;
 
 		String paramOptCriterion = props.getString("optimizationCriterion");
-		optimizationCriterion = ClusteringQualityMeasure.parseFromString(repo,
+		optimizationCriterion = QualityMeasure.parseFromString(repo,
 				paramOptCriterion);
 		if (!qualityMeasures.contains(optimizationCriterion))
 			throw new UnknownClusteringQualityMeasureException(

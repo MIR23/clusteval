@@ -12,9 +12,7 @@ import java.util.HashMap;
  * @author Christian Wiwie
  * 
  */
-public class ClusteringQualitySet
-		extends
-			HashMap<ClusteringQualityMeasure, ClusteringQualityMeasureValue> {
+public class QualitySet extends HashMap<QualityMeasure, QualityMeasureValue> {
 
 	/**
 	 * 
@@ -27,7 +25,7 @@ public class ClusteringQualitySet
 	 * @see java.util.HashMap#clone()
 	 */
 	@Override
-	public ClusteringQualitySet clone() {
-		return (ClusteringQualitySet) super.clone();
+	public QualitySet clone() {
+		return (QualitySet) super.clone();
 	}
 }

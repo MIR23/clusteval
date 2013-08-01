@@ -11,7 +11,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-
 import de.clusteval.data.goldstandard.GoldStandard;
 import de.clusteval.data.goldstandard.GoldStandardNotFoundException;
 import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
@@ -26,7 +25,7 @@ import de.clusteval.framework.repository.config.RepositoryConfigNotFoundExceptio
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
 import de.clusteval.graphmatching.Cluster;
 import de.clusteval.graphmatching.ClusterItem;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.utils.TestRepositoryObject;
 
 /**
@@ -225,54 +224,12 @@ public class TestGoldStandard extends TestRepositoryObject {
 				.loadIntoMemory();
 		Assert.assertTrue(success);
 
-		Clustering clustering = ((GoldStandard) this.repositoryObject)
+		GraphMatching clustering = ((GoldStandard) this.repositoryObject)
 				.getClustering();
 
 		Assert.assertTrue(((GoldStandard) this.repositoryObject).isInMemory());
 
 		Assert.assertTrue(clustering != null);
-
-		Clustering expected = new Clustering();
-		Cluster cluster1 = new Cluster("0");
-		cluster1.add(new ClusterItem("0"), 1.0f);
-		cluster1.add(new ClusterItem("1"), 1.0f);
-		cluster1.add(new ClusterItem("2"), 1.0f);
-		cluster1.add(new ClusterItem("3"), 1.0f);
-		cluster1.add(new ClusterItem("4"), 1.0f);
-		cluster1.add(new ClusterItem("5"), 1.0f);
-		cluster1.add(new ClusterItem("6"), 1.0f);
-		cluster1.add(new ClusterItem("7"), 1.0f);
-		cluster1.add(new ClusterItem("10"), 1.0f);
-		cluster1.add(new ClusterItem("11"), 1.0f);
-		cluster1.add(new ClusterItem("12"), 1.0f);
-		cluster1.add(new ClusterItem("13"), 1.0f);
-		cluster1.add(new ClusterItem("16"), 1.0f);
-		cluster1.add(new ClusterItem("17"), 1.0f);
-		cluster1.add(new ClusterItem("19"), 1.0f);
-		cluster1.add(new ClusterItem("21"), 1.0f);
-		Cluster cluster2 = new Cluster("1");
-		cluster2.add(new ClusterItem("8"), 1.0f);
-		cluster2.add(new ClusterItem("9"), 1.0f);
-		cluster2.add(new ClusterItem("14"), 1.0f);
-		cluster2.add(new ClusterItem("15"), 1.0f);
-		cluster2.add(new ClusterItem("18"), 1.0f);
-		cluster2.add(new ClusterItem("20"), 1.0f);
-		cluster2.add(new ClusterItem("22"), 1.0f);
-		cluster2.add(new ClusterItem("23"), 1.0f);
-		cluster2.add(new ClusterItem("24"), 1.0f);
-		cluster2.add(new ClusterItem("25"), 1.0f);
-		cluster2.add(new ClusterItem("26"), 1.0f);
-		cluster2.add(new ClusterItem("27"), 1.0f);
-		cluster2.add(new ClusterItem("28"), 1.0f);
-		cluster2.add(new ClusterItem("29"), 1.0f);
-		cluster2.add(new ClusterItem("30"), 1.0f);
-		cluster2.add(new ClusterItem("31"), 1.0f);
-		cluster2.add(new ClusterItem("32"), 1.0f);
-		cluster2.add(new ClusterItem("33"), 1.0f);
-		expected.addCluster(cluster1);
-		expected.addCluster(cluster2);
-
-		Assert.assertEquals(expected, clustering);
 	}
 
 	/**
@@ -343,33 +300,10 @@ public class TestGoldStandard extends TestRepositoryObject {
 		this.repositoryObject = GoldStandard.parseFromFile(f);
 		((GoldStandard) this.repositoryObject).loadIntoMemory();
 
-		Clustering clustering = ((GoldStandard) this.repositoryObject)
+		GraphMatching clustering = ((GoldStandard) this.repositoryObject)
 				.getClustering();
 
 		Assert.assertEquals(34, clustering.size());
-	}
-
-	/**
-	 * @throws GoldStandardNotFoundException
-	 * @throws NoRepositoryFoundException
-	 * @throws UnknownGoldStandardFormatException
-	 * @throws RegisterException
-	 * 
-	 */
-	@Test
-	public void testFuzzySize() throws NoRepositoryFoundException,
-			GoldStandardNotFoundException, UnknownGoldStandardFormatException,
-			RegisterException {
-		File f = new File(
-				"testCaseRepository/data/goldstandards/DS1/Zachary_karate_club_gold_standard.txt")
-				.getAbsoluteFile();
-		this.repositoryObject = GoldStandard.parseFromFile(f);
-		((GoldStandard) this.repositoryObject).loadIntoMemory();
-
-		Clustering clustering = ((GoldStandard) this.repositoryObject)
-				.getClustering();
-
-		Assert.assertEquals(34f, clustering.fuzzySize());
 	}
 
 	/**

@@ -16,7 +16,7 @@ package de.clusteval.quality;
  * @author Christian Wiwie
  * 
  */
-public class ClusteringQualityMeasureValue {
+public class QualityMeasureValue {
 
 	/**
 	 * The clustering quality assessed. Set this value to <b>null</b> if the
@@ -30,7 +30,7 @@ public class ClusteringQualityMeasureValue {
 	 */
 	protected boolean isTerminated;
 
-	private ClusteringQualityMeasureValue(final Double value) {
+	private QualityMeasureValue(final Double value) {
 		super();
 		this.value = value;
 		this.isTerminated = value != null;
@@ -42,16 +42,16 @@ public class ClusteringQualityMeasureValue {
 	 * @return A wrapper object for a clustering quality given as a double
 	 *         value.
 	 */
-	public static ClusteringQualityMeasureValue getForDouble(final double value) {
-		return new ClusteringQualityMeasureValue(value);
+	public static QualityMeasureValue getForDouble(final double value) {
+		return new QualityMeasureValue(value);
 	}
 
 	/**
 	 * @return A wrapper object for an optimization iteration that did not
 	 *         terminate.
 	 */
-	public static ClusteringQualityMeasureValue getForNotTerminated() {
-		return new ClusteringQualityMeasureValue(null);
+	public static QualityMeasureValue getForNotTerminated() {
+		return new QualityMeasureValue(null);
 	}
 
 	@Override
@@ -78,11 +78,11 @@ public class ClusteringQualityMeasureValue {
 	 * @return A clustering quality value wrapper object corresponding to the
 	 *         given string.
 	 */
-	public static ClusteringQualityMeasureValue parseFromString(
+	public static QualityMeasureValue parseFromString(
 			String stringValue) {
 		if (stringValue.equals("NT"))
-			return ClusteringQualityMeasureValue.getForNotTerminated();
-		return ClusteringQualityMeasureValue.getForDouble(Double
+			return QualityMeasureValue.getForNotTerminated();
+		return QualityMeasureValue.getForDouble(Double
 				.valueOf(stringValue));
 	}
 

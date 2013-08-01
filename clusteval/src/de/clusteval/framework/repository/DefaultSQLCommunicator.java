@@ -25,7 +25,7 @@ import de.clusteval.data.goldstandard.GoldStandard;
 import de.clusteval.data.goldstandard.GoldStandardConfig;
 import de.clusteval.data.statistics.DataStatistic;
 import de.clusteval.framework.repository.config.MysqlConfig;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.ParameterSet;
@@ -33,8 +33,8 @@ import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.StringProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -1146,7 +1146,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 			}
 
 			// insert clustering quality measures into DB
-			for (ClusteringQualityMeasure measure : object.getQualityMeasures()) {
+			for (QualityMeasure measure : object.getQualityMeasures()) {
 
 				int measureId = getClusteringQualityMeasureId(measure
 						.toString());
@@ -2185,9 +2185,9 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected boolean registerClusteringQualityMeasureClass(
-			Class<? extends ClusteringQualityMeasure> object) {
+			Class<? extends QualityMeasure> object) {
 		try {
-			ClusteringQualityMeasure measure = object.getConstructor(
+			QualityMeasure measure = object.getConstructor(
 					Repository.class, boolean.class, long.class, File.class)
 					.newInstance(repository, false, System.currentTimeMillis(),
 							new File(object.getSimpleName()));
@@ -3139,38 +3139,38 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 			int dataConfigId = getDataConfigId(object.getDataConfig());
 			int programConfigId = getProgramConfigId(object.getProgramConfig());
 
-			final Pair<ParameterSet, Clustering> pair = object.getClustering();
-
-			final ClusteringQualitySet qualities = pair.getSecond()
-					.getQualities();
-
-			final StringBuilder paramString = new StringBuilder();
-			for (String param : pair.getFirst().keySet()) {
-				paramString.append(param);
-				paramString.append("=");
-				paramString.append(pair.getFirst().get(param));
-				paramString.append(",");
-			}
-			for (ClusteringQualityMeasure measure : qualities.keySet()) {
-
-				paramString.deleteCharAt(paramString.length() - 1);
-				insert(this.getTableRunResultsClusteringsQuality(),
-						new String[]{"repository_id",
-								"run_results_clustering_id", "data_config_id",
-								"program_config_id",
-								"clustering_quality_measure_id", "paramString",
-								"quality"},
-						new String[]{
-								"" + this.updateRepositoryId(),
-								"" + clusteringId,
-								"" + dataConfigId,
-								"" + programConfigId,
-								""
-										+ getClusteringQualityMeasureId(measure
-												.toString()),
-								paramString.toString(),
-								"" + qualities.get(measure).getValue()});
-			}
+			final Pair<ParameterSet, GraphMatching> pair = object.getGraphMatching();
+// TODO
+//			final QualitySet qualities = pair.getSecond()
+//					.getQualities();
+//
+//			final StringBuilder paramString = new StringBuilder();
+//			for (String param : pair.getFirst().keySet()) {
+//				paramString.append(param);
+//				paramString.append("=");
+//				paramString.append(pair.getFirst().get(param));
+//				paramString.append(",");
+//			}
+//			for (QualityMeasure measure : qualities.keySet()) {
+//
+//				paramString.deleteCharAt(paramString.length() - 1);
+//				insert(this.getTableRunResultsClusteringsQuality(),
+//						new String[]{"repository_id",
+//								"run_results_clustering_id", "data_config_id",
+//								"program_config_id",
+//								"clustering_quality_measure_id", "paramString",
+//								"quality"},
+//						new String[]{
+//								"" + this.updateRepositoryId(),
+//								"" + clusteringId,
+//								"" + dataConfigId,
+//								"" + programConfigId,
+//								""
+//										+ getClusteringQualityMeasureId(measure
+//												.toString()),
+//								paramString.toString(),
+//								"" + qualities.get(measure).getValue()});
+//			}
 
 			return true;
 		} catch (SQLException e) {
@@ -3256,7 +3256,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 			List<ParameterSet> paramSets = object.getParameterSets();
 			List<Long> iterationNumbers = object.getIterationNumbers();
 			for (int i = 0; i < paramSets.size(); i++) {
-				Pair<ParameterSet, ClusteringQualitySet> pair = Pair.getPair(
+				Pair<ParameterSet, QualitySet> pair = Pair.getPair(
 						paramSets.get(i), object.get(paramSets.get(i)));
 				StringBuilder paramSetAsString = new StringBuilder();
 				for (Map.Entry<String, Double> paramValue : paramSets.get(i)
@@ -3313,7 +3313,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 													optParam.getName())});
 				}
 
-				for (ClusteringQualityMeasure measure : pair.getSecond()
+				for (QualityMeasure measure : pair.getSecond()
 						.keySet()) {
 					int clustering_quality_measure_id = getClusteringQualityMeasureId(measure
 							.toString());
@@ -3783,7 +3783,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected boolean unregisterClusteringQualityMeasureClass(
-			Class<? extends ClusteringQualityMeasure> object) {
+			Class<? extends QualityMeasure> object) {
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();

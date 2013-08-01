@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.clusteval.paramOptimization.ParameterOptimizationMethod;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 
 import utils.StringExt;
 import utils.parse.TextFileParser;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualityMeasureValue;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualityMeasureValue;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.run.ParameterOptimizationRun;
 
 /**
@@ -27,7 +27,7 @@ import de.clusteval.run.ParameterOptimizationRun;
 public class ParameterOptimizationResultParser extends TextFileParser {
 
 	protected List<ProgramParameter<?>> parameters = new ArrayList<ProgramParameter<?>>();
-	protected List<ClusteringQualityMeasure> qualityMeasures = new ArrayList<ClusteringQualityMeasure>();
+	protected List<QualityMeasure> qualityMeasures = new ArrayList<QualityMeasure>();
 	protected ParameterOptimizationMethod method;
 	protected ParameterOptimizationRun run;
 	protected ParameterOptimizationResult tmpResult;
@@ -74,7 +74,7 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 						.add(method.getProgramConfig().getParameterForName(p));
 			for (int i = 2; i < value.length; i++) {
 				String q = value[i];
-				for (ClusteringQualityMeasure other : run.getQualityMeasures())
+				for (QualityMeasure other : run.getQualityMeasures())
 					if (other.getClass().getSimpleName().equals(q)) {
 						qualityMeasures.add(other);
 						break;
@@ -90,7 +90,7 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 					paramSet.put(p.getName(), Double.valueOf(paramSplit[pos]));
 				}
 
-				ClusteringQualitySet qualitySet = new ClusteringQualitySet();
+				QualitySet qualitySet = new QualitySet();
 
 				// changed 03.04.2013 this does not necessarily work,
 				// because line number not always corresponds to iteration
@@ -106,9 +106,9 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 				// granted
 				// if (absFile.exists()) {
 				for (int pos = 2; pos < value.length; pos++) {
-					ClusteringQualityMeasure other = this.qualityMeasures
+					QualityMeasure other = this.qualityMeasures
 							.get(pos - 2);
-					qualitySet.put(other, ClusteringQualityMeasureValue
+					qualitySet.put(other, QualityMeasureValue
 							.parseFromString(value[pos]));
 				}
 				// }
@@ -128,7 +128,7 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 				if (parseClusterings) {
 					// if (absFile.exists()) {
 					try {
-						Clustering clustering = Clustering.parseFromFile(
+						GraphMatching clustering = GraphMatching.parseFromFile(
 								method.getRepository(), absFile, false)
 								.getSecond();
 						if (storeClusterings)

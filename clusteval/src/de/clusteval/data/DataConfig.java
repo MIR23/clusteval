@@ -30,7 +30,7 @@ import de.clusteval.framework.repository.RepositoryObject;
 import de.clusteval.framework.repository.RepositoryRemoveEvent;
 import de.clusteval.framework.repository.RepositoryReplaceEvent;
 import de.clusteval.framework.repository.RunResultRepository;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import file.FileUtils;
 
 /**
@@ -129,7 +129,7 @@ public class DataConfig extends RepositoryObject {
 	 * Use this method to check, whether this DataConfig has a goldstandard
 	 * configuration or not. Some clustering quality measures do not require a
 	 * goldstandard to evaluate a clustering (see
-	 * {@link ClusteringQualityMeasure#requiresGoldstandard()}).
+	 * {@link QualityMeasure#requiresGoldstandard()}).
 	 * 
 	 * @return True, if this data configuration has a goldstandard, false
 	 *         otherwise.

@@ -17,14 +17,14 @@ import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.repository.RepositoryObject;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.utils.RCalculationException;
 import de.clusteval.utils.RNotAvailableException;
 
 /**
  * A clustering quality measure is used to assess the quality of a
- * {@link Clustering} by invoking
- * {@link #getQualityOfClustering(Clustering, Clustering, DataConfig)}.
+ * {@link GraphMatching} by invoking
+ * {@link #getQualityOf(GraphMatching, GraphMatching, DataConfig)}.
  * 
  * <p>
  * Every clustering quality measure has a range of possible qualities between
@@ -36,7 +36,7 @@ import de.clusteval.utils.RNotAvailableException;
  * 
  * @author Christian Wiwie
  */
-public abstract class ClusteringQualityMeasure extends RepositoryObject {
+public abstract class QualityMeasure extends RepositoryObject {
 
 	/**
 	 * Instantiates a new clustering quality measure.
@@ -47,9 +47,8 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 * @param absPath
 	 * @throws RegisterException
 	 */
-	public ClusteringQualityMeasure(final Repository repo,
-			final boolean register, final long changeDate, final File absPath)
-			throws RegisterException {
+	public QualityMeasure(final Repository repo, final boolean register,
+			final long changeDate, final File absPath) throws RegisterException {
 		super(repo, false, changeDate, absPath);
 
 		if (register)
@@ -63,8 +62,7 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 *            The quality measure to clone.
 	 * @throws RegisterException
 	 */
-	public ClusteringQualityMeasure(final ClusteringQualityMeasure other)
-			throws RegisterException {
+	public QualityMeasure(final QualityMeasure other) throws RegisterException {
 		super(other);
 	}
 
@@ -106,9 +104,9 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 * @throws RNotAvailableException
 	 * @throws RCalculationException
 	 */
-	public abstract ClusteringQualityMeasureValue getQualityOfClustering(
-			Clustering clustering, Clustering goldStandard,
-			DataConfig dataConfig) throws UnknownGoldStandardFormatException,
+	public abstract QualityMeasureValue getQualityOf(GraphMatching clustering,
+			GraphMatching goldStandard, DataConfig dataConfig)
+			throws UnknownGoldStandardFormatException,
 			UnknownDataSetFormatException, IOException,
 			InvalidDataSetFormatVersionException, RNotAvailableException,
 			RCalculationException;
@@ -121,11 +119,11 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 *            The quality measures to be cloned.
 	 * @return A list containining cloned objects of the given quality measures.
 	 */
-	public static List<ClusteringQualityMeasure> cloneQualityMeasures(
-			final List<ClusteringQualityMeasure> qualityMeasures) {
-		List<ClusteringQualityMeasure> result = new ArrayList<ClusteringQualityMeasure>();
+	public static List<QualityMeasure> cloneQualityMeasures(
+			final List<QualityMeasure> qualityMeasures) {
+		List<QualityMeasure> result = new ArrayList<QualityMeasure>();
 
-		for (ClusteringQualityMeasure qualityMeasure : qualityMeasures)
+		for (QualityMeasure qualityMeasure : qualityMeasures)
 			result.add(qualityMeasure.clone());
 
 		return result;
@@ -142,18 +140,18 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 * @throws UnknownClusteringQualityMeasureException
 	 *             the unknown clustering quality measure exception
 	 */
-	public static ClusteringQualityMeasure parseFromString(
-			final Repository repository, String qualityMeasure)
+	public static QualityMeasure parseFromString(final Repository repository,
+			String qualityMeasure)
 			throws UnknownClusteringQualityMeasureException {
 
-		Class<? extends ClusteringQualityMeasure> c = repository
+		Class<? extends QualityMeasure> c = repository
 				.getClusteringQualityMeasureClass("de.clusteval.cluster.quality."
 						+ qualityMeasure);
 		try {
-			ClusteringQualityMeasure measure = c.getConstructor(
-					Repository.class, boolean.class, long.class, File.class)
-					.newInstance(repository, false, System.currentTimeMillis(),
-							new File(qualityMeasure));
+			QualityMeasure measure = c.getConstructor(Repository.class,
+					boolean.class, long.class, File.class).newInstance(
+					repository, false, System.currentTimeMillis(),
+					new File(qualityMeasure));
 
 			return measure;
 		} catch (InstantiationException e) {
@@ -192,7 +190,7 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	public ClusteringQualityMeasure clone() {
+	public QualityMeasure clone() {
 		try {
 			return this.getClass().getConstructor(this.getClass())
 					.newInstance(this);
@@ -244,8 +242,8 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 	 *            The second quality value.
 	 * @return True, if quality1 is better than quality2
 	 */
-	public final boolean isBetterThan(ClusteringQualityMeasureValue quality1,
-			ClusteringQualityMeasureValue quality2) {
+	public final boolean isBetterThan(QualityMeasureValue quality1,
+			QualityMeasureValue quality2) {
 		if (!quality1.isTerminated)
 			return false;
 		if (!quality2.isTerminated)
@@ -253,9 +251,8 @@ public abstract class ClusteringQualityMeasure extends RepositoryObject {
 		return isBetterThanHelper(quality1, quality2);
 	}
 
-	protected abstract boolean isBetterThanHelper(
-			ClusteringQualityMeasureValue quality1,
-			ClusteringQualityMeasureValue quality2);
+	protected abstract boolean isBetterThanHelper(QualityMeasureValue quality1,
+			QualityMeasureValue quality2);
 
 	/**
 	 * @return The minimal value of the range of possible values of this quality

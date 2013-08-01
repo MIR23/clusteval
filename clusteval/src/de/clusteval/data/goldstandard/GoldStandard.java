@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import utils.text.TextFileMapParser;
 import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
@@ -13,7 +12,7 @@ import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.repository.RepositoryObject;
 import de.clusteval.graphmatching.Cluster;
 import de.clusteval.graphmatching.ClusterItem;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 
 /**
  * A wrapper class for a goldstandard on the filesystem.
@@ -28,9 +27,9 @@ public class GoldStandard extends RepositoryObject {
 	 * Every goldstandard can be interpreted as a clustering: A partition of the
 	 * data objects into several groups.
 	 * 
-	 * @see {@link Clustering}
+	 * @see {@link GraphMatching}
 	 */
-	protected Clustering clustering;
+	protected GraphMatching clustering;
 
 	/**
 	 * Instantiates a new goldstandard object.
@@ -179,9 +178,10 @@ public class GoldStandard extends RepositoryObject {
 				}
 			}
 
-			this.clustering = new Clustering();
-			for (String clusterId : clusterMap.keySet())
-				this.clustering.addCluster(clusterMap.get(clusterId));
+			// TODO
+			// this.clustering = new GraphMatching();
+			// for (String clusterId : clusterMap.keySet())
+			// this.clustering.addCluster(clusterMap.get(clusterId));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -229,15 +229,6 @@ public class GoldStandard extends RepositoryObject {
 	}
 
 	/**
-	 * Fuzzy size.
-	 * 
-	 * @return the float
-	 */
-	public float fuzzySize() {
-		return this.clustering.fuzzySize();
-	}
-
-	/**
 	 * This method returns a reference to the clustering object representing the
 	 * contents of the goldstandard file.
 	 * 
@@ -249,7 +240,8 @@ public class GoldStandard extends RepositoryObject {
 	 * @throws UnknownGoldStandardFormatException
 	 *             the unknown gold standard format exception
 	 */
-	public Clustering getClustering() throws UnknownGoldStandardFormatException {
+	public GraphMatching getClustering()
+			throws UnknownGoldStandardFormatException {
 		if (!isInMemory()) {
 			loadIntoMemory();
 		}

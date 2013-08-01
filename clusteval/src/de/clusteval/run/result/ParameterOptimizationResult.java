@@ -44,14 +44,14 @@ import de.clusteval.framework.repository.RepositoryAlreadyExistsException;
 import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.ParameterOptimizationRun;
@@ -72,7 +72,7 @@ import file.FileUtils;
  */
 
 public class ParameterOptimizationResult extends ExecutionRunResult implements
-		Iterable<Pair<ParameterSet, ClusteringQualitySet>> {
+		Iterable<Pair<ParameterSet, QualitySet>> {
 
 	/**
 	 * @param parentRepository
@@ -265,10 +265,10 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 */
 	protected ParameterOptimizationMethod method;
 
-	protected Map<ParameterSet, ClusteringQualitySet> parameterSetToQualities;
+	protected Map<ParameterSet, QualitySet> parameterSetToQualities;
 
 	// TODO: added 20.08.2012
-	protected Map<ParameterSet, Clustering> parameterSetToClustering;
+	protected Map<ParameterSet, GraphMatching> parameterSetToClustering;
 
 	// added 04.04.2013
 	protected Map<ParameterSet, Long> parameterSetToIterationNumber;
@@ -276,11 +276,11 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	/*
 	 * We keep track of the optimal parameter sets
 	 */
-	protected Map<ClusteringQualityMeasure, ParameterSet> optimalParameterSet;
+	protected Map<QualityMeasure, ParameterSet> optimalParameterSet;
 
-	protected ClusteringQualitySet optimalCriterionValue;
+	protected QualitySet optimalCriterionValue;
 
-	protected Map<ClusteringQualityMeasure, Clustering> optimalClustering;
+	protected Map<QualityMeasure, GraphMatching> optimalClustering;
 
 	protected List<ParameterSet> parameterSets;
 
@@ -334,17 +334,17 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 		super(repository, changeDate, absPath, runIdentString, run, method
 				.getDataConfig(), method.getProgramConfig());
 		this.method = method;
-		this.parameterSetToQualities = new HashMap<ParameterSet, ClusteringQualitySet>();
-		this.optimalCriterionValue = new ClusteringQualitySet();
-		this.optimalParameterSet = new HashMap<ClusteringQualityMeasure, ParameterSet>();
+		this.parameterSetToQualities = new HashMap<ParameterSet, QualitySet>();
+		this.optimalCriterionValue = new QualitySet();
+		this.optimalParameterSet = new HashMap<QualityMeasure, ParameterSet>();
 		this.parameterSets = new ArrayList<ParameterSet>();
 		this.iterationNumbers = new ArrayList<Long>();
 		this.parameterSetToIterationNumber = new HashMap<ParameterSet, Long>();
 		this.parseClusterings = parseClusterings;
 		this.storeClusterings = storeClusterings;
 		if (parseClusterings) {
-			this.parameterSetToClustering = new HashMap<ParameterSet, Clustering>();
-			this.optimalClustering = new HashMap<ClusteringQualityMeasure, Clustering>();
+			this.parameterSetToClustering = new HashMap<ParameterSet, GraphMatching>();
+			this.optimalClustering = new HashMap<QualityMeasure, GraphMatching>();
 		}
 
 		if (register)
@@ -373,11 +373,11 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 		this.optimalClustering = cloneOptimalClustering(other.optimalClustering);
 	}
 
-	private Map<ClusteringQualityMeasure, Clustering> cloneOptimalClustering(
-			Map<ClusteringQualityMeasure, Clustering> optimalClustering) {
-		final Map<ClusteringQualityMeasure, Clustering> result = new HashMap<ClusteringQualityMeasure, Clustering>();
+	private Map<QualityMeasure, GraphMatching> cloneOptimalClustering(
+			Map<QualityMeasure, GraphMatching> optimalClustering) {
+		final Map<QualityMeasure, GraphMatching> result = new HashMap<QualityMeasure, GraphMatching>();
 
-		for (Map.Entry<ClusteringQualityMeasure, Clustering> entry : optimalClustering
+		for (Map.Entry<QualityMeasure, GraphMatching> entry : optimalClustering
 				.entrySet()) {
 			result.put(entry.getKey().clone(), entry.getValue().clone());
 		}
@@ -385,11 +385,11 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 		return result;
 	}
 
-	private Map<ParameterSet, Clustering> cloneParameterSetsToClustering(
-			Map<ParameterSet, Clustering> parameterSetToClustering) {
-		final Map<ParameterSet, Clustering> result = new HashMap<ParameterSet, Clustering>();
+	private Map<ParameterSet, GraphMatching> cloneParameterSetsToClustering(
+			Map<ParameterSet, GraphMatching> parameterSetToClustering) {
+		final Map<ParameterSet, GraphMatching> result = new HashMap<ParameterSet, GraphMatching>();
 
-		for (Map.Entry<ParameterSet, Clustering> entry : parameterSetToClustering
+		for (Map.Entry<ParameterSet, GraphMatching> entry : parameterSetToClustering
 				.entrySet()) {
 			result.put(entry.getKey().clone(), entry.getValue().clone());
 		}
@@ -423,11 +423,11 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 		return result;
 	}
 
-	private Map<ClusteringQualityMeasure, ParameterSet> cloneOptimalParameterSets(
-			Map<ClusteringQualityMeasure, ParameterSet> optimalParameterSet) {
-		final Map<ClusteringQualityMeasure, ParameterSet> result = new HashMap<ClusteringQualityMeasure, ParameterSet>();
+	private Map<QualityMeasure, ParameterSet> cloneOptimalParameterSets(
+			Map<QualityMeasure, ParameterSet> optimalParameterSet) {
+		final Map<QualityMeasure, ParameterSet> result = new HashMap<QualityMeasure, ParameterSet>();
 
-		for (Map.Entry<ClusteringQualityMeasure, ParameterSet> entry : optimalParameterSet
+		for (Map.Entry<QualityMeasure, ParameterSet> entry : optimalParameterSet
 				.entrySet()) {
 			result.put(entry.getKey().clone(), entry.getValue().clone());
 		}
@@ -435,11 +435,11 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 		return result;
 	}
 
-	private Map<ParameterSet, ClusteringQualitySet> cloneParameterSetQualities(
-			Map<ParameterSet, ClusteringQualitySet> parameterSetToQualities) {
-		final Map<ParameterSet, ClusteringQualitySet> result = new HashMap<ParameterSet, ClusteringQualitySet>();
+	private Map<ParameterSet, QualitySet> cloneParameterSetQualities(
+			Map<ParameterSet, QualitySet> parameterSetToQualities) {
+		final Map<ParameterSet, QualitySet> result = new HashMap<ParameterSet, QualitySet>();
 
-		for (Map.Entry<ParameterSet, ClusteringQualitySet> entry : parameterSetToQualities
+		for (Map.Entry<ParameterSet, QualitySet> entry : parameterSetToQualities
 				.entrySet()) {
 			result.put(entry.getKey().clone(), entry.getValue().clone());
 		}
@@ -465,7 +465,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 
 	/**
 	 * A convenience method for
-	 * {@link #put(long, ParameterSet, ClusteringQualitySet, Clustering)}.
+	 * {@link #put(long, ParameterSet, QualitySet, GraphMatching)}.
 	 * 
 	 * @param iterationNumber
 	 *            The number of the iteration.
@@ -477,8 +477,8 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *            The qualities which we want to add for the parameter set.
 	 * @return The old value, if this operation replaced an old mapping,
 	 */
-	public ClusteringQualitySet put(long iterationNumber, ParameterSet last,
-			ClusteringQualitySet qualities) {
+	public QualitySet put(long iterationNumber, ParameterSet last,
+			QualitySet qualities) {
 		return this.put(iterationNumber, last, qualities, null);
 	}
 
@@ -498,9 +498,9 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *            The clustering resulting the given parameter set.
 	 * @return The old value, if this operation replaced an old mapping,
 	 */
-	public ClusteringQualitySet put(long iterationNumber, ParameterSet last,
-			ClusteringQualitySet qualities, Clustering clustering) {
-		ClusteringQualitySet result = this.parameterSetToQualities.put(last,
+	public QualitySet put(long iterationNumber, ParameterSet last,
+			QualitySet qualities, GraphMatching clustering) {
+		QualitySet result = this.parameterSetToQualities.put(last,
 				qualities);
 
 		if (this.parameterSetToClustering != null)
@@ -510,7 +510,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 			this.parameterSetToIterationNumber.put(last, iterationNumber);
 
 		if (qualities != null) {
-			for (ClusteringQualityMeasure measure : qualities.keySet()) {
+			for (QualityMeasure measure : qualities.keySet()) {
 				if (optimalCriterionValue.get(measure) == null
 						|| measure.isBetterThan(qualities.get(measure),
 								this.optimalCriterionValue.get(measure))) {
@@ -542,7 +542,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 * @return A map with the optimal parameter sets for every clustering
 	 *         quality measure.
 	 */
-	public Map<ClusteringQualityMeasure, ParameterSet> getOptimalParameterSets() {
+	public Map<QualityMeasure, ParameterSet> getOptimalParameterSets() {
 		return this.optimalParameterSet;
 	}
 
@@ -550,7 +550,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 * @return The optimal quality value achieved for the optimization
 	 *         criterion.
 	 */
-	public ClusteringQualitySet getOptimalCriterionValue() {
+	public QualitySet getOptimalCriterionValue() {
 		return this.optimalCriterionValue;
 	}
 
@@ -559,7 +559,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *         value for the optimization criterion (see
 	 *         {@link #getOptimalCriterionValue()}).
 	 */
-	public Clustering getOptimalClustering() {
+	public GraphMatching getOptimalClustering() {
 		if (this.optimalClustering != null)
 			return this.optimalClustering.get(this.method
 					.getOptimizationCriterion());
@@ -571,7 +571,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *         clusterings which achieved the highest quality values for each of
 	 *         those.
 	 */
-	public Map<ClusteringQualityMeasure, Clustering> getOptimalClusterings() {
+	public Map<QualityMeasure, GraphMatching> getOptimalClusterings() {
 		return this.optimalClustering;
 	}
 
@@ -580,8 +580,8 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *         the optimization process together with the optimal resulting
 	 *         quality sets.
 	 */
-	public List<Pair<ParameterSet, ClusteringQualitySet>> getOptimizationQualities() {
-		List<Pair<ParameterSet, ClusteringQualitySet>> result = new ArrayList<Pair<ParameterSet, ClusteringQualitySet>>();
+	public List<Pair<ParameterSet, QualitySet>> getOptimizationQualities() {
+		List<Pair<ParameterSet, QualitySet>> result = new ArrayList<Pair<ParameterSet, QualitySet>>();
 		for (ParameterSet paramSet : this.parameterSets)
 			result.add(Pair.getPair(paramSet,
 					this.parameterSetToQualities.get(paramSet)));
@@ -609,8 +609,8 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *         the optimization process together with the optimal resulting
 	 *         clusterings.
 	 */
-	public List<Pair<ParameterSet, Clustering>> getOptimizationClusterings() {
-		List<Pair<ParameterSet, Clustering>> result = new ArrayList<Pair<ParameterSet, Clustering>>();
+	public List<Pair<ParameterSet, GraphMatching>> getOptimizationClusterings() {
+		List<Pair<ParameterSet, GraphMatching>> result = new ArrayList<Pair<ParameterSet, GraphMatching>>();
 		for (ParameterSet paramSet : this.parameterSets)
 			result.add(Pair.getPair(paramSet,
 					this.parameterSetToClustering.get(paramSet)));
@@ -701,7 +701,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 * @return The clustering quality set resulting from the given parameter
 	 *         set.
 	 */
-	public ClusteringQualitySet get(final ParameterSet paramSet) {
+	public QualitySet get(final ParameterSet paramSet) {
 		return this.parameterSetToQualities.get(paramSet);
 	}
 
@@ -712,7 +712,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 *            clustering.
 	 * @return The clustering resulting from the given parameter set.
 	 */
-	public Clustering getClustering(final ParameterSet paramSet) {
+	public GraphMatching getClustering(final ParameterSet paramSet) {
 		return this.parameterSetToClustering.get(paramSet);
 	}
 
@@ -778,13 +778,13 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
-	public Iterator<Pair<ParameterSet, ClusteringQualitySet>> iterator() {
+	public Iterator<Pair<ParameterSet, QualitySet>> iterator() {
 		return new ParameterOptimizationResultIterator(this);
 	}
 }
 
 class ParameterOptimizationResultIterator implements
-		Iterator<Pair<ParameterSet, ClusteringQualitySet>> {
+		Iterator<Pair<ParameterSet, QualitySet>> {
 
 	protected ParameterOptimizationResult result;
 
@@ -816,7 +816,7 @@ class ParameterOptimizationResultIterator implements
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public Pair<ParameterSet, ClusteringQualitySet> next() {
+	public Pair<ParameterSet, QualitySet> next() {
 		ParameterSet set = result.getParameterSets().get(currPos++);
 		return Pair.getPair(set, result.get(set));
 	}

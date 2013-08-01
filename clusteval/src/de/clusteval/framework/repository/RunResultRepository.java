@@ -21,7 +21,7 @@ import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.StringProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.run.Run;
 import de.clusteval.utils.Finder;
 import file.FileUtils;
@@ -343,7 +343,7 @@ public class RunResultRepository extends Repository {
 	 * @see utils.Repository#getClusteringQualityMeasureClass(java.lang.String)
 	 */
 	@Override
-	public Class<? extends ClusteringQualityMeasure> getClusteringQualityMeasureClass(
+	public Class<? extends QualityMeasure> getClusteringQualityMeasureClass(
 			String clusteringQualityMeasureClassName) {
 		return this.parent
 				.getClusteringQualityMeasureClass(clusteringQualityMeasureClassName);
@@ -356,7 +356,7 @@ public class RunResultRepository extends Repository {
 	 */
 	@Override
 	public boolean registerClusteringQualityMeasureClass(
-			Class<? extends ClusteringQualityMeasure> object) {
+			Class<? extends QualityMeasure> object) {
 		return this.parent.registerClusteringQualityMeasureClass(object);
 	}
 
@@ -368,7 +368,7 @@ public class RunResultRepository extends Repository {
 	 */
 	@Override
 	public boolean isClusteringQualityMeasureRegistered(
-			Class<? extends ClusteringQualityMeasure> dsFormat) {
+			Class<? extends QualityMeasure> dsFormat) {
 		return this.parent.isClusteringQualityMeasureRegistered(dsFormat);
 	}
 

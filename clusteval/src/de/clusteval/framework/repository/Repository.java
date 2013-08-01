@@ -71,7 +71,7 @@ import de.clusteval.framework.threading.RunResultRepositorySupervisorThread;
 import de.clusteval.framework.threading.SupervisorThread;
 import de.clusteval.graphmatching.Cluster;
 import de.clusteval.graphmatching.ClusterItem;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.Program;
@@ -82,7 +82,7 @@ import de.clusteval.program.StringProgramParameter;
 import de.clusteval.program.r.RProgram;
 import de.clusteval.program.r.RProgramFinderThread;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.AnalysisRun;
@@ -663,13 +663,13 @@ public class Repository {
 	 * A map containing all classes of clustering quality measure registered in
 	 * this repository. Mapping from Class.getName() to the class.
 	 */
-	protected Map<String, Class<? extends ClusteringQualityMeasure>> clusteringQualityMeasureClasses;
+	protected Map<String, Class<? extends QualityMeasure>> clusteringQualityMeasureClasses;
 
 	/**
 	 * A map mapping from the simple name of the class to all of its
 	 * instances.Mapping from Class.getSimpleName() to the instances.
 	 */
-	protected Map<String, List<ClusteringQualityMeasure>> clusteringQualityMeasureInstances;
+	protected Map<String, List<QualityMeasure>> clusteringQualityMeasureInstances;
 
 	/**
 	 * A map containing all classes of parameter optimization methods registered
@@ -782,7 +782,7 @@ public class Repository {
 	/**
 	 * A map containing all clusterings registered in this repository.
 	 */
-	protected Map<Clustering, Clustering> clusterings;
+	protected Map<GraphMatching, GraphMatching> clusterings;
 
 	/**
 	 * A map containing all clusters registered in this repository.
@@ -1347,9 +1347,9 @@ public class Repository {
 	 * @return The clustering quality measure class with the given name or null,
 	 *         if it does not exist.
 	 */
-	public Class<? extends ClusteringQualityMeasure> getClusteringQualityMeasureClass(
+	public Class<? extends QualityMeasure> getClusteringQualityMeasureClass(
 			final String clusteringQualityMeasureClassName) {
-		Class<? extends ClusteringQualityMeasure> result = this.clusteringQualityMeasureClasses
+		Class<? extends QualityMeasure> result = this.clusteringQualityMeasureClasses
 				.get(clusteringQualityMeasureClassName);
 		if (result == null && parent != null)
 			return parent
@@ -1379,7 +1379,7 @@ public class Repository {
 	 * 
 	 * @return The set of all registered clustering quality measure classes.
 	 */
-	public Collection<Class<? extends ClusteringQualityMeasure>> getClusteringQualityMeasureClasses() {
+	public Collection<Class<? extends QualityMeasure>> getClusteringQualityMeasureClasses() {
 		return this.clusteringQualityMeasureClasses.values();
 	}
 
@@ -3234,8 +3234,8 @@ public class Repository {
 		this.dataStatisticCalculatorClasses = new ConcurrentHashMap<String, Class<? extends DataStatisticCalculator<? extends DataStatistic>>>();
 		this.runStatisticCalculatorClasses = new ConcurrentHashMap<String, Class<? extends RunStatisticCalculator<? extends RunStatistic>>>();
 		this.runDataStatisticCalculatorClasses = new ConcurrentHashMap<String, Class<? extends RunDataStatisticCalculator<? extends RunDataStatistic>>>();
-		this.clusteringQualityMeasureClasses = new ConcurrentHashMap<String, Class<? extends ClusteringQualityMeasure>>();
-		this.clusteringQualityMeasureInstances = new ConcurrentHashMap<String, List<ClusteringQualityMeasure>>();
+		this.clusteringQualityMeasureClasses = new ConcurrentHashMap<String, Class<? extends QualityMeasure>>();
+		this.clusteringQualityMeasureInstances = new ConcurrentHashMap<String, List<QualityMeasure>>();
 		this.goldStandardConfigs = new ConcurrentHashMap<GoldStandardConfig, GoldStandardConfig>();
 		this.goldStandards = new ConcurrentHashMap<GoldStandard, GoldStandard>();
 		this.goldStandardFormats = new ConcurrentHashMap<GoldStandardFormat, GoldStandardFormat>();
@@ -3262,7 +3262,7 @@ public class Repository {
 		this.integerProgramParameters = new ConcurrentHashMap<IntegerProgramParameter, IntegerProgramParameter>();
 		this.stringProgramParameters = new ConcurrentHashMap<StringProgramParameter, StringProgramParameter>();
 
-		this.clusterings = new ConcurrentHashMap<Clustering, Clustering>();
+		this.clusterings = new ConcurrentHashMap<GraphMatching, GraphMatching>();
 		this.clusters = new ConcurrentHashMap<Cluster, Cluster>();
 		this.clusterItems = new ConcurrentHashMap<ClusterItem, ClusterItem>();
 
@@ -3398,7 +3398,7 @@ public class Repository {
 	 * @return True, if the clustering quality measure class was registered.
 	 */
 	public boolean isClusteringQualityMeasureRegistered(
-			final Class<? extends ClusteringQualityMeasure> clusteringQualityMeasure) {
+			final Class<? extends QualityMeasure> clusteringQualityMeasure) {
 		return this.clusteringQualityMeasureClasses
 				.containsKey(clusteringQualityMeasure.getName())
 				|| (this.parent != null && this.parent
@@ -4186,7 +4186,7 @@ public class Repository {
 	 *         successfully, false otherwise.
 	 */
 	public boolean register(
-			final ClusteringQualityMeasure clusteringQualityMeasure) {
+			final QualityMeasure clusteringQualityMeasure) {
 		this.clusteringQualityMeasureInstances.get(
 				clusteringQualityMeasure.getClass().getSimpleName()).add(
 				clusteringQualityMeasure);
@@ -5098,7 +5098,7 @@ public class Repository {
 	 * @return True, if the new class was registered.
 	 */
 	public boolean registerClusteringQualityMeasureClass(
-			final Class<? extends ClusteringQualityMeasure> object) {
+			final Class<? extends QualityMeasure> object) {
 		if (this.isClusteringQualityMeasureRegistered(object)) {
 			// first remove the old class
 			unregisterClusteringQualityMeasureClass(this.clusteringQualityMeasureClasses
@@ -5110,7 +5110,7 @@ public class Repository {
 		this.clusteringQualityMeasureInstances
 				.put(object.getSimpleName(),
 						Collections
-								.synchronizedList(new ArrayList<ClusteringQualityMeasure>()));
+								.synchronizedList(new ArrayList<QualityMeasure>()));
 
 		if (!ensureClusteringQualityMeasureRLibraries(object))
 			return false;
@@ -5937,7 +5937,7 @@ public class Repository {
 	 *         successfully.
 	 */
 	public boolean unregister(
-			final ClusteringQualityMeasure clusteringQualityMeasure) {
+			final QualityMeasure clusteringQualityMeasure) {
 		boolean result = this.clusteringQualityMeasureInstances.get(
 				clusteringQualityMeasure.getClass().getSimpleName()).remove(
 				clusteringQualityMeasure);
@@ -6689,7 +6689,7 @@ public class Repository {
 	 * @return True, if the object was remved successfully
 	 */
 	public boolean unregisterClusteringQualityMeasureClass(
-			final Class<? extends ClusteringQualityMeasure> object) {
+			final Class<? extends QualityMeasure> object) {
 		boolean result = this.clusteringQualityMeasureClasses.remove(object
 				.getName()) != null;
 		if (result) {
@@ -6698,8 +6698,8 @@ public class Repository {
 			// we inform all listeners about the new class. that
 			// means those objects are deleted such that new instances instances
 			// can be created using the new class.
-			for (ClusteringQualityMeasure clusteringQualityMeasure : Collections
-					.synchronizedList(new ArrayList<ClusteringQualityMeasure>(
+			for (QualityMeasure clusteringQualityMeasure : Collections
+					.synchronizedList(new ArrayList<QualityMeasure>(
 							clusteringQualityMeasureInstances.get(object
 									.getSimpleName())))) {
 				clusteringQualityMeasure.unregister();
@@ -6989,11 +6989,11 @@ public class Repository {
 	 * @throws UnsatisfiedRLibraryException
 	 */
 	private boolean ensureClusteringQualityMeasureRLibraries(
-			final Class<? extends ClusteringQualityMeasure> classObject) {
+			final Class<? extends QualityMeasure> classObject) {
 		// create an instance
-		ClusteringQualityMeasure measure;
+		QualityMeasure measure;
 		try {
-			measure = ClusteringQualityMeasure.parseFromString(this,
+			measure = QualityMeasure.parseFromString(this,
 					classObject.getSimpleName());
 
 			// ensure that all R libraries are available

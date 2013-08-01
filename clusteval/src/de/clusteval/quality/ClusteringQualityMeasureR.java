@@ -17,7 +17,7 @@ import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
 import de.clusteval.framework.MyRengine;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.utils.RNotAvailableException;
 
 /**
@@ -29,7 +29,7 @@ import de.clusteval.utils.RNotAvailableException;
  */
 public abstract class ClusteringQualityMeasureR
 		extends
-			ClusteringQualityMeasure {
+			QualityMeasure {
 
 	/**
 	 * Instantiates a new R clustering quality measure.
@@ -70,8 +70,8 @@ public abstract class ClusteringQualityMeasureR
 	 * de.clusteval.data.DataConfig)
 	 */
 	@Override
-	public final ClusteringQualityMeasureValue getQualityOfClustering(
-			Clustering clustering, Clustering goldStandard,
+	public final QualityMeasureValue getQualityOf(
+			GraphMatching clustering, GraphMatching goldStandard,
 			DataConfig dataConfig) throws UnknownGoldStandardFormatException,
 			UnknownDataSetFormatException, IOException,
 			InvalidDataSetFormatVersionException, RNotAvailableException {
@@ -88,7 +88,7 @@ public abstract class ClusteringQualityMeasureR
 			} catch (REngineException e) {
 				this.log.warn("R-framework (" + this.getClass().getSimpleName()
 						+ "): " + rEngine.getLastError());
-				return ClusteringQualityMeasureValue.getForDouble(this
+				return QualityMeasureValue.getForDouble(this
 						.getMinimum());
 			} finally {
 				rEngine.close();
@@ -98,8 +98,8 @@ public abstract class ClusteringQualityMeasureR
 		}
 	}
 
-	protected abstract ClusteringQualityMeasureValue getQualityOfClusteringHelper(
-			Clustering clustering, Clustering goldStandard,
+	protected abstract QualityMeasureValue getQualityOfClusteringHelper(
+			GraphMatching clustering, GraphMatching goldStandard,
 			DataConfig dataConfig, final MyRengine rEngine)
 			throws UnknownGoldStandardFormatException,
 			UnknownDataSetFormatException, IOException,

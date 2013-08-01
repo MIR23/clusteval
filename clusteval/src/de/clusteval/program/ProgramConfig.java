@@ -33,6 +33,7 @@ import de.clusteval.program.r.UnknownRProgramException;
 import de.clusteval.run.ParameterOptimizationRun;
 import de.clusteval.run.result.format.RunResultFormat;
 import de.clusteval.run.result.format.UnknownRunResultFormatException;
+import de.clusteval.utils.FormatCompatibilityParser;
 import file.FileUtils;
 
 /**
@@ -378,8 +379,11 @@ public class ProgramConfig extends RepositoryObject {
 
 			String outputFormat = props.getString("outputFormat");
 
-			compatibleDataSetFormats = Arrays.asList(props.getString(
-					"compatibleDataSetFormats").split("\\|"));
+			compatibleDataSetFormats = Arrays
+					.asList(new FormatCompatibilityParser()
+							.parseFormatExpression(
+									props.getString("compatibleDataSetFormats"))
+							.toDNF().toString().split("\\|"));
 
 			runresultFormat = RunResultFormat.parseFromString(repo,
 					outputFormat);

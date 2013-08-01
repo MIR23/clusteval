@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -21,7 +20,6 @@ import org.rosuda.REngine.REngineException;
 
 import utils.Pair;
 import utils.Triple;
-import de.clusteval.paramOptimization.NoParameterSetFoundException;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
 import de.clusteval.data.dataset.DataSetConfig;
@@ -35,13 +33,14 @@ import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
 import de.clusteval.framework.ClustevalBackendServer;
 import de.clusteval.framework.RLibraryNotLoadedException;
 import de.clusteval.framework.repository.RegisterException;
-import de.clusteval.graphmatching.Clustering;
+import de.clusteval.graphmatching.GraphMatching;
+import de.clusteval.paramOptimization.NoParameterSetFoundException;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.r.RProgram;
-import de.clusteval.quality.ClusteringQualityMeasure;
-import de.clusteval.quality.ClusteringQualitySet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualitySet;
 import de.clusteval.run.ExecutionRun;
 import de.clusteval.run.MissingParameterValueException;
 import de.clusteval.run.Run;
@@ -198,7 +197,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			sb.append(param);
 		}
 		sb.append("\t");
-		for (ClusteringQualityMeasure measure : this.getRun()
+		for (QualityMeasure measure : this.getRun()
 				.getQualityMeasures()) {
 			sb.append(measure.getClass().getSimpleName());
 			sb.append("\t");
@@ -818,11 +817,11 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				if (checkForInterrupted())
 					return;
 
-				List<Pair<ParameterSet, ClusteringQualitySet>> qualities = this
+				List<Pair<ParameterSet, QualitySet>> qualities = this
 						.assessQualities(convertedResult);
 				// 04.04.2013: adding iteration number to qualities
-				List<Triple<ParameterSet, ClusteringQualitySet, Long>> qualitiesWithIterations = new ArrayList<Triple<ParameterSet, ClusteringQualitySet, Long>>();
-				for (Pair<ParameterSet, ClusteringQualitySet> pair : qualities)
+				List<Triple<ParameterSet, QualitySet, Long>> qualitiesWithIterations = new ArrayList<Triple<ParameterSet, QualitySet, Long>>();
+				for (Pair<ParameterSet, QualitySet> pair : qualities)
 					qualitiesWithIterations
 							.add(Triple.getTriple(pair.getFirst(),
 									pair.getSecond(), new Long(optId)));
@@ -860,22 +859,22 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * @throws InvalidDataSetFormatVersionException
 	 * @throws RunResultNotFoundException
 	 */
-	protected List<Pair<ParameterSet, ClusteringQualitySet>> assessQualities(
+	protected List<Pair<ParameterSet, QualitySet>> assessQualities(
 			GraphMatchingRunResult convertedResult)
 			throws RunResultNotFoundException {
 		this.log.debug(this.getRun() + " (" + this.programConfig + ","
 				+ this.dataConfig + ") Assessing quality of results...");
-		List<Pair<ParameterSet, ClusteringQualitySet>> qualities = new ArrayList<Pair<ParameterSet, ClusteringQualitySet>>();
+		List<Pair<ParameterSet, QualitySet>> qualities = new ArrayList<Pair<ParameterSet, QualitySet>>();
 		try {
 			final String qualityFile = this.internalParams.get("q");
 			convertedResult.loadIntoMemory();
-			final Pair<ParameterSet, Clustering> pair = convertedResult
-					.getClustering();
+			final Pair<ParameterSet, GraphMatching> pair = convertedResult
+					.getGraphMatching();
 			convertedResult.unloadFromMemory();
-			ClusteringQualitySet quals = pair.getSecond().assessQuality(
+			QualitySet quals = pair.getSecond().assessQuality(
 					dataConfig, this.getRun().getQualityMeasures());
 			qualities.add(Pair.getPair(pair.getFirst(), quals));
-			for (ClusteringQualityMeasure qualityMeasure : quals.keySet()) {
+			for (QualityMeasure qualityMeasure : quals.keySet()) {
 				FileUtils.appendStringToFile(qualityFile,
 						qualityMeasure.getClass().getSimpleName() + "\t"
 								+ quals.get(qualityMeasure) + "\n");
@@ -900,12 +899,12 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 *            clustering qualities of different measures.
 	 */
 	protected void writeQualitiesToFile(
-			List<Triple<ParameterSet, ClusteringQualitySet, Long>> qualities) {
+			List<Triple<ParameterSet, QualitySet, Long>> qualities) {
 		// 04.04.2013: adding iteration number into first column
 		/*
 		 * Write the qualities into the complete file
 		 */
-		for (Triple<ParameterSet, ClusteringQualitySet, Long> clustSet : qualities) {
+		for (Triple<ParameterSet, QualitySet, Long> clustSet : qualities) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(clustSet.getThird());
 			sb.append("\t");
@@ -917,7 +916,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				sb.append(clustSet.getFirst().get(param.getName()));
 			}
 			sb.append("\t");
-			for (ClusteringQualityMeasure measure : this.getRun()
+			for (QualityMeasure measure : this.getRun()
 					.getQualityMeasures()) {
 				sb.append(clustSet.getSecond().get(measure));
 				sb.append("\t");
@@ -1083,7 +1082,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	@SuppressWarnings("unused")
 	protected void afterClustering(
 			final GraphMatchingRunResult clusteringRunResult,
-			final List<Pair<ParameterSet, ClusteringQualitySet>> qualities) {
+			final List<Pair<ParameterSet, QualitySet>> qualities) {
 	}
 
 	/**

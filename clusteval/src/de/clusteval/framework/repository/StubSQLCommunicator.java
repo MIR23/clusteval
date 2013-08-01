@@ -21,7 +21,7 @@ import de.clusteval.program.Program;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.StringProgramParameter;
-import de.clusteval.quality.ClusteringQualityMeasure;
+import de.clusteval.quality.QualityMeasure;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -1549,7 +1549,7 @@ public class StubSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected boolean unregisterClusteringQualityMeasureClass(
-			Class<? extends ClusteringQualityMeasure> object) {
+			Class<? extends QualityMeasure> object) {
 		return false;
 	}
 
@@ -1640,7 +1640,7 @@ public class StubSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected boolean registerClusteringQualityMeasureClass(
-			Class<? extends ClusteringQualityMeasure> clusteringQualityMeasure) {
+			Class<? extends QualityMeasure> clusteringQualityMeasure) {
 		return false;
 	}
 
