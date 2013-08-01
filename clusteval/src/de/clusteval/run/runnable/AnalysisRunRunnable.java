@@ -51,7 +51,7 @@ import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.Run;
@@ -261,7 +261,7 @@ public abstract class AnalysisRunRunnable<T extends Statistic, R extends RunResu
 				e.printStackTrace();
 			} catch (UnknownRunResultFormatException e) {
 				e.printStackTrace();
-			} catch (UnknownClusteringQualityMeasureException e) {
+			} catch (UnknownQualityMeasureException e) {
 				e.printStackTrace();
 			} catch (InvalidRunModeException e) {
 				e.printStackTrace();

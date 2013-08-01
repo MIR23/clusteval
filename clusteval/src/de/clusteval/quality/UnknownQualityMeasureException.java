@@ -6,7 +6,7 @@ package de.clusteval.quality;
 /**
  * @author Christian Wiwie
  */
-public class UnknownClusteringQualityMeasureException extends Exception {
+public class UnknownQualityMeasureException extends Exception {
 
 	/**
 	 * 
@@ -19,7 +19,7 @@ public class UnknownClusteringQualityMeasureException extends Exception {
 	 * @param string
 	 *            the string
 	 */
-	public UnknownClusteringQualityMeasureException(String string) {
+	public UnknownQualityMeasureException(String string) {
 		super(string);
 	}
 }

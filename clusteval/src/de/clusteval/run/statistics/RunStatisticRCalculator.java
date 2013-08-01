@@ -42,7 +42,7 @@ import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.RunException;
 import de.clusteval.run.result.AnalysisRunResultException;
@@ -102,7 +102,7 @@ public abstract class RunStatisticRCalculator<T extends RunStatistic>
 			DataSetNotFoundException, DataSetConfigNotFoundException,
 			GoldStandardConfigNotFoundException, DataConfigurationException,
 			DataConfigNotFoundException, UnknownRunResultFormatException,
-			UnknownClusteringQualityMeasureException, InvalidRunModeException,
+			UnknownQualityMeasureException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException, InternalAttributeException,
@@ -151,7 +151,7 @@ public abstract class RunStatisticRCalculator<T extends RunStatistic>
 			DataSetNotFoundException, DataSetConfigNotFoundException,
 			GoldStandardConfigNotFoundException, DataConfigurationException,
 			DataConfigNotFoundException, UnknownRunResultFormatException,
-			UnknownClusteringQualityMeasureException, InvalidRunModeException,
+			UnknownQualityMeasureException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException, InternalAttributeException,

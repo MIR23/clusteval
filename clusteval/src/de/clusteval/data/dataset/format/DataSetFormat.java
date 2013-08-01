@@ -18,6 +18,7 @@ import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.repository.RepositoryObject;
 import de.clusteval.utils.RNotAvailableException;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import file.FileUtils;
 
 /**
@@ -160,23 +161,6 @@ public abstract class DataSetFormat extends RepositoryObject {
 
 	/**
 	 * @param dataSet
-	 *            The dataset to be parsed.
-	 * @return A wrapper object containing the contents of the dataset
-	 * @throws IllegalArgumentException
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws IOException
-	 */
-	public Object parse(final DataSet dataSet) throws IllegalArgumentException,
-			IOException, InvalidDataSetFormatVersionException {
-		final DataSetFormatParser parser = getDataSetFormatParser();
-		if (parser == null)
-			throw new IllegalArgumentException(
-					"Operation only supported for the standard dataset format");
-		return parser.parse(dataSet);
-	}
-
-	/**
-	 * @param dataSet
 	 *            The dataset to be written to the filesystem.
 	 * @param withHeader
 	 *            Whether to write the header into the dataset file.
@@ -263,7 +247,7 @@ public abstract class DataSetFormat extends RepositoryObject {
 	 * @return An instance of the dataset format parser corresponding to this
 	 *         dataset format class.
 	 */
-	protected abstract DataSetFormatParser getDataSetFormatParser();
+	public abstract DataSetFormatParser getDataSetFormatParser();
 
 	/**
 	 * Instantiates a new dataset format with the given version.

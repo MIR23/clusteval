@@ -19,7 +19,6 @@ import de.clusteval.framework.repository.Repository;
 import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.QualityMeasureValue;
 import de.clusteval.quality.QualitySet;
-import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 
 /**
  * @author Christian Wiwie
@@ -27,12 +26,25 @@ import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
  */
 public class GraphMatching implements Iterable<Pair<String, String>> {
 
-	//
-	// protected DirectedSparseMultigraph<String, String> graph1;
-	//
-	// protected DirectedSparseMultigraph<String, String> graph2;
+	protected static List<Pair<String, String>> cloneMappings(
+			List<Pair<String, String>> mappings) {
+		final List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+
+		for (Pair<String, String> p : mappings)
+			result.add(Pair.getPair(p.getFirst(), p.getSecond()));
+
+		return result;
+	}
 
 	protected List<Pair<String, String>> mappings;
+	
+	/**
+	 * 
+	 */
+	public GraphMatching() {
+		super();
+		this.mappings = new ArrayList<Pair<String, String>>();
+	}
 
 	/**
 	 * The copy constructor of clusterings.
@@ -51,16 +63,6 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	@Override
 	public GraphMatching clone() {
 		return new GraphMatching(this);
-	}
-
-	protected static List<Pair<String, String>> cloneMappings(
-			List<Pair<String, String>> mappings) {
-		final List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
-
-		for (Pair<String, String> p : mappings)
-			result.add(Pair.getPair(p.getFirst(), p.getSecond()));
-
-		return result;
 	}
 
 	/*
@@ -89,6 +91,10 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	public int hashCode() {
 		return (// this.graph1.toString() + this.graph2.toString() +
 		this.mappings.toString()).hashCode();
+	}
+	
+	public void addMatching(final Pair<String, String> pair) {
+		this.mappings.add(pair);
 	}
 
 	public int size() {
@@ -144,12 +150,11 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	public static Pair<Map<String, Double>, GraphMatching> parseFromFile(
 			final Repository repository, final File absFilePath,
 			final boolean parseQualities) throws IOException {
-		// TODO
-		ClusteringParser parser = new ClusteringParser(repository,
+		GraphMatchingParser parser = new GraphMatchingParser(repository,
 				absFilePath.getAbsolutePath(), parseQualities);
 		parser.process();
 
-		return parser.getClusterings();
+		return parser.getMatchings();
 	}
 
 	/**

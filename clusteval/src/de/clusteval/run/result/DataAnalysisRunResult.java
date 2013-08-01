@@ -48,7 +48,7 @@ import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.DataAnalysisRun;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.Run;
@@ -156,7 +156,7 @@ public class DataAnalysisRunResult extends
 	 * @throws NoOptimizableProgramParameterException
 	 * @throws UnknownParameterOptimizationMethodException
 	 * @throws InvalidRunModeException
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 * @throws InvalidConfigurationFileException
 	 * @throws UnknownDataSetFormatException
 	 * @throws UnknownRunResultFormatException
@@ -193,7 +193,7 @@ public class DataAnalysisRunResult extends
 			DataConfigNotFoundException, IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
 			InvalidConfigurationFileException,
-			UnknownClusteringQualityMeasureException, InvalidRunModeException,
+			UnknownQualityMeasureException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException, NoRepositoryFoundException,

@@ -30,6 +30,7 @@ import de.clusteval.utils.FormatConversionException;
 import de.clusteval.utils.NamedDoubleAttribute;
 import de.clusteval.utils.NamedIntegerAttribute;
 import de.clusteval.utils.RNotAvailableException;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 
 /**
  * A wrapper class for a dataset on the filesystem.
@@ -452,36 +453,6 @@ public class DataSet extends RepositoryObject {
 	}
 
 	/**
-	 * Checks whether this dataset is loaded into the memory.
-	 * 
-	 * @return true, if is in memory
-	 */
-	public boolean isInMemory() {
-		// TODO
-		return false;
-	}
-
-	/**
-	 * Load this dataset into memory. When this method is invoked, it parses the
-	 * dataset file on the filesystem using the
-	 * {@link DataSetFormatParser#parse(DataSet)} method corresponding to the
-	 * dataset format of this dataset. Then the contents of the dataset is
-	 * stored in a member variable.
-	 * 
-	 * @return true, if successful
-	 * @throws UnknownDataSetFormatException
-	 * @throws InvalidDataSetFormatVersionException
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public boolean loadIntoMemory() throws UnknownDataSetFormatException,
-			IllegalArgumentException, IOException,
-			InvalidDataSetFormatVersionException {
-		// TODO
-		return false;
-	}
-
-	/**
 	 * This method writes the contents of this dataset to the file denoted by
 	 * the {@link #getAbsolutePath()}.
 	 * 
@@ -491,8 +462,9 @@ public class DataSet extends RepositoryObject {
 	 * @return True, if the writing was succesfull
 	 */
 	public boolean writeToFile(final boolean withHeader) {
-		if (!isInMemory())
-			return false;
+		// TODO
+//		if (!isInMemory())
+//			return false;
 		return this.getDataSetFormat().writeToFile(this, withHeader);
 	}
 
@@ -517,16 +489,6 @@ public class DataSet extends RepositoryObject {
 	 *         object.
 	 */
 	public boolean setDataSetContent(Object newContent) {
-		// TODO
-		return false;
-	}
-
-	/**
-	 * Unload the contents of this dataset from memory.
-	 * 
-	 * @return true, if successful
-	 */
-	public boolean unloadFromMemory() {
 		// TODO
 		return false;
 	}

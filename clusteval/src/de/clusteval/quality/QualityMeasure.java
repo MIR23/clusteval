@@ -137,12 +137,12 @@ public abstract class QualityMeasure extends RepositoryObject {
 	 * @param qualityMeasure
 	 *            the quality measure
 	 * @return the clustering quality measure
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 *             the unknown clustering quality measure exception
 	 */
 	public static QualityMeasure parseFromString(final Repository repository,
 			String qualityMeasure)
-			throws UnknownClusteringQualityMeasureException {
+			throws UnknownQualityMeasureException {
 
 		Class<? extends QualityMeasure> c = repository
 				.getClusteringQualityMeasureClass("de.clusteval.quality."
@@ -169,9 +169,8 @@ public abstract class QualityMeasure extends RepositoryObject {
 		} catch (NoSuchMethodException e1) {
 			e1.printStackTrace();
 		}
-		throw new UnknownClusteringQualityMeasureException("\""
-				+ qualityMeasure
-				+ "\" is not a known clustering quality measure.");
+		throw new UnknownQualityMeasureException("\""
+				+ qualityMeasure + "\" is not a known quality measure.");
 	}
 
 	/*

@@ -53,7 +53,7 @@ import de.clusteval.program.ProgramParameter;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.NoRunResultFormatParserException;
 import de.clusteval.run.result.RunResult;
@@ -147,7 +147,7 @@ public abstract class Run extends RepositoryObject {
 	 * @throws InvalidConfigurationFileException
 	 *             If any of the configuration files is missing a required
 	 *             value, this exception is thrown.
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 *             the unknown clustering quality measure exception
 	 * @throws FileNotFoundException
 	 *             the file not found exception
@@ -188,7 +188,7 @@ public abstract class Run extends RepositoryObject {
 	public static Run parseFromFile(final File absPath) throws IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
 			InvalidConfigurationFileException,
-			UnknownClusteringQualityMeasureException, FileNotFoundException,
+			UnknownQualityMeasureException, FileNotFoundException,
 			InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,

@@ -47,7 +47,7 @@ import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.Run;
@@ -338,7 +338,7 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 	 * @throws IOException
 	 * @throws UnknownRunResultFormatException
 	 * @throws UnknownDataSetFormatException
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 * @throws InvalidRunModeException
 	 * @throws UnknownParameterOptimizationMethodException
 	 * @throws NoOptimizableProgramParameterException
@@ -383,7 +383,7 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 			final Repository parentRepository, final File runResultFolder,
 			final List<ExecutionRunResult> result) throws IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			UnknownClusteringQualityMeasureException, InvalidRunModeException,
+			UnknownQualityMeasureException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException,

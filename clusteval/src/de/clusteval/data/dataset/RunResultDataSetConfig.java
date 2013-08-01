@@ -14,7 +14,7 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
-import utils.Pair;
+import utils.Triple;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -33,7 +33,7 @@ public class RunResultDataSetConfig extends DataSetConfig {
 	 * @throws RegisterException
 	 */
 	public RunResultDataSetConfig(Repository repository, long changeDate,
-			File absPath, List<Pair<String, DataSet>> ds)
+			File absPath, List<Triple<String, DataSet, String>> ds)
 			throws RegisterException {
 		super(repository, changeDate, absPath, ds);
 	}
@@ -88,7 +88,7 @@ public class RunResultDataSetConfig extends DataSetConfig {
 			Repository repo = Repository.getRepositoryForPath(absConfigPath
 					.getAbsolutePath());
 
-			List<Pair<String, DataSet>> dataSets = new ArrayList<Pair<String, DataSet>>();
+			List<Triple<String, DataSet, String>> dataSets = new ArrayList<Triple<String, DataSet, String>>();
 
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
@@ -97,12 +97,13 @@ public class RunResultDataSetConfig extends DataSetConfig {
 
 				String datasetName = props.getString("datasetName");
 				String datasetFile = props.getString("datasetFile");
+				String groupName = props.getString("groupName");
 
 				// we take the dataset from the runresult repository
 				DataSet dataSet = repo.getDataSetWithName(datasetName + "/"
 						+ datasetFile);
 
-				dataSets.add(Pair.getPair(section, dataSet));
+				dataSets.add(Triple.getTriple(section, dataSet, groupName));
 			}
 			DataSetConfig result = new DataSetConfig(repo,
 					absConfigPath.lastModified(), absConfigPath, dataSets);

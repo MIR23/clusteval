@@ -84,7 +84,7 @@ import de.clusteval.program.r.RProgramFinderThread;
 import de.clusteval.program.r.UnknownRProgramException;
 import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.QualityMeasureFinderThread;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
@@ -7022,7 +7022,7 @@ public class Repository {
 							+ measure
 							+ "\" could not be loaded since it requires R and no connection could be established.");
 			}
-		} catch (UnknownClusteringQualityMeasureException e1) {
+		} catch (UnknownQualityMeasureException e1) {
 			e1.printStackTrace();
 		}
 		this.clusteringQualityMeasureClasses.remove(classObject.getName());

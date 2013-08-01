@@ -84,7 +84,7 @@ import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
 import de.clusteval.quality.QualityMeasure;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.RUN_STATUS;
 import de.clusteval.run.Run;
@@ -783,7 +783,7 @@ public class ClustevalBackendServer implements IBackendServer {
 			e.printStackTrace();
 		} catch (UnknownDataSetFormatException e) {
 			e.printStackTrace();
-		} catch (UnknownClusteringQualityMeasureException e) {
+		} catch (UnknownQualityMeasureException e) {
 			e.printStackTrace();
 		} catch (InvalidRunModeException e) {
 			e.printStackTrace();

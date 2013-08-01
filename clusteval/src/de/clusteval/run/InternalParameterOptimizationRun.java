@@ -45,7 +45,7 @@ import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
 import de.clusteval.quality.QualityMeasure;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.result.format.UnknownRunResultFormatException;
 import de.clusteval.run.runnable.ExecutionRunRunnable;
 import de.clusteval.run.runnable.InternalParameterOptimizationRunRunnable;
@@ -174,7 +174,7 @@ public class InternalParameterOptimizationRun extends ExecutionRun {
 	 *             the unknown run result format exception
 	 * @throws UnknownDataSetFormatException
 	 *             the unknown data set format exception
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 *             the unknown clustering quality measure exception
 	 * @throws UnknownProgramParameterException
 	 * @throws NoRepositoryFoundException
@@ -202,7 +202,7 @@ public class InternalParameterOptimizationRun extends ExecutionRun {
 	public static Run parseFromFile(final File absPath)
 			throws ConfigurationException, IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			UnknownClusteringQualityMeasureException,
+			UnknownQualityMeasureException,
 			UnknownProgramParameterException, NoRepositoryFoundException,
 			GoldStandardNotFoundException,
 			InvalidOptimizationParameterException,
@@ -304,12 +304,12 @@ public class InternalParameterOptimizationRun extends ExecutionRun {
 		 * be loaded once so that they are ALL registered as missing in the
 		 * repository.
 		 */
-		List<UnknownClusteringQualityMeasureException> thrownExceptions = new ArrayList<UnknownClusteringQualityMeasureException>();
+		List<UnknownQualityMeasureException> thrownExceptions = new ArrayList<UnknownQualityMeasureException>();
 		for (String qualityMeasure : props.getStringArray("qualityMeasures")) {
 			try {
 				qualityMeasures.add(QualityMeasure.parseFromString(
 						repo, qualityMeasure));
-			} catch (UnknownClusteringQualityMeasureException e) {
+			} catch (UnknownQualityMeasureException e) {
 				thrownExceptions.add(e);
 			}
 		}

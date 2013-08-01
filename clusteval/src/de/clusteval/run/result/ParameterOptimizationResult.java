@@ -52,7 +52,7 @@ import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
 import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.QualitySet;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.InvalidRunModeException;
 import de.clusteval.run.ParameterOptimizationRun;
 import de.clusteval.run.Run;
@@ -85,7 +85,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 * @throws IOException
 	 * @throws UnknownRunResultFormatException
 	 * @throws UnknownDataSetFormatException
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 * @throws InvalidRunModeException
 	 * @throws UnknownParameterOptimizationMethodException
 	 * @throws NoOptimizableProgramParameterException
@@ -133,7 +133,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 			final boolean parseClusterings, final boolean storeClusterings,
 			final boolean register) throws IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			UnknownClusteringQualityMeasureException, InvalidRunModeException,
+			UnknownQualityMeasureException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException,

@@ -7,11 +7,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.clusteval.data.dataset.DataSet;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 
 /**
  * @author Christian Wiwie
@@ -52,14 +54,15 @@ public abstract class DataSetFormatParser {
 	}
 
 	/**
-	 * @param dataSet
-	 *            The dataset to be parsed.
+	 * @param dataSets
+	 *            The datasets to be parsed.
 	 * @return A wrapper object containing the contents of the dataset
 	 * @throws IllegalArgumentException
 	 * @throws InvalidDataSetFormatVersionException
 	 * @throws IOException
 	 */
-	protected abstract Object parse(DataSet dataSet) throws IOException,
+	public abstract DirectedSparseMultigraph<String, String> parse(
+			List<DataSet> dataSets) throws IOException,
 			InvalidDataSetFormatVersionException;
 
 	/**
@@ -80,8 +83,9 @@ public abstract class DataSetFormatParser {
 				.equals(this.getClass().getSimpleName().replace("Parser", "")))
 			return false;
 
-		if (!dataSet.isInMemory())
-			return false;
+		// TODO
+//		if (!dataSet.isInMemory())
+//			return false;
 
 		// create the target file
 		final File dataSetFile = new File(dataSet.getAbsolutePath());

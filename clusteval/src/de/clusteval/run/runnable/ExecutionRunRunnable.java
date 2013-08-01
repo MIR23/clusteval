@@ -197,8 +197,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			sb.append(param);
 		}
 		sb.append("\t");
-		for (QualityMeasure measure : this.getRun()
-				.getQualityMeasures()) {
+		for (QualityMeasure measure : this.getRun().getQualityMeasures()) {
 			sb.append(measure.getClass().getSimpleName());
 			sb.append("\t");
 		}
@@ -236,10 +235,10 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			 * either they are directly compatible or the dataset can be
 			 * converted to another compatible DataSetFormat.
 			 */
-			List<Pair<String, DataSet>> dataSets = dataConfig
+			List<Triple<String, DataSet, String>> dataSets = dataConfig
 					.getDatasetConfig().getDataSets();
 			List<String> dataSetFormats = new ArrayList<String>();
-			for (Pair<String, DataSet> ds : dataSets) {
+			for (Triple<String, DataSet, String> ds : dataSets) {
 				dataSetFormats.add(ds.getSecond().getDataSetFormat().getClass()
 						.getSimpleName());
 			}
@@ -449,8 +448,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	protected String[] parseInput(final String[] invocation,
 			final Map<String, String> internalParams) {
-		List<Pair<String, DataSet>> dataSets = dataConfig.getDatasetConfig()
-				.getDataSets();
+		List<Triple<String, DataSet, String>> dataSets = dataConfig
+				.getDatasetConfig().getDataSets();
 		String[] parsed = invocation.clone();
 		for (int i = 0; i < dataSets.size(); i++) {
 			internalParams.put("i{" + dataSets.get(i).getFirst() + "}",
@@ -871,8 +870,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			final Pair<ParameterSet, GraphMatching> pair = convertedResult
 					.getGraphMatching();
 			convertedResult.unloadFromMemory();
-			QualitySet quals = pair.getSecond().assessQuality(
-					dataConfig, this.getRun().getQualityMeasures());
+			QualitySet quals = pair.getSecond().assessQuality(dataConfig,
+					this.getRun().getQualityMeasures());
 			qualities.add(Pair.getPair(pair.getFirst(), quals));
 			for (QualityMeasure qualityMeasure : quals.keySet()) {
 				FileUtils.appendStringToFile(qualityFile,
@@ -891,8 +890,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	}
 
 	/**
-	 * Helper method of {@link #assessQualities(GraphMatchingRunResult)}, invoked
-	 * to write the assessed clustering qualities into files.
+	 * Helper method of {@link #assessQualities(GraphMatchingRunResult)},
+	 * invoked to write the assessed clustering qualities into files.
 	 * 
 	 * @param qualities
 	 *            A list containing pairs of parameter sets and corresponding
@@ -916,8 +915,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				sb.append(clustSet.getFirst().get(param.getName()));
 			}
 			sb.append("\t");
-			for (QualityMeasure measure : this.getRun()
-					.getQualityMeasures()) {
+			for (QualityMeasure measure : this.getRun().getQualityMeasures()) {
 				sb.append(clustSet.getSecond().get(measure));
 				sb.append("\t");
 			}
@@ -1205,8 +1203,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		boolean found = preprocessAndCheckCompatibleDataSetFormat();
 		if (!found) {
 			List<DataSetFormat> dsFormats = new ArrayList<DataSetFormat>();
-			for (Pair<String, DataSet> ds : dataConfig.getDatasetConfig()
-					.getDataSets()) {
+			for (Triple<String, DataSet, String> ds : dataConfig
+					.getDatasetConfig().getDataSets()) {
 				dsFormats.add(ds.getSecond().getDataSetFormat());
 			}
 			IncompatibleDataSetFormatException ex = new IncompatibleDataSetFormatException(
@@ -1219,9 +1217,10 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 		try {
 			// Load the dataset into memory
-			for (Pair<String, DataSet> dataSet : this.dataConfig
-					.getDatasetConfig().getDataSets())
-				dataSet.getSecond().loadIntoMemory();
+			this.dataConfig.getDatasetConfig().loadIntoMemory();
+			// for (Triple<String, DataSet, String> dataSet : this.dataConfig
+			// .getDatasetConfig().getDataSets())
+			// dataSet.getSecond().loadIntoMemory();
 
 			// if the original dataset is an absolute dataset, load it into
 			// memory as well
@@ -1308,10 +1307,12 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	protected void afterRun() {
 		super.afterRun();
 		// unload the dataset from memory
-		for (Pair<String, DataSet> dataSet : this.dataConfig.getDatasetConfig()
-				.getDataSets()) {
-			dataSet.getSecond().unloadFromMemory();
-		}
+		// for (Triple<String, DataSet, String> dataSet :
+		// this.dataConfig.getDatasetConfig()
+		// .getDataSets()) {
+		// dataSet.getSecond().unloadFromMemory();
+		// }
+		this.dataConfig.getDatasetConfig().unloadFromMemory();
 		// if the original dataset is an absolute dataset, unload it from
 		// memory
 		// as well

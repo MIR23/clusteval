@@ -1,8 +1,13 @@
 package de.clusteval.data.dataset;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -11,7 +16,10 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.slf4j.LoggerFactory;
 
-import utils.Pair;
+import utils.Triple;
+import de.clusteval.data.dataset.format.DataSetFormatParser;
+import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
+import de.clusteval.data.dataset.format.Parsable;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.dataset.type.UnknownDataSetTypeException;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
@@ -21,6 +29,7 @@ import de.clusteval.framework.repository.RepositoryEvent;
 import de.clusteval.framework.repository.RepositoryObject;
 import de.clusteval.framework.repository.RepositoryRemoveEvent;
 import de.clusteval.framework.repository.RepositoryReplaceEvent;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import file.FileUtils;
 
 /**
@@ -51,13 +60,13 @@ public class DataSetConfig extends RepositoryObject {
 	 *            The list of data sets to clone.
 	 * @return The list containing the cloned objects of the input list.
 	 */
-	public static List<Pair<String, DataSet>> cloneDataSets(
-			final List<Pair<String, DataSet>> dataSets) {
-		List<Pair<String, DataSet>> result = new ArrayList<Pair<String, DataSet>>();
+	public static List<Triple<String, DataSet, String>> cloneDataSets(
+			final List<Triple<String, DataSet, String>> dataSets) {
+		List<Triple<String, DataSet, String>> result = new ArrayList<Triple<String, DataSet, String>>();
 
-		for (Pair<String, DataSet> dataSet : dataSets) {
-			result.add(Pair.getPair(dataSet.getFirst() + "", dataSet
-					.getSecond().clone()));
+		for (Triple<String, DataSet, String> dataSet : dataSets) {
+			result.add(Triple.getTriple(dataSet.getFirst() + "", dataSet
+					.getSecond().clone(), dataSet.getThird()));
 		}
 
 		return result;
@@ -67,7 +76,11 @@ public class DataSetConfig extends RepositoryObject {
 	 * A dataset configuration encapsulates a dataset. This attribute stores a
 	 * reference to the dataset wrapper object.
 	 */
-	protected List<Pair<String, DataSet>> datasets;
+	protected List<Triple<String, DataSet, String>> datasets;
+
+	protected Map<String, List<Triple<String, DataSet, String>>> groupToDataSet;
+
+	protected List<DirectedSparseMultigraph<String, String>> graphs;
 
 	/**
 	 * Instantiates a new dataset configuration.
@@ -85,15 +98,27 @@ public class DataSetConfig extends RepositoryObject {
 	 * @throws RegisterException
 	 */
 	public DataSetConfig(final Repository repository, final long changeDate,
-			final File absPath, final List<Pair<String, DataSet>> ds)
+			final File absPath, final List<Triple<String, DataSet, String>> ds)
 			throws RegisterException {
 		super(repository, false, changeDate, absPath);
 
 		this.datasets = ds;
 
+		initGroupToDataSets();
+
 		if (this.register()) {
-			for (Pair<String, DataSet> dataset : this.datasets)
+			for (Triple<String, DataSet, String> dataset : this.datasets)
 				dataset.getSecond().addListener(this);
+		}
+	}
+
+	protected void initGroupToDataSets() {
+		this.groupToDataSet = new HashMap<String, List<Triple<String, DataSet, String>>>();
+		for (Triple<String, DataSet, String> triple : this.datasets) {
+			if (!this.groupToDataSet.containsKey(triple.getThird()))
+				this.groupToDataSet.put(triple.getThird(),
+						new ArrayList<Triple<String, DataSet, String>>());
+			this.groupToDataSet.get(triple.getThird()).add(triple);
 		}
 	}
 
@@ -108,6 +133,8 @@ public class DataSetConfig extends RepositoryObject {
 		super(datasetConfig);
 
 		this.datasets = cloneDataSets(datasetConfig.datasets);
+
+		initGroupToDataSets();
 	}
 
 	/*
@@ -179,7 +206,7 @@ public class DataSetConfig extends RepositoryObject {
 			Repository repo = Repository.getRepositoryForPath(absConfigPath
 					.getAbsolutePath());
 
-			List<Pair<String, DataSet>> dataSets = new ArrayList<Pair<String, DataSet>>();
+			List<Triple<String, DataSet, String>> dataSets = new ArrayList<Triple<String, DataSet, String>>();
 
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
@@ -188,12 +215,13 @@ public class DataSetConfig extends RepositoryObject {
 
 				String datasetName = props.getString("datasetName");
 				String datasetFile = props.getString("datasetFile");
+				String groupName = props.getString("groupName");
 
 				DataSet dataSet = DataSet.parseFromFile(new File(FileUtils
 						.buildPath(repo.getDataSetBasePath(), datasetName,
 								datasetFile)));
 
-				dataSets.add(Pair.getPair(section, dataSet));
+				dataSets.add(Triple.getTriple(section, dataSet, groupName));
 			}
 			DataSetConfig result = new DataSetConfig(repo,
 					absConfigPath.lastModified(), absConfigPath, dataSets);
@@ -209,8 +237,13 @@ public class DataSetConfig extends RepositoryObject {
 	/**
 	 * @return The dataset, this configuration belongs to.
 	 */
-	public List<Pair<String, DataSet>> getDataSets() {
+	public List<Triple<String, DataSet, String>> getDataSets() {
 		return datasets;
+	}
+
+	public List<Triple<String, DataSet, String>> getDataSetsForGroup(
+			final String groupName) {
+		return this.groupToDataSet.get(groupName);
 	}
 
 	/*
@@ -300,7 +333,91 @@ public class DataSetConfig extends RepositoryObject {
 	 * @param datasets
 	 *            The new datasets
 	 */
-	public void setDataSets(List<Pair<String,DataSet>> datasets) {
+	public void setDataSets(List<Triple<String, DataSet, String>> datasets) {
 		this.datasets = datasets;
+	}
+
+	/**
+	 * Load this dataset into memory. When this method is invoked, it parses the
+	 * dataset file on the filesystem using the
+	 * {@link DataSetFormatParser#parse(DataSet)} method corresponding to the
+	 * dataset format of this dataset. Then the contents of the dataset is
+	 * stored in a member variable.
+	 * 
+	 * @return true, if successful
+	 * @throws UnknownDataSetFormatException
+	 * @throws InvalidDataSetFormatVersionException
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
+	public boolean loadIntoMemory() throws UnknownDataSetFormatException,
+			IllegalArgumentException, IOException,
+			InvalidDataSetFormatVersionException {
+		this.graphs = this.parse();
+		return true;
+	}
+
+	/**
+	 * Checks whether this dataset is loaded into the memory.
+	 * 
+	 * @return true, if is in memory
+	 */
+	public boolean isInMemory() {
+		return this.graphs != null;
+	}
+
+	/**
+	 * Unload the contents of this dataset from memory.
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean unloadFromMemory() {
+		this.graphs = null;
+		return true;
+	}
+
+	/**
+	 * @param dataSet
+	 *            The dataset to be parsed.
+	 * @return A wrapper object containing the contents of the dataset
+	 * @throws IllegalArgumentException
+	 * @throws InvalidDataSetFormatVersionException
+	 * @throws IOException
+	 */
+	public List<DirectedSparseMultigraph<String, String>> parse()
+			throws IllegalArgumentException, IOException,
+			InvalidDataSetFormatVersionException {
+		List<DirectedSparseMultigraph<String, String>> result = new ArrayList<DirectedSparseMultigraph<String, String>>();
+		for (String group : groupToDataSet.keySet()) {
+			List<Triple<String, DataSet, String>> dataSets = groupToDataSet
+					.get(group);
+			DataSetFormatParser parser = null;
+			Set<String> optionalInputs = null;
+			List<DataSet> inputs = new ArrayList<DataSet>();
+			// find the parsable dataset
+			for (Triple<String, DataSet, String> triple : dataSets) {
+				if (triple.getSecond().getDataSetFormat() instanceof Parsable) {
+					parser = triple.getSecond().getDataSetFormat()
+							.getDataSetFormatParser();
+					optionalInputs = new HashSet<String>(
+							Arrays.asList(((Parsable) triple.getSecond().getDataSetFormat())
+									.optionalInputs()));
+					inputs.add(triple.getSecond());
+					break;
+				}
+			}
+			if (parser == null || optionalInputs == null)
+				throw new IllegalArgumentException(
+						"No parser found to parse the datasetconfig");
+			// find optional inputs
+			for (Triple<String, DataSet, String> triple : dataSets) {
+				if (optionalInputs.contains(triple.getSecond()
+						.getDataSetFormat().getClass().getSimpleName()))
+					inputs.add(triple.getSecond());
+			}
+
+			result.add(parser.parse(inputs));
+		}
+		return result;
 	}
 }

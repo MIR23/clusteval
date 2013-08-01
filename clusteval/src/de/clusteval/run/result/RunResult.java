@@ -45,7 +45,7 @@ import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
-import de.clusteval.quality.UnknownClusteringQualityMeasureException;
+import de.clusteval.quality.UnknownQualityMeasureException;
 import de.clusteval.run.ClusteringRun;
 import de.clusteval.run.DataAnalysisRun;
 import de.clusteval.run.InvalidRunModeException;
@@ -78,7 +78,7 @@ public abstract class RunResult extends RepositoryObject {
 	 * @throws IOException
 	 * @throws UnknownRunResultFormatException
 	 * @throws UnknownDataSetFormatException
-	 * @throws UnknownClusteringQualityMeasureException
+	 * @throws UnknownQualityMeasureException
 	 * @throws InvalidRunModeException
 	 * @throws UnknownParameterOptimizationMethodException
 	 * @throws NoOptimizableProgramParameterException
@@ -124,7 +124,7 @@ public abstract class RunResult extends RepositoryObject {
 			final boolean parseClusterings, final boolean storeClusterings)
 			throws IOException, UnknownRunResultFormatException,
 			UnknownDataSetFormatException,
-			UnknownClusteringQualityMeasureException, InvalidRunModeException,
+			UnknownQualityMeasureException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException,
