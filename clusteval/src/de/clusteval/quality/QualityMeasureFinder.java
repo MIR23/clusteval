@@ -18,9 +18,7 @@ import de.clusteval.utils.RecursiveSubDirectoryIterator;
 /**
  * @author Christian Wiwie
  */
-public class ClusteringQualityMeasureFinder
-		extends
-			JARFinder<QualityMeasure> {
+public class QualityMeasureFinder extends JARFinder<QualityMeasure> {
 
 	/**
 	 * Instantiates a new clustering quality measure finder.
@@ -31,7 +29,7 @@ public class ClusteringQualityMeasureFinder
 	 * @param absPath
 	 * @throws RegisterException
 	 */
-	public ClusteringQualityMeasureFinder(final Repository repository,
+	public QualityMeasureFinder(final Repository repository,
 			final long changeDate, final File absPath) throws RegisterException {
 		super(repository, changeDate, absPath);
 	}
@@ -52,8 +50,7 @@ public class ClusteringQualityMeasureFinder
 	 * @see utils.JARFinder#removeOldObject(java.lang.Class)
 	 */
 	@Override
-	protected void removeOldObject(
-			Class<? extends QualityMeasure> object) {
+	protected void removeOldObject(Class<? extends QualityMeasure> object) {
 		this.repository.unregisterClusteringQualityMeasureClass(object);
 	}
 
@@ -64,7 +61,7 @@ public class ClusteringQualityMeasureFinder
 	 */
 	@Override
 	protected String[] classNamesForJARFile(File f) {
-		return new String[]{"de.clusteval.cluster.quality."
+		return new String[]{"de.clusteval.quality."
 				+ f.getName().replace(".jar", "")};
 	}
 
@@ -77,8 +74,7 @@ public class ClusteringQualityMeasureFinder
 	protected URLClassLoader getURLClassLoader0(File f, final ClassLoader parent)
 			throws MalformedURLException {
 		URL url = f.toURI().toURL();
-		return new ClusteringQualityMeasureURLClassLoader(this, new URL[]{url},
-				parent);
+		return new QualityMeasureURLClassLoader(this, new URL[]{url}, parent);
 	}
 
 	/*
@@ -90,7 +86,7 @@ public class ClusteringQualityMeasureFinder
 	protected boolean isJARLoaded(File f) {
 		return super.isJARLoaded(f)
 				&& this.repository
-						.isClusteringQualityMeasureRegistered(classNamesForJARFile(f)[0]);
+						.isQualityMeasureRegistered(classNamesForJARFile(f)[0]);
 	}
 
 	/*
@@ -100,7 +96,7 @@ public class ClusteringQualityMeasureFinder
 	 */
 	@Override
 	protected boolean checkFile(File file) {
-		return file.getName().endsWith("ClusteringQualityMeasure.jar");
+		return file.getName().endsWith("QualityMeasure.jar");
 	}
 
 	/*
@@ -164,18 +160,17 @@ public class ClusteringQualityMeasureFinder
 	}
 }
 
-class ClusteringQualityMeasureURLClassLoader extends URLClassLoader {
+class QualityMeasureURLClassLoader extends URLClassLoader {
 
-	protected ClusteringQualityMeasureFinder parent;
+	protected QualityMeasureFinder parent;
 
 	/**
 	 * @param urls
 	 * @param parent
 	 * @param loaderParent
 	 */
-	public ClusteringQualityMeasureURLClassLoader(
-			ClusteringQualityMeasureFinder parent, URL[] urls,
-			ClassLoader loaderParent) {
+	public QualityMeasureURLClassLoader(QualityMeasureFinder parent,
+			URL[] urls, ClassLoader loaderParent) {
 		super(urls, loaderParent);
 		this.parent = parent;
 	}
@@ -189,18 +184,17 @@ class ClusteringQualityMeasureURLClassLoader extends URLClassLoader {
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
 		Class<?> result = super.loadClass(name, true);
 
-		if (name.startsWith("de.clusteval.cluster.quality")) {
-			if (!name
-					.equals("de.clusteval.cluster.quality.ClusteringQualityMeasure")
-					&& !name.equals("de.clusteval.cluster.quality.ClusteringQualityMeasureR")
-					&& name.endsWith("ClusteringQualityMeasure")) {
+		if (name.startsWith("de.clusteval.quality")) {
+			if (!name.equals("de.clusteval.quality.QualityMeasure")
+					&& !name.equals("de.clusteval.quality.QualityMeasureR")
+					&& name.endsWith("QualityMeasure")) {
 				@SuppressWarnings("unchecked")
 				Class<? extends QualityMeasure> qualityMeasure = (Class<? extends QualityMeasure>) result;
 
 				if (this.parent.getRepository()
 						.registerClusteringQualityMeasureClass(qualityMeasure))
 					this.parent.getLog().info(
-							"ClusteringQualityMeasure " + name + " loaded");
+							"QualityMeasure " + name + " loaded");
 			}
 		}
 		return result;

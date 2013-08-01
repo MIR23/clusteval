@@ -83,7 +83,7 @@ import de.clusteval.program.r.RProgram;
 import de.clusteval.program.r.RProgramFinderThread;
 import de.clusteval.program.r.UnknownRProgramException;
 import de.clusteval.quality.QualityMeasure;
-import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
+import de.clusteval.quality.QualityMeasureFinderThread;
 import de.clusteval.quality.UnknownClusteringQualityMeasureException;
 import de.clusteval.run.AnalysisRun;
 import de.clusteval.run.ClusteringRun;
@@ -355,7 +355,7 @@ public class Repository {
 
 	/**
 	 * A boolean attribute indicating whether the clustering quality measures
-	 * have been initialized by the {@link ClusteringQualityMeasureFinderThread}
+	 * have been initialized by the {@link QualityMeasureFinderThread}
 	 * .
 	 */
 	private boolean clusteringQualityMeasuresInitialized;
@@ -1395,7 +1395,7 @@ public class Repository {
 	 * 
 	 * @return A boolean attribute indicating whether the clustering quality
 	 *         measures have been initialized by the
-	 *         {@link ClusteringQualityMeasureFinderThread} .
+	 *         {@link QualityMeasureFinderThread} .
 	 */
 	public boolean getClusteringQualityMeasuresInitialized() {
 		return this.clusteringQualityMeasuresInitialized;
@@ -3413,12 +3413,12 @@ public class Repository {
 	 *            The name of the clustering quality measure to look up.
 	 * @return True, if the clustering quality measure was registered.
 	 */
-	public boolean isClusteringQualityMeasureRegistered(
+	public boolean isQualityMeasureRegistered(
 			final String clusteringQualityMeasure) {
 		return this.clusteringQualityMeasureClasses
 				.containsKey(clusteringQualityMeasure)
 				|| (this.parent != null && this.parent
-						.isClusteringQualityMeasureRegistered(clusteringQualityMeasure));
+						.isQualityMeasureRegistered(clusteringQualityMeasure));
 	}
 
 	/**
@@ -5650,7 +5650,7 @@ public class Repository {
 	/**
 	 * This method sets the clustering quality measures as initialized. It
 	 * should only be invoked by
-	 * {@link ClusteringQualityMeasureFinderThread#afterFind()}.
+	 * {@link QualityMeasureFinderThread#afterFind()}.
 	 */
 	public void setClusteringQualityMeasuresInitialized() {
 		this.clusteringQualityMeasuresInitialized = true;

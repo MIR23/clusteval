@@ -379,9 +379,9 @@ public class RunResultRepository extends Repository {
 	 * utils.Repository#isClusteringQualityMeasureRegistered(java.lang.String)
 	 */
 	@Override
-	public boolean isClusteringQualityMeasureRegistered(String dsFormatClassName) {
+	public boolean isQualityMeasureRegistered(String dsFormatClassName) {
 		return this.parent
-				.isClusteringQualityMeasureRegistered(dsFormatClassName);
+				.isQualityMeasureRegistered(dsFormatClassName);
 	}
 
 	/*

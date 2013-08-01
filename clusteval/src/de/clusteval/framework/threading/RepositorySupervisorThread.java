@@ -33,7 +33,7 @@ import de.clusteval.program.ProgramConfigFinderThread;
 import de.clusteval.program.r.RProgram;
 import de.clusteval.program.r.RProgramFinderThread;
 import de.clusteval.quality.QualityMeasure;
-import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
+import de.clusteval.quality.QualityMeasureFinderThread;
 import de.clusteval.run.Run;
 import de.clusteval.run.RunFinderThread;
 import de.clusteval.run.result.RunResult;
@@ -147,7 +147,7 @@ public class RepositorySupervisorThread extends SupervisorThread {
 						DataStatisticFinderThread.class,
 						RunStatisticFinderThread.class,
 						RunDataStatisticFinderThread.class,
-						ClusteringQualityMeasureFinderThread.class,
+						QualityMeasureFinderThread.class,
 						ParameterOptimizationMethodFinderThread.class,
 						DataSetConfigFinderThread.class,
 						GoldStandardConfigFinderThread.class,
@@ -167,7 +167,7 @@ public class RepositorySupervisorThread extends SupervisorThread {
 						RunStatisticFinderThread.class,
 						RunDataStatisticFinderThread.class,
 						RunResultFormatFinderThread.class,
-						ClusteringQualityMeasureFinderThread.class,
+						QualityMeasureFinderThread.class,
 						ParameterOptimizationMethodFinderThread.class,
 						DataSetConfigFinderThread.class,
 						GoldStandardConfigFinderThread.class,

@@ -1,10 +1,10 @@
 context = GraphMatchingContext
 programConfig = gedevo
 dataConfig = rashid
-qualityMeasures = AlignedEdgesClusteringQualityMeasure
+qualityMeasures = AlignedEdgesQualityMeasure
 mode = parameter_optimization
 optimizationMethod = LayeredDivisiveParameterOptimizationMethod
-optimizationCriterion = AlignedEdgesClusteringQualityMeasure
+optimizationCriterion = AlignedEdgesQualityMeasure
 optimizationIterations = 10
 
 [gedevo]

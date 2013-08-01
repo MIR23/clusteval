@@ -19,7 +19,7 @@ import de.clusteval.data.dataset.DataSetConfigFinderThread;
 import de.clusteval.data.dataset.format.DataSetFormatFinderThread;
 import de.clusteval.data.statistics.DataStatisticFinderThread;
 import de.clusteval.framework.repository.Repository;
-import de.clusteval.quality.ClusteringQualityMeasureFinderThread;
+import de.clusteval.quality.QualityMeasureFinderThread;
 import de.clusteval.run.RunFinderThread;
 import de.clusteval.run.result.format.RunResultFormatFinderThread;
 import de.clusteval.run.statistics.RunStatisticFinderThread;
@@ -266,9 +266,9 @@ public abstract class SupervisorThread extends Thread {
 	/**
 	 * @return The thread which finds clustering quality measures.
 	 */
-	public ClusteringQualityMeasureFinderThread getClusteringQualityMeasureFinderThread() {
-		return (ClusteringQualityMeasureFinderThread) this.threads
-				.get(ClusteringQualityMeasureFinderThread.class);
+	public QualityMeasureFinderThread getClusteringQualityMeasureFinderThread() {
+		return (QualityMeasureFinderThread) this.threads
+				.get(QualityMeasureFinderThread.class);
 	}
 
 	/**

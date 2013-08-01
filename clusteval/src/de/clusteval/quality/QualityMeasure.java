@@ -145,7 +145,7 @@ public abstract class QualityMeasure extends RepositoryObject {
 			throws UnknownClusteringQualityMeasureException {
 
 		Class<? extends QualityMeasure> c = repository
-				.getClusteringQualityMeasureClass("de.clusteval.cluster.quality."
+				.getClusteringQualityMeasureClass("de.clusteval.quality."
 						+ qualityMeasure);
 		try {
 			QualityMeasure measure = c.getConstructor(Repository.class,

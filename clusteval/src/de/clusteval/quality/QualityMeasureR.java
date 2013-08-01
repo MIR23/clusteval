@@ -27,7 +27,7 @@ import de.clusteval.utils.RNotAvailableException;
  * @author Christian Wiwie
  * 
  */
-public abstract class ClusteringQualityMeasureR
+public abstract class QualityMeasureR
 		extends
 			QualityMeasure {
 
@@ -40,7 +40,7 @@ public abstract class ClusteringQualityMeasureR
 	 * @param absPath
 	 * @throws RegisterException
 	 */
-	public ClusteringQualityMeasureR(final Repository repo,
+	public QualityMeasureR(final Repository repo,
 			final boolean register, final long changeDate, final File absPath)
 			throws RegisterException {
 		super(repo, false, changeDate, absPath);
@@ -56,7 +56,7 @@ public abstract class ClusteringQualityMeasureR
 	 *            The quality measure to clone.
 	 * @throws RegisterException
 	 */
-	public ClusteringQualityMeasureR(final ClusteringQualityMeasureR other)
+	public QualityMeasureR(final QualityMeasureR other)
 			throws RegisterException {
 		super(other);
 	}

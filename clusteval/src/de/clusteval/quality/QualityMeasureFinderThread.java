@@ -15,7 +15,7 @@ import de.clusteval.utils.FinderThread;
  * @author Christian Wiwie
  * 
  */
-public class ClusteringQualityMeasureFinderThread extends FinderThread {
+public class QualityMeasureFinderThread extends FinderThread {
 
 	/**
 	 * @param supervisorThread
@@ -26,7 +26,7 @@ public class ClusteringQualityMeasureFinderThread extends FinderThread {
 	 *            quality measures.
 	 * 
 	 */
-	public ClusteringQualityMeasureFinderThread(
+	public QualityMeasureFinderThread(
 			final SupervisorThread supervisorThread,
 			final Repository repository, final boolean checkOnce) {
 		super(supervisorThread, repository, 30000, checkOnce);
@@ -43,7 +43,7 @@ public class ClusteringQualityMeasureFinderThread extends FinderThread {
 	 *            quality measures.
 	 * 
 	 */
-	public ClusteringQualityMeasureFinderThread(
+	public QualityMeasureFinderThread(
 			final SupervisorThread supervisorThread,
 			final Repository repository, final long sleepTime,
 			final boolean checkOnce) {
@@ -77,7 +77,7 @@ public class ClusteringQualityMeasureFinderThread extends FinderThread {
 	 */
 	@Override
 	protected Finder getFinder() throws RegisterException {
-		return new ClusteringQualityMeasureFinder(repository,
+		return new QualityMeasureFinder(repository,
 				System.currentTimeMillis(), new File(
 						repository.getClusteringQualityMeasuresBasePath()));
 	}

@@ -88,7 +88,6 @@ public class FormatCompatibilityParser {
 		if (endReached) {
 			throw new IllegalArgumentException("Blabla");
 		}
-		System.out.print(token);
 		nextToken();
 	}
 
