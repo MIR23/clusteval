@@ -246,6 +246,10 @@ public class DataSetConfig extends RepositoryObject {
 		return this.groupToDataSet.get(groupName);
 	}
 
+	public List<DirectedSparseMultigraph<String, String>> getGraphs() {
+		return this.graphs;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -384,7 +388,7 @@ public class DataSetConfig extends RepositoryObject {
 	 * @throws InvalidDataSetFormatVersionException
 	 * @throws IOException
 	 */
-	public List<DirectedSparseMultigraph<String, String>> parse()
+	protected List<DirectedSparseMultigraph<String, String>> parse()
 			throws IllegalArgumentException, IOException,
 			InvalidDataSetFormatVersionException {
 		List<DirectedSparseMultigraph<String, String>> result = new ArrayList<DirectedSparseMultigraph<String, String>>();
@@ -400,8 +404,8 @@ public class DataSetConfig extends RepositoryObject {
 					parser = triple.getSecond().getDataSetFormat()
 							.getDataSetFormatParser();
 					optionalInputs = new HashSet<String>(
-							Arrays.asList(((Parsable) triple.getSecond().getDataSetFormat())
-									.optionalInputs()));
+							Arrays.asList(((Parsable) triple.getSecond()
+									.getDataSetFormat()).optionalInputs()));
 					inputs.add(triple.getSecond());
 					break;
 				}

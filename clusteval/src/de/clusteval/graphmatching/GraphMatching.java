@@ -6,6 +6,7 @@ package de.clusteval.graphmatching;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,13 +38,17 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	}
 
 	protected List<Pair<String, String>> mappings;
-	
+
+	protected Map<String, String> graph1ToGraph2;
+
 	/**
 	 * 
 	 */
 	public GraphMatching() {
 		super();
 		this.mappings = new ArrayList<Pair<String, String>>();
+
+		this.graph1ToGraph2 = new HashMap<String, String>();
 	}
 
 	/**
@@ -54,10 +59,13 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	 */
 	public GraphMatching(final GraphMatching other) {
 		super();
-		// TODO
-		// this.graph1 = other.graph1;
-		// this.graph2 = other.graph2;
 		this.mappings = cloneMappings(other.mappings);
+		updateMap();
+	}
+
+	protected void updateMap() {
+		for (Pair<String, String> p : mappings)
+			this.graph1ToGraph2.put(p.getFirst(), p.getSecond());
 	}
 
 	@Override
@@ -92,9 +100,14 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 		return (// this.graph1.toString() + this.graph2.toString() +
 		this.mappings.toString()).hashCode();
 	}
-	
+
+	public String getMatchingForGraph1Vertex(final String v) {
+		return this.graph1ToGraph2.get(v);
+	}
+
 	public void addMatching(final Pair<String, String> pair) {
 		this.mappings.add(pair);
+		this.graph1ToGraph2.put(pair.getFirst(), pair.getSecond());
 	}
 
 	public int size() {
