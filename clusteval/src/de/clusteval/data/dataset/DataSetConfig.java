@@ -78,6 +78,8 @@ public class DataSetConfig extends RepositoryObject {
 	 */
 	protected List<Triple<String, DataSet, String>> datasets;
 
+	protected List<String> groups;
+
 	protected Map<String, List<Triple<String, DataSet, String>>> groupToDataSet;
 
 	protected List<DirectedSparseMultigraph<String, String>> graphs;
@@ -93,14 +95,18 @@ public class DataSetConfig extends RepositoryObject {
 	 *            equality checks.
 	 * @param absPath
 	 *            The absolute path of this dataset configuration.
+	 * @param groups
 	 * @param ds
 	 *            The encapsulated dataset.
 	 * @throws RegisterException
 	 */
 	public DataSetConfig(final Repository repository, final long changeDate,
-			final File absPath, final List<Triple<String, DataSet, String>> ds)
+			final File absPath, final List<String> groups,
+			final List<Triple<String, DataSet, String>> ds)
 			throws RegisterException {
 		super(repository, false, changeDate, absPath);
+
+		this.groups = groups;
 
 		this.datasets = ds;
 
@@ -133,6 +139,7 @@ public class DataSetConfig extends RepositoryObject {
 		super(datasetConfig);
 
 		this.datasets = cloneDataSets(datasetConfig.datasets);
+		this.groups = new ArrayList<String>(datasetConfig.groups);
 
 		initGroupToDataSets();
 	}
@@ -208,8 +215,13 @@ public class DataSetConfig extends RepositoryObject {
 
 			List<Triple<String, DataSet, String>> dataSets = new ArrayList<Triple<String, DataSet, String>>();
 
+			List<String> groups = new ArrayList<String>(Arrays.asList(conf
+					.getStringArray("groups")));
+
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
+				if (section == null)
+					continue;
 				SubnodeConfiguration props = conf.getSection(section);
 				props.setThrowExceptionOnMissing(true);
 
@@ -224,7 +236,8 @@ public class DataSetConfig extends RepositoryObject {
 				dataSets.add(Triple.getTriple(section, dataSet, groupName));
 			}
 			DataSetConfig result = new DataSetConfig(repo,
-					absConfigPath.lastModified(), absConfigPath, dataSets);
+					absConfigPath.lastModified(), absConfigPath, groups,
+					dataSets);
 			result = repo.getRegisteredObject(result);
 			return result;
 		} catch (ConfigurationException e) {
@@ -392,7 +405,7 @@ public class DataSetConfig extends RepositoryObject {
 			throws IllegalArgumentException, IOException,
 			InvalidDataSetFormatVersionException {
 		List<DirectedSparseMultigraph<String, String>> result = new ArrayList<DirectedSparseMultigraph<String, String>>();
-		for (String group : groupToDataSet.keySet()) {
+		for (String group : groups) {
 			List<Triple<String, DataSet, String>> dataSets = groupToDataSet
 					.get(group);
 			DataSetFormatParser parser = null;

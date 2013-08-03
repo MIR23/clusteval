@@ -159,6 +159,8 @@ public class TestDataSetConfig extends TestRepositoryObject {
 		DataSetConfig gsConfig = DataSetConfig.parseFromFile(new File(
 				"testCaseRepository/data/datasets/configs/astral_1.dsconfig")
 				.getAbsoluteFile());
+		List<String> groups = new ArrayList<String>();
+		groups.add("N1");
 		List<Triple<String, DataSet, String>> dataSets = new ArrayList<Triple<String, DataSet, String>>();
 		dataSets.add(Triple.getTriple(
 				"blast",
@@ -173,7 +175,7 @@ public class TestDataSetConfig extends TestRepositoryObject {
 								.getAbsoluteFile().lastModified(),
 						new File(
 								"testCaseRepository/data/datasets/configs/astral_1.dsconfig")
-								.getAbsoluteFile(), dataSets), gsConfig);
+								.getAbsoluteFile(), groups, dataSets), gsConfig);
 	}
 
 	/**

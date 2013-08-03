@@ -47,6 +47,7 @@ import de.clusteval.framework.repository.config.RepositoryConfigurationException
 import de.clusteval.graphmatching.GraphMatching;
 import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.ParameterSet;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -71,8 +72,9 @@ import file.FileUtils;
  * 
  */
 
-public class ParameterOptimizationResult extends ExecutionRunResult implements
-		Iterable<Pair<ParameterSet, QualitySet>> {
+public class ParameterOptimizationResult extends ExecutionRunResult
+		implements
+			Iterable<Pair<ParameterSet, QualitySet>> {
 
 	/**
 	 * @param parentRepository
@@ -126,6 +128,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
 	 * @throws IncompatibleContextException
+	 * @throws UnknownParameterType
 	 */
 	public static Run parseFromRunResultFolder(
 			final Repository parentRepository, final File runResultFolder,
@@ -157,7 +160,8 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 			UnknownRunDataStatisticException, RunResultParseException,
 			UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException, IncompatibleContextException {
+			UnknownContextException, IncompatibleContextException,
+			UnknownParameterType {
 
 		Repository childRepository = new RunResultRepository(
 				runResultFolder.getAbsolutePath(), parentRepository);
@@ -500,8 +504,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	 */
 	public QualitySet put(long iterationNumber, ParameterSet last,
 			QualitySet qualities, GraphMatching clustering) {
-		QualitySet result = this.parameterSetToQualities.put(last,
-				qualities);
+		QualitySet result = this.parameterSetToQualities.put(last, qualities);
 
 		if (this.parameterSetToClustering != null)
 			this.parameterSetToClustering.put(last, clustering);
@@ -646,7 +649,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 		try {
 			parser = new ParameterOptimizationResultParser(method,
 					this.getRun(), this, absPath.getAbsolutePath(),
-					new int[] {}, new int[] {}, parseClusterings,
+					new int[]{}, new int[]{}, parseClusterings,
 					storeClusterings);
 			parser.process();
 		} catch (IOException e) {
@@ -783,8 +786,9 @@ public class ParameterOptimizationResult extends ExecutionRunResult implements
 	}
 }
 
-class ParameterOptimizationResultIterator implements
-		Iterator<Pair<ParameterSet, QualitySet>> {
+class ParameterOptimizationResultIterator
+		implements
+			Iterator<Pair<ParameterSet, QualitySet>> {
 
 	protected ParameterOptimizationResult result;
 

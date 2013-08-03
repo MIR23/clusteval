@@ -42,6 +42,7 @@ import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -84,8 +85,7 @@ public class ClusteringRun extends ExecutionRun {
 	 */
 	public ClusteringRun(Repository repository, final Context context,
 			long changeDate, File absPath, List<ProgramConfig> programConfigs,
-			List<DataConfig> dataConfigs,
-			List<QualityMeasure> qualityMeasures,
+			List<DataConfig> dataConfigs, List<QualityMeasure> qualityMeasures,
 			List<Map<ProgramParameter<?>, String>> parameterValues)
 			throws RegisterException {
 		super(repository, context, true, changeDate, absPath, programConfigs,
@@ -222,13 +222,13 @@ public class ClusteringRun extends ExecutionRun {
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
 	 * @throws IncompatibleContextException
+	 * @throws UnknownParameterType
 	 */
 	public static Run parseFromFile(final File absPath)
 			throws ConfigurationException, IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			UnknownQualityMeasureException,
-			UnknownProgramParameterException, NoRepositoryFoundException,
-			GoldStandardNotFoundException,
+			UnknownQualityMeasureException, UnknownProgramParameterException,
+			NoRepositoryFoundException, GoldStandardNotFoundException,
 			InvalidOptimizationParameterException,
 			GoldStandardConfigurationException, DataSetConfigurationException,
 			DataSetNotFoundException, DataSetConfigNotFoundException,
@@ -239,7 +239,8 @@ public class ClusteringRun extends ExecutionRun {
 			UnknownDataSetTypeException, NumberFormatException,
 			NoDataSetException, UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException, IncompatibleContextException {
+			UnknownContextException, IncompatibleContextException,
+			UnknownParameterType {
 		Logger log = LoggerFactory.getLogger(ClusteringRun.class);
 		log.debug("Parsing run \"" + absPath + "\"");
 
@@ -342,8 +343,8 @@ public class ClusteringRun extends ExecutionRun {
 		List<UnknownQualityMeasureException> thrownExceptions = new ArrayList<UnknownQualityMeasureException>();
 		for (String qualityMeasure : props.getStringArray("qualityMeasures")) {
 			try {
-				qualityMeasures.add(QualityMeasure.parseFromString(
-						repo, qualityMeasure));
+				qualityMeasures.add(QualityMeasure.parseFromString(repo,
+						qualityMeasure));
 			} catch (UnknownQualityMeasureException e) {
 				thrownExceptions.add(e);
 			}

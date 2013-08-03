@@ -47,6 +47,7 @@ import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -102,53 +103,53 @@ public class ParameterOptimizationRun extends ExecutionRun {
 			final List<DataConfig> dataConfigs)
 			throws IncompatibleParameterOptimizationMethodException {
 		// TODO
-//		for (ParameterOptimizationMethod method : optimizationMethods) {
-//			if (!method.getCompatibleDataSetFormatBaseClasses().isEmpty()) {
-//				// for every datasetformat we check, whether it class is
-//				// compatible
-//				for (DataConfig dataConfig : dataConfigs) {
-//					Class<? extends DataSetFormat> dataSetFormatClass = dataConfig
-//							.getDatasetConfig().getDataSet().getDataSetFormat()
-//							.getClass();
-//					boolean compatible = false;
-//					for (Class<? extends DataSetFormat> parentClass : method
-//							.getCompatibleDataSetFormatBaseClasses()) {
-//						if (parentClass.isAssignableFrom(dataSetFormatClass)) {
-//							compatible = true;
-//							break;
-//						}
-//					}
-//					if (!compatible) {
-//						throw new IncompatibleParameterOptimizationMethodException(
-//								"The ParameterOptimizationMethod "
-//										+ method.getClass().getSimpleName()
-//										+ " cannot be applied to the dataset "
-//										+ dataConfig.getDatasetConfig()
-//												.getDataSet()
-//										+ " with the format "
-//										+ dataSetFormatClass.getSimpleName());
-//					}
-//				}
-//			}
-//
-//			if (!method.getCompatibleProgramNames().isEmpty()) {
-//				// for every program we check, whether it class is
-//				// compatible
-//				for (ProgramConfig programConfig : programConfigs) {
-//					String programName = programConfig.getProgram()
-//							.getMajorName();
-//					boolean compatible = method.getCompatibleProgramNames()
-//							.contains(programName);
-//					if (!compatible) {
-//						throw new IncompatibleParameterOptimizationMethodException(
-//								"The ParameterOptimizationMethod "
-//										+ method.getClass().getSimpleName()
-//										+ " cannot be applied to the program "
-//										+ programName);
-//					}
-//				}
-//			}
-//		}
+		// for (ParameterOptimizationMethod method : optimizationMethods) {
+		// if (!method.getCompatibleDataSetFormatBaseClasses().isEmpty()) {
+		// // for every datasetformat we check, whether it class is
+		// // compatible
+		// for (DataConfig dataConfig : dataConfigs) {
+		// Class<? extends DataSetFormat> dataSetFormatClass = dataConfig
+		// .getDatasetConfig().getDataSet().getDataSetFormat()
+		// .getClass();
+		// boolean compatible = false;
+		// for (Class<? extends DataSetFormat> parentClass : method
+		// .getCompatibleDataSetFormatBaseClasses()) {
+		// if (parentClass.isAssignableFrom(dataSetFormatClass)) {
+		// compatible = true;
+		// break;
+		// }
+		// }
+		// if (!compatible) {
+		// throw new IncompatibleParameterOptimizationMethodException(
+		// "The ParameterOptimizationMethod "
+		// + method.getClass().getSimpleName()
+		// + " cannot be applied to the dataset "
+		// + dataConfig.getDatasetConfig()
+		// .getDataSet()
+		// + " with the format "
+		// + dataSetFormatClass.getSimpleName());
+		// }
+		// }
+		// }
+		//
+		// if (!method.getCompatibleProgramNames().isEmpty()) {
+		// // for every program we check, whether it class is
+		// // compatible
+		// for (ProgramConfig programConfig : programConfigs) {
+		// String programName = programConfig.getProgram()
+		// .getMajorName();
+		// boolean compatible = method.getCompatibleProgramNames()
+		// .contains(programName);
+		// if (!compatible) {
+		// throw new IncompatibleParameterOptimizationMethodException(
+		// "The ParameterOptimizationMethod "
+		// + method.getClass().getSimpleName()
+		// + " cannot be applied to the program "
+		// + programName);
+		// }
+		// }
+		// }
+		// }
 	}
 
 	/**
@@ -388,6 +389,7 @@ public class ParameterOptimizationRun extends ExecutionRun {
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
 	 * @throws IncompatibleContextException
+	 * @throws UnknownParameterType
 	 */
 	public static Run parseFromFile(final File absPath)
 			throws ConfigurationException, IOException,
@@ -408,7 +410,8 @@ public class ParameterOptimizationRun extends ExecutionRun {
 			UnknownDataSetTypeException, NumberFormatException,
 			NoDataSetException, UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException, IncompatibleContextException {
+			UnknownContextException, IncompatibleContextException,
+			UnknownParameterType {
 		Logger log = LoggerFactory.getLogger(ParameterOptimizationRun.class);
 		log.debug("Parsing run \"" + absPath + "\"");
 
@@ -601,8 +604,8 @@ public class ParameterOptimizationRun extends ExecutionRun {
 		List<UnknownQualityMeasureException> thrownExceptions = new ArrayList<UnknownQualityMeasureException>();
 		for (String qualityMeasure : props.getStringArray("qualityMeasures")) {
 			try {
-				qualityMeasures.add(QualityMeasure.parseFromString(
-						repo, qualityMeasure));
+				qualityMeasures.add(QualityMeasure.parseFromString(repo,
+						qualityMeasure));
 			} catch (UnknownQualityMeasureException e) {
 				thrownExceptions.add(e);
 			}

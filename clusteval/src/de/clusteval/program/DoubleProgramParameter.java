@@ -5,7 +5,6 @@ package de.clusteval.program;
 
 import javax.script.ScriptException;
 
-
 import de.clusteval.data.DataConfig;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -76,7 +75,7 @@ public class DoubleProgramParameter extends ProgramParameter<Double> {
 			final String name, final String desc, String minValue,
 			String maxValue, String def) throws RegisterException {
 		super(repository, register, programConfig, name, desc, minValue,
-				maxValue, def);
+				maxValue, new String[0], def);
 	}
 
 	/**
@@ -229,5 +228,28 @@ public class DoubleProgramParameter extends ProgramParameter<Double> {
 		}
 
 		return Double.parseDouble(newDefaultValue);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.clusteval.program.ProgramParameter#evaluateOptions(de.clusteval.data
+	 * .DataConfig, de.clusteval.program.ProgramConfig)
+	 */
+	@Override
+	public Double[] evaluateOptions(DataConfig dataConfig,
+			ProgramConfig programConfig) throws InternalAttributeException {
+		return new Double[0];
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.clusteval.program.ProgramParameter#isOptionsSet()
+	 */
+	@Override
+	public boolean isOptionsSet() {
+		return false;
 	}
 }

@@ -43,6 +43,7 @@ import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
 import de.clusteval.program.NoOptimizableProgramParameterException;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -63,8 +64,9 @@ import file.FileUtils;
  * @author Christian Wiwie
  * 
  */
-public class RunAnalysisRunResult extends
-		AnalysisRunResult<String, RunStatistic> {
+public class RunAnalysisRunResult
+		extends
+			AnalysisRunResult<String, RunStatistic> {
 
 	/**
 	 * @param repository
@@ -188,6 +190,7 @@ public class RunAnalysisRunResult extends
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
 	 * @throws IncompatibleContextException
+	 * @throws UnknownParameterType
 	 */
 	public static RunAnalysisRunResult parseFromRunResultFolder(
 			final Repository repository, final File runResultFolder)
@@ -198,8 +201,8 @@ public class RunAnalysisRunResult extends
 			GoldStandardConfigNotFoundException, DataConfigurationException,
 			DataConfigNotFoundException, IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			InvalidConfigurationFileException,
-			UnknownQualityMeasureException, InvalidRunModeException,
+			InvalidConfigurationFileException, UnknownQualityMeasureException,
+			InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException, NoRepositoryFoundException,
@@ -217,7 +220,8 @@ public class RunAnalysisRunResult extends
 			UnknownRunDataStatisticException, RunResultParseException,
 			UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException, IncompatibleContextException {
+			UnknownContextException, IncompatibleContextException,
+			UnknownParameterType {
 		Repository childRepository = new RunResultRepository(
 				runResultFolder.getAbsolutePath(), repository);
 		childRepository.initialize();

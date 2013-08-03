@@ -50,6 +50,7 @@ import de.clusteval.framework.repository.RepositoryReplaceEvent;
 import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -183,13 +184,13 @@ public abstract class Run extends RepositoryObject {
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
 	 * @throws IncompatibleContextException
+	 * @throws UnknownParameterType
 	 */
 	@SuppressWarnings("unused")
 	public static Run parseFromFile(final File absPath) throws IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			InvalidConfigurationFileException,
-			UnknownQualityMeasureException, FileNotFoundException,
-			InvalidRunModeException,
+			InvalidConfigurationFileException, UnknownQualityMeasureException,
+			FileNotFoundException, InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownGoldStandardFormatException,
@@ -209,7 +210,8 @@ public abstract class Run extends RepositoryObject {
 			NumberFormatException, NoDataSetException,
 			UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException, IncompatibleContextException {
+			UnknownContextException, IncompatibleContextException,
+			UnknownParameterType {
 
 		HierarchicalINIConfiguration props;
 		try {

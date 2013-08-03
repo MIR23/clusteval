@@ -5,6 +5,7 @@ package de.clusteval.data.dataset;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -29,13 +30,14 @@ public class RunResultDataSetConfig extends DataSetConfig {
 	 * @param repository
 	 * @param changeDate
 	 * @param absPath
+	 * @param groups
 	 * @param ds
 	 * @throws RegisterException
 	 */
 	public RunResultDataSetConfig(Repository repository, long changeDate,
-			File absPath, List<Triple<String, DataSet, String>> ds)
-			throws RegisterException {
-		super(repository, changeDate, absPath, ds);
+			File absPath, final List<String> groups,
+			List<Triple<String, DataSet, String>> ds) throws RegisterException {
+		super(repository, changeDate, absPath, groups, ds);
 	}
 
 	/**
@@ -90,8 +92,13 @@ public class RunResultDataSetConfig extends DataSetConfig {
 
 			List<Triple<String, DataSet, String>> dataSets = new ArrayList<Triple<String, DataSet, String>>();
 
+			List<String> groups = new ArrayList<String>(Arrays.asList(conf
+					.getStringArray("groups")));
+
 			Set<String> sections = conf.getSections();
 			for (String section : sections) {
+				if (section == null)
+					continue;
 				SubnodeConfiguration props = conf.getSection(section);
 				props.setThrowExceptionOnMissing(true);
 
@@ -106,7 +113,8 @@ public class RunResultDataSetConfig extends DataSetConfig {
 				dataSets.add(Triple.getTriple(section, dataSet, groupName));
 			}
 			DataSetConfig result = new DataSetConfig(repo,
-					absConfigPath.lastModified(), absConfigPath, dataSets);
+					absConfigPath.lastModified(), absConfigPath, groups,
+					dataSets);
 			result = repo.getRegisteredObject(result);
 			return result;
 		} catch (ConfigurationException e) {

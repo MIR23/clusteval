@@ -1,3 +1,5 @@
+groups = N1,N2
+
 [edgelist1]
 datasetName = rashid
 datasetFile = N1.edgelist

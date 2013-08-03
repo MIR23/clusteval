@@ -320,6 +320,7 @@ public class ProgramConfig extends RepositoryObject {
 	 * @throws RegisterException
 	 * @return The program configuration.
 	 * @throws UnknownContextException
+	 * @throws UnknownParameterType
 	 */
 	public static ProgramConfig parseFromFile(final File absConfigPath)
 			throws ConfigurationException, FileNotFoundException,
@@ -327,7 +328,7 @@ public class ProgramConfig extends RepositoryObject {
 			NoRepositoryFoundException, InvalidOptimizationParameterException,
 			UnknownProgramParameterException, UnknownProgramTypeException,
 			UnknownRProgramException, RegisterException,
-			UnknownContextException {
+			UnknownContextException, UnknownParameterType {
 
 		if (!absConfigPath.exists())
 			throw new FileNotFoundException("Program config \"" + absConfigPath
@@ -476,15 +477,15 @@ public class ProgramConfig extends RepositoryObject {
 		// add parameter objects for input (i), executable (e), output (o)
 		// and goldstandard (gs)
 		params.add(new StringProgramParameter(repo, false, result, "i",
-				"Input", null, null, null));
+				"Input", null, null));
 		params.add(new StringProgramParameter(repo, false, result, "e",
-				"Executable", null, null, null));
+				"Executable", null, null));
 		params.add(new StringProgramParameter(repo, false, result, "o",
-				"Output", null, null, null));
+				"Output", null, null));
 		params.add(new StringProgramParameter(repo, false, result, "q",
-				"Quality", null, null, null));
+				"Quality", null, null));
 		params.add(new StringProgramParameter(repo, false, result, "gs",
-				"Goldstandard", null, null, null));
+				"Goldstandard", null, null));
 
 		/*
 		 * Get the optimization parameters (parameters, that can be optimized

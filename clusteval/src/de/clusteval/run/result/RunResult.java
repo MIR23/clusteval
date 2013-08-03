@@ -42,6 +42,7 @@ import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
 import de.clusteval.program.NoOptimizableProgramParameterException;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -117,14 +118,15 @@ public abstract class RunResult extends RepositoryObject {
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
 	 * @throws IncompatibleContextException
+	 * @throws UnknownParameterType
 	 */
 	public static Run parseFromRunResultFolder(
 			final Repository parentRepository, final File runResultFolder,
 			final List<ExecutionRunResult> result,
 			final boolean parseClusterings, final boolean storeClusterings)
 			throws IOException, UnknownRunResultFormatException,
-			UnknownDataSetFormatException,
-			UnknownQualityMeasureException, InvalidRunModeException,
+			UnknownDataSetFormatException, UnknownQualityMeasureException,
+			InvalidRunModeException,
 			UnknownParameterOptimizationMethodException,
 			NoOptimizableProgramParameterException,
 			UnknownProgramParameterException,
@@ -148,7 +150,8 @@ public abstract class RunResult extends RepositoryObject {
 			UnknownRunDataStatisticException, RunResultParseException,
 			UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException, IncompatibleContextException {
+			UnknownContextException, IncompatibleContextException,
+			UnknownParameterType {
 
 		Logger log = LoggerFactory.getLogger(RunResult.class);
 		log.debug("Parsing run result from '" + runResultFolder + "'");

@@ -5,7 +5,6 @@ package de.clusteval.program;
 
 import javax.script.ScriptException;
 
-
 import de.clusteval.data.DataConfig;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -78,7 +77,7 @@ public class IntegerProgramParameter extends ProgramParameter<Integer> {
 			final String name, final String desc, String minValue,
 			String maxValue, String def) throws RegisterException {
 		super(repository, register, programConfig, name, desc, minValue,
-				maxValue, def);
+				maxValue, new String[0], def);
 	}
 
 	/**
@@ -230,5 +229,28 @@ public class IntegerProgramParameter extends ProgramParameter<Integer> {
 		}
 
 		return (int) Double.parseDouble(newDefaultValue);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.clusteval.program.ProgramParameter#evaluateOptions(de.clusteval.data
+	 * .DataConfig, de.clusteval.program.ProgramConfig)
+	 */
+	@Override
+	public Integer[] evaluateOptions(DataConfig dataConfig,
+			ProgramConfig programConfig) throws InternalAttributeException {
+		return new Integer[0];
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.clusteval.program.ProgramParameter#isOptionsSet()
+	 */
+	@Override
+	public boolean isOptionsSet() {
+		return false;
 	}
 }

@@ -5,7 +5,6 @@ package de.clusteval.program;
 
 import javax.script.ScriptException;
 
-
 import de.clusteval.data.DataConfig;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
@@ -28,10 +27,8 @@ public class StringProgramParameter extends ProgramParameter<String> {
 	 *            The name of the parameter.
 	 * @param desc
 	 *            The description of the parameter.
-	 * @param minValue
-	 *            The minimal value of the parameter.
-	 * @param maxValue
-	 *            The maximal value of the parameter.
+	 * @param options
+	 *            The possible values of the parameter.
 	 * @param def
 	 *            The default value of the parameter.
 	 * @return The parsed string program parameter.
@@ -39,12 +36,12 @@ public class StringProgramParameter extends ProgramParameter<String> {
 	 */
 	public static StringProgramParameter parseFromStrings(
 			final ProgramConfig programConfig, final String name,
-			final String desc, final String minValue, final String maxValue,
-			final String def) throws RegisterException {
+			final String desc, final String[] options, final String def)
+			throws RegisterException {
 		final Repository repo = programConfig.getRepository();
 
 		StringProgramParameter result = new StringProgramParameter(repo, true,
-				programConfig, name, desc, minValue, maxValue, def);
+				programConfig, name, desc, options, def);
 
 		result = programConfig.getRepository().getRegisteredObject(result);
 
@@ -65,20 +62,18 @@ public class StringProgramParameter extends ProgramParameter<String> {
 	 *            The name of the parameter.
 	 * @param desc
 	 *            The description of the parameter.
-	 * @param minValue
-	 *            The minimal value of the parameter.
-	 * @param maxValue
-	 *            The maximal value of the parameter.
+	 * @param options
+	 *            The possible values of this parameter.
 	 * @param def
 	 *            The default value of the parameter.
 	 * @throws RegisterException
 	 */
 	public StringProgramParameter(final Repository repository,
 			final boolean register, final ProgramConfig programConfig,
-			final String name, final String desc, String minValue,
-			String maxValue, String def) throws RegisterException {
-		super(repository, register, programConfig, name, desc, minValue,
-				maxValue, def);
+			final String name, final String desc, String[] options, String def)
+			throws RegisterException {
+		super(repository, register, programConfig, name, desc, "", "", options,
+				def);
 	}
 
 	/**
@@ -137,7 +132,7 @@ public class StringProgramParameter extends ProgramParameter<String> {
 	 */
 	@Override
 	public boolean isMinValueSet() {
-		return false;
+		return !this.minValue.equals("");
 	}
 
 	/*
@@ -147,7 +142,7 @@ public class StringProgramParameter extends ProgramParameter<String> {
 	 */
 	@Override
 	public boolean isMaxValueSet() {
-		return false;
+		return !this.maxValue.equals("");
 	}
 
 	/*
@@ -230,5 +225,46 @@ public class StringProgramParameter extends ProgramParameter<String> {
 		}
 
 		return newDefaultValue;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.clusteval.program.ProgramParameter#evaluateOptions(de.clusteval.data
+	 * .DataConfig, de.clusteval.program.ProgramConfig)
+	 */
+	@Override
+	public String[] evaluateOptions(DataConfig dataConfig,
+			ProgramConfig programConfig) throws InternalAttributeException {
+		/*
+		 * Parse options
+		 */
+		String[] newOptions = new String[this.options.length];
+		for (int i = 0; i < this.options.length; i++) {
+			newOptions[i] = this.repository.evaluateInternalAttributes(
+					options[i], dataConfig, programConfig);
+			try {
+				newOptions[i] = this.repository
+						.evaluateJavaScript(newOptions[i]);
+			} catch (ScriptException e) {
+				throw new InternalAttributeException("The expression '"
+						+ newOptions[i] + "' for parameter attribute "
+						+ this.programConfig + "/" + this.name
+						+ "/options is invalid");
+			}
+		}
+
+		return newOptions;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.clusteval.program.ProgramParameter#isOptionsSet()
+	 */
+	@Override
+	public boolean isOptionsSet() {
+		return !(this.options.length == 0);
 	}
 }

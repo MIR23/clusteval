@@ -41,6 +41,7 @@ import de.clusteval.framework.repository.Repository;
 import de.clusteval.framework.threading.RunSchedulerThread;
 import de.clusteval.program.ProgramConfig;
 import de.clusteval.program.ProgramParameter;
+import de.clusteval.program.UnknownParameterType;
 import de.clusteval.program.UnknownProgramParameterException;
 import de.clusteval.program.UnknownProgramTypeException;
 import de.clusteval.program.r.UnknownRProgramException;
@@ -198,13 +199,13 @@ public class InternalParameterOptimizationRun extends ExecutionRun {
 	 * @throws UnknownDataPreprocessorException
 	 * @throws IncompatibleDataSetConfigPreprocessorException
 	 * @throws UnknownContextException
+	 * @throws UnknownParameterType
 	 */
 	public static Run parseFromFile(final File absPath)
 			throws ConfigurationException, IOException,
 			UnknownRunResultFormatException, UnknownDataSetFormatException,
-			UnknownQualityMeasureException,
-			UnknownProgramParameterException, NoRepositoryFoundException,
-			GoldStandardNotFoundException,
+			UnknownQualityMeasureException, UnknownProgramParameterException,
+			NoRepositoryFoundException, GoldStandardNotFoundException,
 			InvalidOptimizationParameterException,
 			GoldStandardConfigurationException, DataSetConfigurationException,
 			DataSetNotFoundException, DataSetConfigNotFoundException,
@@ -215,7 +216,7 @@ public class InternalParameterOptimizationRun extends ExecutionRun {
 			UnknownDataSetTypeException, NumberFormatException,
 			NoDataSetException, UnknownDataPreprocessorException,
 			IncompatibleDataSetConfigPreprocessorException,
-			UnknownContextException {
+			UnknownContextException, UnknownParameterType {
 		Logger log = LoggerFactory.getLogger(Run.class);
 		log.debug("Parsing run \"" + absPath + "\"");
 
@@ -307,8 +308,8 @@ public class InternalParameterOptimizationRun extends ExecutionRun {
 		List<UnknownQualityMeasureException> thrownExceptions = new ArrayList<UnknownQualityMeasureException>();
 		for (String qualityMeasure : props.getStringArray("qualityMeasures")) {
 			try {
-				qualityMeasures.add(QualityMeasure.parseFromString(
-						repo, qualityMeasure));
+				qualityMeasures.add(QualityMeasure.parseFromString(repo,
+						qualityMeasure));
 			} catch (UnknownQualityMeasureException e) {
 				thrownExceptions.add(e);
 			}

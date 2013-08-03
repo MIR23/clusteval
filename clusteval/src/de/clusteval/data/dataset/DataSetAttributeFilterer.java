@@ -18,7 +18,7 @@ public class DataSetAttributeFilterer extends TextFileParser {
 	 * @throws IOException
 	 */
 	public DataSetAttributeFilterer(String absFilePath) throws IOException {
-		super(absFilePath, new int[0], new int[0], false, absFilePath
+		super(absFilePath, new int[0], new int[0], false, null, absFilePath
 				+ ".strip", OUTPUT_MODE.STREAM);
 		this.setLockTargetFile(true);
 	}

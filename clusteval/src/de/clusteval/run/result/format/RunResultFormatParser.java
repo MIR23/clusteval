@@ -37,8 +37,8 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	public RunResultFormatParser(final Map<String, String> internalParams,
 			final Map<String, String> params, final String absFilePath)
 			throws IOException {
-		super(absFilePath, new int[0], new int[0], true, absFilePath + ".conv",
-				OUTPUT_MODE.STREAM);
+		super(absFilePath, new int[0], new int[0], true, null, absFilePath
+				+ ".conv", OUTPUT_MODE.STREAM);
 		this.setLockTargetFile(true);
 		this.params = params;
 		this.internalParams = internalParams;
@@ -64,8 +64,8 @@ public abstract class RunResultFormatParser extends TextFileParser {
 			final Map<String, String> params, final String absFilePath,
 			final boolean splitLines, final OUTPUT_MODE outputMode)
 			throws IOException {
-		super(absFilePath, new int[0], new int[0], splitLines, absFilePath
-				+ ".conv", outputMode);
+		super(absFilePath, new int[0], new int[0], splitLines, null,
+				absFilePath + ".conv", outputMode);
 		this.params = params;
 		this.internalParams = internalParams;
 	}

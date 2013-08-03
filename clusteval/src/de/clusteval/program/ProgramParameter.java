@@ -104,6 +104,13 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 	protected String maxValue;
 
 	/**
+	 * The possible values this parameter can be set to. The attribute holds a
+	 * string[], because the values of this variable can hold placeholders which
+	 * are replaced dynamically by the framework, e.g $(meanSimilarity).
+	 */
+	protected String[] options;
+
+	/**
 	 * The default value of this parameter. The attribute holds a string,
 	 * because the value of this variable can hold a placeholder which is
 	 * replaced dynamically by the framework, e.g $(meanSimilarity).
@@ -138,6 +145,8 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 	 * @param maxValue
 	 *            The maximal value this parameter can be set to (see
 	 *            {@link #maxValue}).
+	 * @param options
+	 *            The possible values of this parameter.
 	 * @param def
 	 *            The default value of this parameter (see {@link #def}).
 	 * @throws RegisterException
@@ -145,7 +154,8 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 	public ProgramParameter(final Repository repository,
 			final boolean register, final ProgramConfig programConfig,
 			final String name, final String desc, final String minValue,
-			final String maxValue, final String def) throws RegisterException {
+			final String maxValue, final String[] options, final String def)
+			throws RegisterException {
 		super(repository, false, System.currentTimeMillis(), new File(
 				programConfig.getAbsolutePath() + ":" + name));
 
@@ -154,6 +164,7 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 		this.description = desc;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
+		this.options = options;
 		this.def = def;
 
 		if (register)
@@ -177,6 +188,7 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 		this.description = other.description;
 		this.minValue = other.minValue;
 		this.maxValue = other.maxValue;
+		this.options = other.options;
 		this.def = other.def;
 
 	}
@@ -285,6 +297,57 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 	 * @return True, if the variable has been set correctly, false otherwise.
 	 */
 	public abstract boolean isMaxValueSet();
+
+	/**
+	 * Sets the minimal value.
+	 * 
+	 * @param options
+	 *            The possible values of this parameter.
+	 */
+	public void setOptions(final String[] options) {
+		this.options = options;
+	}
+
+	/**
+	 * @return The possible values of this parameter.
+	 */
+	public String[] getOptions() {
+		return this.options;
+	}
+
+	/**
+	 * This method evaluates the string representation of the options
+	 * {@link #options} to a value corresponding to the dynamic type of this
+	 * object, e.g. in case this parameter is a double parameter, it is
+	 * evaluated to a double value.
+	 * 
+	 * <p>
+	 * The method requires a data and program configuration, since the string
+	 * representation can contain a placeholder of a internal variable which is
+	 * replaced by looking it up during runtime. $(meanSimilarity) for example
+	 * is evaluated by looking into the data and calculating the mean similarity
+	 * of the input.
+	 * 
+	 * @param dataConfig
+	 *            The data configuration which might be needed to evaluate
+	 *            certain placeholder variables.
+	 * @param programConfig
+	 *            The program configuration which might be needed to evaluate
+	 *            certain placeholder variables.
+	 * @return The evaluated value of the {@link #minValue} variable.
+	 * @throws InternalAttributeException
+	 */
+	public abstract T[] evaluateOptions(final DataConfig dataConfig,
+			final ProgramConfig programConfig)
+			throws InternalAttributeException;
+
+	/**
+	 * This method checks, whether the {@link #options} variable has been set to
+	 * a correct not-null value.
+	 * 
+	 * @return True, if the variable has been set correctly, false otherwise.
+	 */
+	public abstract boolean isOptionsSet();
 
 	/**
 	 * @return The name of this parameter.
@@ -401,10 +464,12 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 	 *            information about this parameter.
 	 * @return The parsed program parameter.
 	 * @throws RegisterException
+	 * @throws UnknownParameterType
 	 */
 	public static ProgramParameter<?> parseFromConfiguration(
 			final ProgramConfig programConfig, final String name,
-			final SubnodeConfiguration config) throws RegisterException {
+			final SubnodeConfiguration config) throws RegisterException,
+			UnknownParameterType {
 		Map<String, String> paramValues = new HashMap<String, String>();
 		paramValues.put("name", name);
 
@@ -420,20 +485,24 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 
 		String na = paramValues.get("name");
 		String description = paramValues.get("desc");
-		String minValue = paramValues.get("minValue");
-		String maxValue = paramValues.get("maxValue");
 		String def = paramValues.get("def");
 
 		ProgramParameter<?> param = null;
-		if (type.equals(ParameterType.FLOAT))
+		if (type.equals(ParameterType.FLOAT)) {
+			String minValue = paramValues.get("minValue");
+			String maxValue = paramValues.get("maxValue");
 			param = DoubleProgramParameter.parseFromStrings(programConfig, na,
 					description, minValue, maxValue, def);
-		else if (type.equals(ParameterType.INTEGER))
+		} else if (type.equals(ParameterType.INTEGER)) {
+			String minValue = paramValues.get("minValue");
+			String maxValue = paramValues.get("maxValue");
 			param = IntegerProgramParameter.parseFromStrings(programConfig, na,
 					description, minValue, maxValue, def);
-		else if (type.equals(ParameterType.STRING))
+		} else if (type.equals(ParameterType.STRING)) {
+			String[] options = config.getStringArray("options");
 			param = StringProgramParameter.parseFromStrings(programConfig, na,
-					description, minValue, maxValue, def);
+					description, options, def);
+		}
 		return param;
 	}
 
@@ -456,8 +525,10 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 	 *            A string indicating a number corresponding to a parameter
 	 *            type.
 	 * @return the parameter type
+	 * @throws UnknownParameterType
 	 */
-	private static ParameterType parseTypeFromString(String value) {
+	private static ParameterType parseTypeFromString(String value)
+			throws UnknownParameterType {
 
 		// String
 		if (value.equals("0")) {
@@ -472,7 +543,8 @@ public abstract class ProgramParameter<T> extends RepositoryObject {
 			return ParameterType.FLOAT;
 		}
 
-		return null;
+		throw new UnknownParameterType("The parameter type " + value
+				+ " is unknown");
 	}
 
 	/*
