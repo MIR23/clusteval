@@ -431,6 +431,47 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		return parsed;
 	}
 
+	protected void initInputParams(final Map<String, String> internalParams) {
+		List<Triple<String, DataSet, String>> dataSets = dataConfig
+				.getDatasetConfig().getDataSets();
+		for (int i = 0; i < dataSets.size(); i++) {
+			internalParams.put("i{" + dataSets.get(i).getFirst() + "}",
+					dataSets.get(i).getSecond().getAbsolutePath());
+		}
+	}
+
+	protected String evaluateInputConditionals(final String invocation,
+			final Map<String, String> internalParams) {
+		final StringBuilder parsed = new StringBuilder(invocation);
+		int startPos = -1;
+		while ((startPos = parsed.indexOf("%{if/")) > -1) {
+			int endPos = startPos;
+			// find the corresponding ending
+			int count = 1;
+			while (count > 0) {
+				int opening = parsed.indexOf("%i{", endPos + 2);
+				int ending = parsed.indexOf("}%", endPos + 2);
+				if (opening == -1 || ending < opening) {
+					count--;
+					endPos = ending;
+				} else {
+					count++;
+					endPos = opening;
+				}
+			}
+			String complete = parsed.substring(startPos + 2, endPos);
+			String[] split = complete.split("/");
+			String condition = split[1];
+			if (internalParams.containsKey(condition)) {
+				parsed.replace(startPos, endPos + 2, split[2]);
+			} else if (split.length == 4)
+				parsed.replace(startPos, endPos + 2, split[3]);
+			else
+				parsed.replace(startPos, endPos + 2, "");
+		}
+		return parsed.toString();
+	}
+
 	/**
 	 * Helper method for
 	 * {@link #parseInvocationLineAndEffectiveParameters(String, String, Map, Map, Map, StringBuilder)}
@@ -446,18 +487,16 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 *            path.
 	 * @return The invocation line with replaced input parameter.
 	 */
-	protected String[] parseInput(final String[] invocation,
-			final Map<String, String> internalParams) {
+	protected String[] parseInput(final String[] invocation) {
 		List<Triple<String, DataSet, String>> dataSets = dataConfig
 				.getDatasetConfig().getDataSets();
 		String[] parsed = invocation.clone();
 		for (int i = 0; i < dataSets.size(); i++) {
-			internalParams.put("i{" + dataSets.get(i).getFirst() + "}",
-					dataSets.get(i).getSecond().getAbsolutePath());
 			for (int j = 0; j < parsed.length; j++)
-				parsed[j] = parsed[j].replace("%i{"
-						+ dataSets.get(i).getFirst() + "}%", dataSets.get(i)
-						.getSecond().getAbsolutePath());
+				parsed[j] = parsed[j].replace(
+						"%i{" + dataSets.get(i).getFirst() + "}%",
+						internalParams.get("i{" + dataSets.get(i).getFirst()
+								+ "}"));
 		}
 		return parsed;
 	}
@@ -558,9 +597,17 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		 * variables %e%, %i%, %gs%, %o% by the absolute path to the executable,
 		 * the input, the goldstandard and the output respectively.
 		 */
-		// split by spaces. this ensures compatibility for spaces in pathes that
+		String originalLine = getInvocationFormat();
+
+		// init input variables
+		initInputParams(internalParams);
+
+		// evaluate conditionals
+		originalLine = evaluateInputConditionals(originalLine, internalParams);
+
+		// split by spaces. this ensures compatibility for spaces in paths that
 		// might be inserted later.
-		String[] invocation = getInvocationFormat().split(" ");
+		String[] invocation = originalLine.split(" ");
 
 		/*
 		 * Executable %e%
@@ -570,7 +617,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		/*
 		 * input %i%
 		 */
-		invocation = parseInput(invocation, internalParams);
+		invocation = parseInput(invocation);
 
 		/*
 		 * goldstandard %gs%

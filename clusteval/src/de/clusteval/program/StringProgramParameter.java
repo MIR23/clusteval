@@ -215,15 +215,6 @@ public class StringProgramParameter extends ProgramParameter<String> {
 		String newDefaultValue = this.repository.evaluateInternalAttributes(
 				def, dataConfig, programConfig);
 
-		try {
-			newDefaultValue = this.repository
-					.evaluateJavaScript(newDefaultValue);
-		} catch (ScriptException e) {
-			throw new InternalAttributeException("The expression '" + def
-					+ "' for parameter attribute " + this.programConfig + "/"
-					+ this.name + "/def is invalid");
-		}
-
 		return newDefaultValue;
 	}
 

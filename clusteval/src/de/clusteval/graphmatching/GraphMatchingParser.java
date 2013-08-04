@@ -67,7 +67,9 @@ public class GraphMatchingParser extends TextFileParser {
 	@Override
 	protected void processLine(String[] key, String[] value) {
 		String parameterString = key[0];
-		String[] params = parameterString.split(",");
+		String[] params = parameterString.equals("")
+				? new String[0]
+				: parameterString.split(",");
 
 		if (this.currentLine == 0) {
 			for (String param : params)

@@ -9,3 +9,8 @@ groupName = N1
 datasetName = rashid
 datasetFile = EBV.gw
 groupName = N2
+
+[seqsim1]
+datasetName = rashid
+datasetFile = EBV_vs_VZV.pairlist
+groupName = N1

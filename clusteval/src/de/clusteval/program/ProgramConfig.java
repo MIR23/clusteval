@@ -523,7 +523,8 @@ public class ProgramConfig extends RepositoryObject {
 				 * Check if min and max values are given for this parameter,
 				 * which is necessary for optimizing it
 				 */
-				if (!(param.isMinValueSet()) || !(param.isMaxValueSet()))
+				if (!param.isOptionsSet()
+						&& (!(param.isMinValueSet()) || !(param.isMaxValueSet())))
 					throw new InvalidOptimizationParameterException(
 							"The parameter "
 									+ param
