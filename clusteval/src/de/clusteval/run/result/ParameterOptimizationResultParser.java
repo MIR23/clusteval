@@ -87,7 +87,7 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 				String[] paramSplit = StringExt.split(value[1], ",");
 				for (int pos = 0; pos < paramSplit.length; pos++) {
 					ProgramParameter<?> p = this.parameters.get(pos);
-					paramSet.put(p.getName(), Double.valueOf(paramSplit[pos]));
+					paramSet.put(p.getName(), paramSplit[pos]);
 				}
 
 				QualitySet qualitySet = new QualitySet();
@@ -106,10 +106,9 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 				// granted
 				// if (absFile.exists()) {
 				for (int pos = 2; pos < value.length; pos++) {
-					QualityMeasure other = this.qualityMeasures
-							.get(pos - 2);
-					qualitySet.put(other, QualityMeasureValue
-							.parseFromString(value[pos]));
+					QualityMeasure other = this.qualityMeasures.get(pos - 2);
+					qualitySet.put(other,
+							QualityMeasureValue.parseFromString(value[pos]));
 				}
 				// }
 				// if the file does not exist, put NT quality values

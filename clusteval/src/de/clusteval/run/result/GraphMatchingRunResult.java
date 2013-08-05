@@ -195,9 +195,10 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 			p = this.repository
 					.getRunResultFormatParser(
 							this.getResultFormat().getClass().getName())
-					.getConstructor(Map.class, Map.class, String.class)
+					.getConstructor(Map.class, Map.class, String.class,
+							DataConfig.class)
 					.newInstance(internalParams, params,
-							this.absPath.getAbsolutePath());
+							this.absPath.getAbsolutePath(), this.dataConfig);
 			if (p != null) {
 				p.convertToStandardFormat();
 				result = new GraphMatchingRunResult(this.repository,
@@ -461,7 +462,7 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 	public void loadIntoMemory() {
 		if (absPath.exists()) {
 			try {
-				final Pair<Map<String, Double>, GraphMatching> pair = GraphMatching
+				final Pair<ParameterSet, GraphMatching> pair = GraphMatching
 						.parseFromFile(repository, absPath, true);
 
 				ParameterSet paramSet = new ParameterSet();

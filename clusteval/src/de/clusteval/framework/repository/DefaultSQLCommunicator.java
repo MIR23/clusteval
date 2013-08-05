@@ -3259,7 +3259,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 				Pair<ParameterSet, QualitySet> pair = Pair.getPair(
 						paramSets.get(i), object.get(paramSets.get(i)));
 				StringBuilder paramSetAsString = new StringBuilder();
-				for (Map.Entry<String, Double> paramValue : paramSets.get(i)
+				for (Map.Entry<String, String> paramValue : paramSets.get(i)
 						.entrySet()) {
 					paramSetAsString.append(paramValue.getKey());
 					paramSetAsString.append("=");

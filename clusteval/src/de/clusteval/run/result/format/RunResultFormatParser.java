@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import utils.parse.TextFileParser;
+import de.clusteval.data.DataConfig;
 import de.clusteval.run.result.GraphMatchingRunResult;
 
 /**
@@ -22,6 +23,8 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	/** The result. */
 	protected GraphMatchingRunResult result;
 
+	protected DataConfig dataConfig;
+
 	/**
 	 * Instantiates a new run result format parser.
 	 * 
@@ -31,17 +34,19 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	 *            the params
 	 * @param absFilePath
 	 *            the abs file path
+	 * @param dataConfig
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public RunResultFormatParser(final Map<String, String> internalParams,
-			final Map<String, String> params, final String absFilePath)
-			throws IOException {
+			final Map<String, String> params, final String absFilePath,
+			final DataConfig dataConfig) throws IOException {
 		super(absFilePath, new int[0], new int[0], true, null, absFilePath
 				+ ".conv", OUTPUT_MODE.STREAM);
 		this.setLockTargetFile(true);
 		this.params = params;
 		this.internalParams = internalParams;
+		this.dataConfig = dataConfig;
 	}
 
 	/**
@@ -53,6 +58,7 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	 *            the params
 	 * @param absFilePath
 	 *            the abs file path
+	 * @param dataConfig
 	 * @param splitLines
 	 *            the split lines
 	 * @param outputMode
@@ -62,12 +68,13 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	 */
 	public RunResultFormatParser(final Map<String, String> internalParams,
 			final Map<String, String> params, final String absFilePath,
-			final boolean splitLines, final OUTPUT_MODE outputMode)
-			throws IOException {
+			final DataConfig dataConfig, final boolean splitLines,
+			final OUTPUT_MODE outputMode) throws IOException {
 		super(absFilePath, new int[0], new int[0], splitLines, null,
 				absFilePath + ".conv", outputMode);
 		this.params = params;
 		this.internalParams = internalParams;
+		this.dataConfig = dataConfig;
 	}
 
 	/**

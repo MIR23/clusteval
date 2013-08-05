@@ -9,7 +9,7 @@ import java.util.HashMap;
  * @author Christian Wiwie
  * 
  */
-public class ParameterSet extends HashMap<String, Double> {
+public class ParameterSet extends HashMap<String, String> {
 
 	/**
 	 * 

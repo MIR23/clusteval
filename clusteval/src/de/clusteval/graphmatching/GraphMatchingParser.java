@@ -13,6 +13,7 @@ import utils.Pair;
 import utils.parse.TextFileParser;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.Repository;
+import de.clusteval.program.ParameterSet;
 
 /**
  * A parser for files containing parameter sets and clusterings.
@@ -28,7 +29,7 @@ public class GraphMatchingParser extends TextFileParser {
 	/**
 	 * This variable holds the results after parsing
 	 */
-	protected Pair<Map<String, Double>, GraphMatching> result;
+	protected Pair<ParameterSet, GraphMatching> result;
 
 	/**
 	 * A temporary variable of no use after parsing.
@@ -86,10 +87,9 @@ public class GraphMatchingParser extends TextFileParser {
 
 			result = new GraphMatching();
 
-			Map<String, Double> paramValues = new HashMap<String, Double>();
+			ParameterSet paramValues = new ParameterSet();
 			for (int pos = 0; pos < this.params.size(); pos++) {
-				paramValues.put(this.params.get(pos), Double.valueOf(Double
-						.valueOf(params[pos]).doubleValue()));
+				paramValues.put(this.params.get(pos), params[pos]);
 			}
 
 			String matchingsString = value[0];
@@ -149,7 +149,7 @@ public class GraphMatchingParser extends TextFileParser {
 	/**
 	 * @return A map containing parameter sets and corresponding clusterings.
 	 */
-	public Pair<Map<String, Double>, GraphMatching> getMatchings() {
+	public Pair<ParameterSet, GraphMatching> getMatchings() {
 		return this.result;
 	}
 }

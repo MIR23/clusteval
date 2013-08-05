@@ -17,6 +17,7 @@ import de.clusteval.data.dataset.format.InvalidDataSetFormatVersionException;
 import de.clusteval.data.dataset.format.UnknownDataSetFormatException;
 import de.clusteval.data.goldstandard.format.UnknownGoldStandardFormatException;
 import de.clusteval.framework.repository.Repository;
+import de.clusteval.program.ParameterSet;
 import de.clusteval.quality.QualityMeasure;
 import de.clusteval.quality.QualityMeasureValue;
 import de.clusteval.quality.QualitySet;
@@ -160,7 +161,7 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static Pair<Map<String, Double>, GraphMatching> parseFromFile(
+	public static Pair<ParameterSet, GraphMatching> parseFromFile(
 			final Repository repository, final File absFilePath,
 			final boolean parseQualities) throws IOException {
 		GraphMatchingParser parser = new GraphMatchingParser(repository,
