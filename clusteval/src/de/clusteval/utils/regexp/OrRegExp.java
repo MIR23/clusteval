@@ -23,7 +23,7 @@ public class OrRegExp extends BinaryRegExp {
 	 */
 	@Override
 	public String toString() {
-		return child1.toString() + "|" + child2.toString();
+		return childs.get(0).toString() + "|" + childs.get(1).toString();
 	}
 
 	/*
@@ -33,6 +33,6 @@ public class OrRegExp extends BinaryRegExp {
 	 */
 	@Override
 	public RegExp toDNF() {
-		return new OrRegExp(child1.toDNF(), child2.toDNF());
+		return new OrRegExp(childs.get(0).toDNF(), childs.get(1).toDNF());
 	}
 }

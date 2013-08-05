@@ -20,7 +20,7 @@ public class OptionalRegExp extends AtomicRegExp {
 	 */
 	@Override
 	public String toString() {
-		return child.toString() + "?";
+		return childs.get(0).toString() + "?";
 	}
 
 	/*
@@ -30,6 +30,6 @@ public class OptionalRegExp extends AtomicRegExp {
 	 */
 	@Override
 	public RegExp toDNF() {
-		return new OptionalRegExp(child.toDNF());
+		return new OptionalRegExp(childs.get(0).toDNF());
 	}
 }

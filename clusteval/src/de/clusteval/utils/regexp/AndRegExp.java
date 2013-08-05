@@ -24,7 +24,7 @@ public class AndRegExp extends BinaryRegExp {
 	 */
 	@Override
 	public String toString() {
-		return child1.toString() + "&" + child2.toString();
+		return childs.get(0).toString() + "&" + childs.get(1).toString();
 	}
 
 	/*
@@ -34,8 +34,8 @@ public class AndRegExp extends BinaryRegExp {
 	 */
 	@Override
 	public RegExp toDNF() {
-		RegExp dnf1 = child1.toDNF();
-		RegExp dnf2 = child2.toDNF();
+		RegExp dnf1 = childs.get(0).toDNF();
+		RegExp dnf2 = childs.get(1).toDNF();
 		Set<RegExp> dis1 = getDisjunctiveElements(dnf1);
 		Set<RegExp> dis2 = getDisjunctiveElements(dnf2);
 

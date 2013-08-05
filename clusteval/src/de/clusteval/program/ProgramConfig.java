@@ -381,9 +381,8 @@ public class ProgramConfig extends RepositoryObject {
 			String outputFormat = props.getString("outputFormat");
 
 			compatibleDataSetFormats = Arrays
-					.asList(new FormatCompatibilityParser()
-							.parseFormatExpression(
-									props.getString("compatibleDataSetFormats"))
+					.asList(new FormatCompatibilityParser(props
+							.getString("compatibleDataSetFormats")).parse()
 							.toDNF().toString().split("\\|"));
 
 			runresultFormat = RunResultFormat.parseFromString(repo,

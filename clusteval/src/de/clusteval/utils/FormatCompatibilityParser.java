@@ -5,6 +5,7 @@ package de.clusteval.utils;
 
 import java.util.regex.Pattern;
 
+import utils.parse.Parser;
 import de.clusteval.utils.regexp.AndRegExp;
 import de.clusteval.utils.regexp.BraketRegExp;
 import de.clusteval.utils.regexp.OptionalRegExp;
@@ -16,24 +17,15 @@ import de.clusteval.utils.regexp.Token;
  * @author Christian Wiwie
  * 
  */
-public class FormatCompatibilityParser {
+public class FormatCompatibilityParser extends Parser<RegExp> {
 
-	public static void main(String[] args) {
-		FormatCompatibilityParser p = new FormatCompatibilityParser();
-		p.parseFormatExpression("b|a?&x&(a&b?&(a&c|d))");
-	}
-
-	protected String input;
-	protected int pos;
-	protected boolean endReached;
 	protected SyntaxNode root;
 
-	public FormatCompatibilityParser() {
-		super();
+	public FormatCompatibilityParser(final String input) {
+		super(input);
 	}
 
-	public RegExp parseFormatExpression(final String input) {
-		this.input = input;
+	public RegExp parse() {
 		this.pos = 0;
 		endReached = false;
 		root = new SyntaxNode("S1");
@@ -81,24 +73,6 @@ public class FormatCompatibilityParser {
 				return t1;
 			}
 			return null;
-		}
-	}
-
-	protected void match(final char token) {
-		if (endReached) {
-			throw new IllegalArgumentException("Blabla");
-		}
-		nextToken();
-	}
-
-	/**
-	 * Sets the lookahead to the next character in the input string.
-	 */
-	protected void nextToken() {
-		if (pos + 1 < input.length()) {
-			pos++;
-		} else {
-			endReached = true;
 		}
 	}
 
