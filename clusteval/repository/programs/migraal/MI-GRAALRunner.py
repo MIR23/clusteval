@@ -50,6 +50,7 @@ runner1.join()
 runner2.join()
 
 
+
 if (len(sys.argv)==6):
     os.system("./MI-GRAAL "+sys.argv[1]+" "+sys.argv[2]+" "+dirpath+"/"+file1+".res.ndump2 "+dirpath+"/"+file2+".res.ndump2 "+sys.argv[3]+" -p " +sys.argv[5]) # -p
 elif (len(sys.argv)==8):

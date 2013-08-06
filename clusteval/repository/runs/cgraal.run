@@ -1,5 +1,5 @@
 context = GraphMatchingContext
 programConfig = cgraal
-dataConfig = rashid2
+dataConfig = rashid_merge
 qualityMeasures = AlignedEdgesQualityMeasure,GraphEditDistanceQualityMeasure,EdgeCorrectnessQualityMeasure
 mode = clustering

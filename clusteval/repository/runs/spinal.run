@@ -1,5 +1,5 @@
 context = GraphMatchingContext
 programConfig = spinal
-dataConfig = rashid3
+dataConfig = rashid_merge
 qualityMeasures = AlignedEdgesQualityMeasure,GraphEditDistanceQualityMeasure,EdgeCorrectnessQualityMeasure
 mode = clustering

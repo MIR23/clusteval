@@ -15,6 +15,6 @@ public class DefaultRepositoryConfig extends RepositoryConfig {
 	 */
 	public DefaultRepositoryConfig() {
 		super(new MysqlConfig(false, null, null, null),
-				new HashMap<String, Long>());
+				new HashMap<String, Long>(), -1);
 	}
 }

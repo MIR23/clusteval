@@ -29,12 +29,6 @@ import de.clusteval.framework.repository.Repository;
 public class RepositoryConfig {
 
 	/**
-	 * This map holds the sleeping times for all threads that check the
-	 * repository for changes.
-	 */
-	protected Map<String, Long> threadingSleepingTimes;
-
-	/**
 	 * This method parses a repository configuration from the file at the given
 	 * absolute path.
 	 * 
@@ -96,12 +90,16 @@ public class RepositoryConfig {
 
 			Map<String, Long> threadingSleepTimes = new HashMap<String, Long>();
 
+			long methodMaxTime = -1;
+
 			if (props.getSections().contains("threading")) {
 				SubnodeConfiguration threading = props.getSection("threading");
 				Iterator<String> it = threading.getKeys();
 				while (it.hasNext()) {
 					String key = it.next();
-					if (key.endsWith("SleepTime")) {
+					if (key.equals("methodMaxTime")) {
+						methodMaxTime = threading.getLong(key);
+					} else if (key.endsWith("SleepTime")) {
 						String subKey = key.substring(0,
 								key.indexOf("SleepTime"));
 						try {
@@ -116,7 +114,8 @@ public class RepositoryConfig {
 				}
 			}
 
-			return new RepositoryConfig(mysqlConfig, threadingSleepTimes);
+			return new RepositoryConfig(mysqlConfig, threadingSleepTimes,
+					methodMaxTime);
 		} catch (ConfigurationException e) {
 			throw new RepositoryConfigurationException(e.getMessage());
 		} catch (NoSuchElementException e) {
@@ -125,9 +124,17 @@ public class RepositoryConfig {
 	}
 
 	/**
+	 * This map holds the sleeping times for all threads that check the
+	 * repository for changes.
+	 */
+	protected Map<String, Long> threadingSleepingTimes;
+
+	/**
 	 * The configuration of the mysql connection of the repository.
 	 */
 	protected MysqlConfig mysqlConfig;
+
+	protected long methodMaxTime;
 
 	/**
 	 * Creates a new repository configuration.
@@ -136,12 +143,15 @@ public class RepositoryConfig {
 	 *            The mysql configuration for the repository.
 	 * @param threadingSleepTimes
 	 *            The sleep times of the threads created for the repository.
+	 * @param methodMaxTime
 	 */
 	public RepositoryConfig(final MysqlConfig mysqlConfig,
-			final Map<String, Long> threadingSleepTimes) {
+			final Map<String, Long> threadingSleepTimes,
+			final long methodMaxTime) {
 		super();
 		this.mysqlConfig = mysqlConfig;
 		this.threadingSleepingTimes = threadingSleepTimes;
+		this.methodMaxTime = methodMaxTime;
 	}
 
 	/**
@@ -167,6 +177,10 @@ public class RepositoryConfig {
 	 */
 	public Map<String, Long> getThreadSleepTimes() {
 		return this.threadingSleepingTimes;
+	}
+	
+	public long getMethodMaxTime() {
+		return this.methodMaxTime;
 	}
 
 }

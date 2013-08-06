@@ -1,6 +1,6 @@
 context = GraphMatchingContext
 programConfig = migraal
-dataConfig = rashid2
+dataConfig = rashid_merge
 qualityMeasures = AlignedEdgesQualityMeasure,GraphEditDistanceQualityMeasure,EdgeCorrectnessQualityMeasure
 mode = parameter_optimization
 optimizationMethod = LayeredDivisiveParameterOptimizationMethod

@@ -835,11 +835,26 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 				new StreamGobbler(proc.getInputStream(), bw).start();
 				new StreamGobbler(proc.getErrorStream(), bw).start();
 
+				// check that the process is not running longer than specified
+				long startTime = System.currentTimeMillis();
+				long methodMaxTime = this.getRun().getRepository()
+						.getRepositoryConfig().getMethodMaxTime();
+
+				while (methodMaxTime > -1 && isProcessAlive(proc)) {
+					if ((System.currentTimeMillis() - startTime) / 1000 > methodMaxTime) {
+						proc.destroy();
+						break;
+					}
+				}
+
 				try {
 					proc.waitFor();
 				} catch (InterruptedException e) {
 
 				}
+
+				// TODO use exit value
+				// proc.exitValue()
 			}
 
 			/*
@@ -1388,5 +1403,14 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 		this.log.info("Run " + this.getRun() + " (" + this.programConfig + ","
 				+ this.dataConfig + ") finished");
+	}
+
+	protected static boolean isProcessAlive(Process p) {
+		try {
+			p.exitValue();
+			return false;
+		} catch (IllegalThreadStateException e) {
+			return true;
+		}
 	}
 }
