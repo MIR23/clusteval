@@ -655,9 +655,17 @@ public class ProgramConfig extends RepositoryObject {
 					}
 					continue;
 				}
-				// TODO: greedy, just take the first one
-				String sourceFormat = compatibleSourceFormats
-						.toArray(new String[0])[0];
+				// find the shortest conversion paths
+				String sourceFormat = null;
+				int shortestPath = Integer.MAX_VALUE;
+				for (String possibleFormat : pathsToRequiredFormat.keySet()) {
+					int pathLength = pathsToRequiredFormat.get(possibleFormat)
+							.size();
+					if (pathLength < shortestPath) {
+						sourceFormat = possibleFormat;
+						shortestPath = pathLength;
+					}
+				}
 				mapping.add(Pair.getPair(sourceFormat, requiredFormat));
 
 				remainingInputFormats.remove(sourceFormat);

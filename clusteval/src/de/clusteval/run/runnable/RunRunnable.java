@@ -373,7 +373,6 @@ class StreamGobbler extends Thread {
 					bw.flush();
 				}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		}
 	}
 }

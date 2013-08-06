@@ -355,8 +355,7 @@ public class Repository {
 
 	/**
 	 * A boolean attribute indicating whether the clustering quality measures
-	 * have been initialized by the {@link QualityMeasureFinderThread}
-	 * .
+	 * have been initialized by the {@link QualityMeasureFinderThread} .
 	 */
 	private boolean clusteringQualityMeasuresInitialized;
 
@@ -4185,8 +4184,7 @@ public class Repository {
 	 * @return True, if the parameter optimization method was registered
 	 *         successfully, false otherwise.
 	 */
-	public boolean register(
-			final QualityMeasure clusteringQualityMeasure) {
+	public boolean register(final QualityMeasure clusteringQualityMeasure) {
 		this.clusteringQualityMeasureInstances.get(
 				clusteringQualityMeasure.getClass().getSimpleName()).add(
 				clusteringQualityMeasure);
@@ -5107,10 +5105,8 @@ public class Repository {
 
 		this.clusteringQualityMeasureClasses.put(object.getName(), object);
 
-		this.clusteringQualityMeasureInstances
-				.put(object.getSimpleName(),
-						Collections
-								.synchronizedList(new ArrayList<QualityMeasure>()));
+		this.clusteringQualityMeasureInstances.put(object.getSimpleName(),
+				Collections.synchronizedList(new ArrayList<QualityMeasure>()));
 
 		if (!ensureClusteringQualityMeasureRLibraries(object))
 			return false;
@@ -5293,11 +5289,11 @@ public class Repository {
 
 		DijkstraShortestPath<String, String> shortestPath = new DijkstraShortestPath<String, String>(
 				this.dataSetFormatConversions);
-		Map<String, Number> m = shortestPath.getDistanceMap(targetFormat);
-		for (String source : m.keySet())
-			pathsToTarget.put(source,
-					shortestPath.getPath(source, targetFormat));
-
+		for (String source : this.dataSetFormatConversions.getVertices())
+			if (shortestPath.getDistance(source, targetFormat) != null) {
+				pathsToTarget.put(source,
+						shortestPath.getPath(source, targetFormat));
+			}
 		return pathsToTarget;
 	}
 
@@ -5649,8 +5645,7 @@ public class Repository {
 
 	/**
 	 * This method sets the clustering quality measures as initialized. It
-	 * should only be invoked by
-	 * {@link QualityMeasureFinderThread#afterFind()}.
+	 * should only be invoked by {@link QualityMeasureFinderThread#afterFind()}.
 	 */
 	public void setClusteringQualityMeasuresInitialized() {
 		this.clusteringQualityMeasuresInitialized = true;
@@ -5936,8 +5931,7 @@ public class Repository {
 	 * @return True, if the clustering quality measure has been unregistered
 	 *         successfully.
 	 */
-	public boolean unregister(
-			final QualityMeasure clusteringQualityMeasure) {
+	public boolean unregister(final QualityMeasure clusteringQualityMeasure) {
 		boolean result = this.clusteringQualityMeasureInstances.get(
 				clusteringQualityMeasure.getClass().getSimpleName()).remove(
 				clusteringQualityMeasure);
