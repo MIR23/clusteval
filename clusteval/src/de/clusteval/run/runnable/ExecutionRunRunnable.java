@@ -842,6 +842,9 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 				while (methodMaxTime > -1 && isProcessAlive(proc)) {
 					if ((System.currentTimeMillis() - startTime) / 1000 > methodMaxTime) {
+						this.log.info("Terminating process, because it was running longer than the maximal allowed time of "
+								+ Formatter.formatMsToDuration(
+										methodMaxTime * 1000, false));
 						proc.destroy();
 						break;
 					}
