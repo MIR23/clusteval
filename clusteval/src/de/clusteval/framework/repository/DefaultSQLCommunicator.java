@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import utils.Pair;
-import de.clusteval.paramOptimization.ParameterOptimizationMethod;
+import utils.Triple;
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
@@ -26,6 +26,7 @@ import de.clusteval.data.goldstandard.GoldStandardConfig;
 import de.clusteval.data.statistics.DataStatistic;
 import de.clusteval.framework.repository.config.MysqlConfig;
 import de.clusteval.graphmatching.GraphMatching;
+import de.clusteval.paramOptimization.ParameterOptimizationMethod;
 import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.ParameterSet;
@@ -45,9 +46,9 @@ import de.clusteval.run.Run;
 import de.clusteval.run.RunAnalysisRun;
 import de.clusteval.run.RunDataAnalysisRun;
 import de.clusteval.run.result.AnalysisRunResult;
-import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.DataAnalysisRunResult;
 import de.clusteval.run.result.ExecutionRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.ParameterOptimizationResult;
 import de.clusteval.run.result.RunAnalysisRunResult;
 import de.clusteval.run.result.RunDataAnalysisRunResult;
@@ -1336,16 +1337,17 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 				rowId = insert(this.getTableProgramConfigs(), columns, values);
 
 			// TODO
-//			for (DataSetFormat dsFormat : object.getCompatibleDataSetFormats()) {
-//				int dataset_format_id = getDataSetFormatId(dsFormat.getClass()
-//						.getSimpleName());
-//
-//				insert(this.getTableProgramConfigsCompatibleDataSetFormats(),
-//						new String[]{"repository_id", "program_config_id",
-//								"dataset_format_id"}, new String[]{
-//								"" + updateRepositoryId(), "" + rowId,
-//								"" + dataset_format_id});
-//			}
+			// for (DataSetFormat dsFormat :
+			// object.getCompatibleDataSetFormats()) {
+			// int dataset_format_id = getDataSetFormatId(dsFormat.getClass()
+			// .getSimpleName());
+			//
+			// insert(this.getTableProgramConfigsCompatibleDataSetFormats(),
+			// new String[]{"repository_id", "program_config_id",
+			// "dataset_format_id"}, new String[]{
+			// "" + updateRepositoryId(), "" + rowId,
+			// "" + dataset_format_id});
+			// }
 
 			for (ProgramParameter<?> param : object.getOptimizableParams()) {
 				int program_config_id = getProgramConfigId(object);
@@ -2187,10 +2189,10 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	protected boolean registerClusteringQualityMeasureClass(
 			Class<? extends QualityMeasure> object) {
 		try {
-			QualityMeasure measure = object.getConstructor(
-					Repository.class, boolean.class, long.class, File.class)
-					.newInstance(repository, false, System.currentTimeMillis(),
-							new File(object.getSimpleName()));
+			QualityMeasure measure = object.getConstructor(Repository.class,
+					boolean.class, long.class, File.class).newInstance(
+					repository, false, System.currentTimeMillis(),
+					new File(object.getSimpleName()));
 			insert(this.getTableClusteringQualityMeasures(),
 					new String[]{"repository_id", "name", "minValue",
 							"maxValue", "requiresGoldStandard", "alias"},
@@ -2662,54 +2664,69 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 	 */
 	@Override
 	protected boolean register(DataSetConfig object, final boolean updateOnly) {
-		// TODO: change database structure
-		return true;
-		//
-		// try {
-		// int dataset_id = getDataSetId(object.getDataSet());
-		//
-		// String[] columns;
-		// String[] values;
-		// if (object.getRepository() instanceof RunResultRepository) {
-		// columns = new String[]{"repository_id", "absPath", "name",
-		// "dataset_id", "dataset_config_id"};
-		// values = new String[]{
-		// "" + this.updateRepositoryId(),
-		// "" + object.getAbsolutePath(),
-		// new File(object.getAbsolutePath()).getName().replace(
-		// ".dsconfig", ""),
-		// "" + dataset_id,
-		// ""
-		// + getDataSetConfigId(object
-		// .getRepository()
-		// .getParent()
-		// .getDataSetConfigWithName(
-		// object.getAbsolutePath()
-		// .substring(
-		// object.getAbsolutePath()
-		// .lastIndexOf(
-		// "/") + 1)))};
-		// } else {
-		// columns = new String[]{"repository_id", "absPath", "name",
-		// "dataset_id"};
-		// values = new String[]{
-		// "" + this.updateRepositoryId(),
-		// "" + object.getAbsolutePath(),
-		// new File(object.getAbsolutePath()).getName().replace(
-		// ".dsconfig", ""), "" + dataset_id};
-		// }
-		// if (updateOnly) {
-		// int rowId = getDataSetConfigId(object);
-		// update(this.getTableDataSetConfigs(), columns, values, rowId);
-		// } else
-		// insert(this.getTableDataSetConfigs(), columns, values);
+		// // TODO: change database structure
 		// return true;
-		// } catch (SQLException e) {
-		//
-		// e.printStackTrace();
-		// }
-		//
-		// return false;
+
+		try {
+			String[] columns;
+			String[] values;
+			if (object.getRepository() instanceof RunResultRepository) {
+				columns = new String[]{"repository_id", "absPath", "name",
+						"dataset_config_id"};
+				values = new String[]{
+						"" + this.updateRepositoryId(),
+						"" + object.getAbsolutePath(),
+						new File(object.getAbsolutePath()).getName().replace(
+								".dsconfig", ""),
+						""
+								+ getDataSetConfigId(object
+										.getRepository()
+										.getParent()
+										.getDataSetConfigWithName(
+												object.getAbsolutePath()
+														.substring(
+																object.getAbsolutePath()
+																		.lastIndexOf(
+																				"/") + 1)))};
+			} else {
+				columns = new String[]{"repository_id", "absPath", "name"};
+				values = new String[]{
+						"" + this.updateRepositoryId(),
+						"" + object.getAbsolutePath(),
+						new File(object.getAbsolutePath()).getName().replace(
+								".dsconfig", "")};
+			}
+			int dataset_config_id;
+			if (updateOnly) {
+				dataset_config_id = getDataSetConfigId(object);
+				update(this.getTableDataSetConfigs(), columns, values,
+						dataset_config_id);
+				// TODO update datasets if changed
+			} else {
+				dataset_config_id = insert(this.getTableDataSetConfigs(),
+						columns, values);
+			}
+
+			for (Triple<String, DataSet, String> ds : object.getDataSets()) {
+				int dataset_id = getDataSetId(ds.getSecond());
+
+				// feed joint table
+				columns = new String[]{"dataset_config_id", "dataset_id"};
+				values = new String[]{"" + dataset_config_id, "" + dataset_id};
+				insert(this.getTableDatasetConfigsDataSets(), columns, values);
+			}
+			return true;
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	@Override
+	protected String getTableDatasetConfigsDataSets() {
+		return "dataset_configs_datasets";
 	}
 
 	/*
@@ -3139,39 +3156,41 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 			int dataConfigId = getDataConfigId(object.getDataConfig());
 			int programConfigId = getProgramConfigId(object.getProgramConfig());
 
-			final Pair<ParameterSet, GraphMatching> pair = object.getGraphMatching();
-// TODO
-//			final QualitySet qualities = pair.getSecond()
-//					.getQualities();
-//
-//			final StringBuilder paramString = new StringBuilder();
-//			for (String param : pair.getFirst().keySet()) {
-//				paramString.append(param);
-//				paramString.append("=");
-//				paramString.append(pair.getFirst().get(param));
-//				paramString.append(",");
-//			}
-//			for (QualityMeasure measure : qualities.keySet()) {
-//
-//				paramString.deleteCharAt(paramString.length() - 1);
-//				insert(this.getTableRunResultsClusteringsQuality(),
-//						new String[]{"repository_id",
-//								"run_results_clustering_id", "data_config_id",
-//								"program_config_id",
-//								"clustering_quality_measure_id", "paramString",
-//								"quality"},
-//						new String[]{
-//								"" + this.updateRepositoryId(),
-//								"" + clusteringId,
-//								"" + dataConfigId,
-//								"" + programConfigId,
-//								""
-//										+ getClusteringQualityMeasureId(measure
-//												.toString()),
-//								paramString.toString(),
-//								"" + qualities.get(measure).getValue()});
-//			}
+			final Pair<ParameterSet, GraphMatching> pair = object
+					.getGraphMatching();
 
+			final QualitySet qualities = pair.getSecond().getQualities();
+
+			final StringBuilder paramString = new StringBuilder();
+			for (String param : pair.getFirst().keySet()) {
+				paramString.append(param);
+				paramString.append("=");
+				paramString.append(pair.getFirst().get(param));
+				paramString.append(",");
+			}
+			for (QualityMeasure measure : qualities.keySet()) {
+
+				if (paramString.length() > 0)
+					paramString.deleteCharAt(paramString.length() - 1);
+				insert(this.getTableRunResultsClusteringsQuality(),
+						new String[]{"repository_id",
+								"run_results_clustering_id", "data_config_id",
+								"program_config_id",
+								"clustering_quality_measure_id", "paramString",
+								"quality"},
+						new String[]{
+								"" + this.updateRepositoryId(),
+								"" + clusteringId,
+								"" + dataConfigId,
+								"" + programConfigId,
+								""
+										+ getClusteringQualityMeasureId(measure
+												.toString()),
+								paramString.toString(),
+								"" + qualities.get(measure).getValue()});
+			}
+
+			conn.commit();
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -3313,8 +3332,7 @@ public class DefaultSQLCommunicator extends SQLCommunicator {
 													optParam.getName())});
 				}
 
-				for (QualityMeasure measure : pair.getSecond()
-						.keySet()) {
+				for (QualityMeasure measure : pair.getSecond().keySet()) {
 					int clustering_quality_measure_id = getClusteringQualityMeasureId(measure
 							.toString());
 					try {

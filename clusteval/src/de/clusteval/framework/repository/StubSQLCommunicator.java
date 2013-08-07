@@ -1765,4 +1765,15 @@ public class StubSQLCommunicator extends SQLCommunicator {
 			throws SQLException {
 		return 0;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.clusteval.framework.repository.SQLCommunicator#
+	 * getTableDatasetConfigsDataSets()
+	 */
+	@Override
+	protected String getTableDatasetConfigsDataSets() {
+		return null;
+	}
 }

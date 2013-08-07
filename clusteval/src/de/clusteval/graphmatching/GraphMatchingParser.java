@@ -3,17 +3,22 @@
  */
 package de.clusteval.graphmatching;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import utils.Pair;
 import utils.parse.TextFileParser;
+import utils.text.TextFileMapParser;
 import de.clusteval.framework.repository.NoRepositoryFoundException;
 import de.clusteval.framework.repository.Repository;
 import de.clusteval.program.ParameterSet;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualityMeasureValue;
+import de.clusteval.quality.QualitySet;
+import de.clusteval.quality.UnknownQualityMeasureException;
 
 /**
  * A parser for files containing parameter sets and clusterings.
@@ -67,7 +72,7 @@ public class GraphMatchingParser extends TextFileParser {
 	 */
 	@Override
 	protected void processLine(String[] key, String[] value) {
-		String parameterString = key[0];
+		String parameterString = key.length > 0 ? key[0] : "";
 		String[] params = parameterString.equals("")
 				? new String[0]
 				: parameterString.split(",");
@@ -116,34 +121,34 @@ public class GraphMatchingParser extends TextFileParser {
 	public void finishProcess() {
 		// parse qualities
 		// TODO
-		// if (parseQualities) {
-		// final File qualityFile = new File(this.absoluteFilePath.replace(
-		// ".conv", ".qual"));
-		// if (qualityFile.exists()) {
-		// try {
-		// TextFileMapParser parser = new TextFileMapParser(
-		// qualityFile.getAbsolutePath(), 0, 1);
-		// parser.process();
-		// Map<String, String> result = parser.getResult();
-		// QualitySet qualitySet = new QualitySet();
-		// for (String measure : result.keySet()) {
-		// QualityMeasure clMeasure;
-		// clMeasure = QualityMeasure.parseFromString(
-		// this.repository, measure);
-		// qualitySet.put(clMeasure, QualityMeasureValue
-		// .getForDouble(Double.parseDouble(result
-		// .get(measure))));
-		// }
-		// this.result.getSecond().setQualities(qualitySet);
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// } catch (UnknownClusteringQualityMeasureException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
-		//
-		// super.finishProcess();
+		if (parseQualities) {
+			final File qualityFile = new File(this.absoluteFilePath.replace(
+					".conv", ".qual"));
+			if (qualityFile.exists()) {
+				try {
+					TextFileMapParser parser = new TextFileMapParser(
+							qualityFile.getAbsolutePath(), 0, 1);
+					parser.process();
+					Map<String, String> result = parser.getResult();
+					QualitySet qualitySet = new QualitySet();
+					for (String measure : result.keySet()) {
+						QualityMeasure clMeasure;
+						clMeasure = QualityMeasure.parseFromString(
+								this.repository, measure);
+						qualitySet.put(clMeasure, QualityMeasureValue
+								.getForDouble(Double.parseDouble(result
+										.get(measure))));
+					}
+					this.result.getSecond().setQualities(qualitySet);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (UnknownQualityMeasureException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		super.finishProcess();
 	}
 
 	/**

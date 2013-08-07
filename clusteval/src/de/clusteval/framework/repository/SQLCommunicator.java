@@ -892,4 +892,6 @@ public abstract class SQLCommunicator {
 	protected abstract int getRepositoryTypeId(final String repositoryType)
 			throws SQLException;
 
+	protected abstract String getTableDatasetConfigsDataSets();
+
 }

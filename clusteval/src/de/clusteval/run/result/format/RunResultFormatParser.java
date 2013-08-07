@@ -3,6 +3,7 @@
  */
 package de.clusteval.run.result.format;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -19,9 +20,6 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	protected Map<String, String> params;
 
 	protected Map<String, String> internalParams;
-
-	/** The result. */
-	protected GraphMatchingRunResult result;
 
 	protected DataConfig dataConfig;
 
@@ -59,6 +57,32 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	 * @param absFilePath
 	 *            the abs file path
 	 * @param dataConfig
+	 * @param absOutputPath
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public RunResultFormatParser(final Map<String, String> internalParams,
+			final Map<String, String> params, final String absFilePath,
+			final DataConfig dataConfig, final String absOutputPath)
+			throws IOException {
+		super(absFilePath, new int[0], new int[0], true, null, absOutputPath,
+				OUTPUT_MODE.STREAM);
+		this.setLockTargetFile(true);
+		this.params = params;
+		this.internalParams = internalParams;
+		this.dataConfig = dataConfig;
+	}
+
+	/**
+	 * Instantiates a new run result format parser.
+	 * 
+	 * @param internalParams
+	 * 
+	 * @param params
+	 *            the params
+	 * @param absFilePath
+	 *            the abs file path
+	 * @param dataConfig
 	 * @param splitLines
 	 *            the split lines
 	 * @param outputMode
@@ -75,15 +99,6 @@ public abstract class RunResultFormatParser extends TextFileParser {
 		this.params = params;
 		this.internalParams = internalParams;
 		this.dataConfig = dataConfig;
-	}
-
-	/**
-	 * Gets the run result.
-	 * 
-	 * @return the run result
-	 */
-	public GraphMatchingRunResult getRunResult() {
-		return this.result;
 	}
 
 	/**

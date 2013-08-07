@@ -42,6 +42,8 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 
 	protected Map<String, String> graph1ToGraph2;
 
+	protected QualitySet qualities;
+
 	/**
 	 * 
 	 */
@@ -62,6 +64,7 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 		super();
 		this.mappings = cloneMappings(other.mappings);
 		updateMap();
+		this.qualities = other.qualities;
 	}
 
 	protected void updateMap() {
@@ -226,5 +229,21 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 			resultSet.put(qualityMeasure, quality);
 		}
 		return resultSet;
+	}
+
+	/**
+	 * @param qualitySet
+	 *            Set the qualities of this clustering.
+	 */
+	public void setQualities(final QualitySet qualitySet) {
+		this.qualities = qualitySet;
+	}
+
+	/**
+	 * @return Returns the qualities of this clustering.
+	 * @see GraphMatching#qualities
+	 */
+	public QualitySet getQualities() {
+		return this.qualities;
 	}
 }

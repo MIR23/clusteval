@@ -2,6 +2,7 @@ package de.clusteval.run.result;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -10,9 +11,6 @@ import java.util.Map;
 import org.apache.commons.configuration.ConfigurationException;
 
 import utils.Pair;
-import de.clusteval.paramOptimization.IncompatibleParameterOptimizationMethodException;
-import de.clusteval.paramOptimization.InvalidOptimizationParameterException;
-import de.clusteval.paramOptimization.UnknownParameterOptimizationMethodException;
 import de.clusteval.context.IncompatibleContextException;
 import de.clusteval.context.UnknownContextException;
 import de.clusteval.data.DataConfig;
@@ -41,6 +39,9 @@ import de.clusteval.framework.repository.RunResultRepository;
 import de.clusteval.framework.repository.config.RepositoryConfigNotFoundException;
 import de.clusteval.framework.repository.config.RepositoryConfigurationException;
 import de.clusteval.graphmatching.GraphMatching;
+import de.clusteval.paramOptimization.IncompatibleParameterOptimizationMethodException;
+import de.clusteval.paramOptimization.InvalidOptimizationParameterException;
+import de.clusteval.paramOptimization.UnknownParameterOptimizationMethodException;
 import de.clusteval.program.NoOptimizableProgramParameterException;
 import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
@@ -202,10 +203,9 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 			if (p != null) {
 				p.convertToStandardFormat();
 				result = new GraphMatchingRunResult(this.repository,
-						System.currentTimeMillis(), new File(
-								this.absPath.getAbsolutePath() + ".conv"),
-						this.dataConfig, this.programConfig, format,
-						this.runIdentString, run);
+						System.currentTimeMillis(),
+						new File(p.getOutputFile()), this.dataConfig,
+						this.programConfig, format, this.runIdentString, run);
 			}
 		} catch (InstantiationException e) {
 			e.printStackTrace();
@@ -286,10 +286,21 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 
 		for (final DataConfig dataConfig : run.getDataConfigs()) {
 			for (final ProgramConfig programConfig : run.getProgramConfigs()) {
-				final File completeFile = new File(FileUtils.buildPath(
-						clusterFolder.getAbsolutePath(),
-						programConfig.toString() + "_" + dataConfig
-								+ ".1.results.conv"));
+				final File completeFile = new File(
+						FileUtils.buildPath(clusterFolder.getAbsolutePath()))
+						.listFiles(new FilenameFilter() {
+
+							/*
+							 * (non-Javadoc)
+							 * 
+							 * @see java.io.FilenameFilter#accept(java.io.File,
+							 * java.lang.String)
+							 */
+							@Override
+							public boolean accept(File dir, String name) {
+								return name.endsWith(".conv");
+							}
+						})[0];
 				final GraphMatchingRunResult tmpResult = parseFromRunResultCompleteFile(
 						repository, run, dataConfig, programConfig,
 						completeFile);
