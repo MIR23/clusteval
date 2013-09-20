@@ -5,7 +5,7 @@ qualityMeasures = AlignedEdgesQualityMeasure,GraphEditDistanceQualityMeasure,Edg
 mode = parameter_optimization
 optimizationMethod = LayeredDivisiveParameterOptimizationMethod
 optimizationCriterion = AlignedEdgesQualityMeasure
-optimizationIterations = 10
+optimizationIterations = 100
 
 [gedevo]
 optimizationParameters = pop,maxsame
