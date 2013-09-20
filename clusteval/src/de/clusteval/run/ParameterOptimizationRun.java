@@ -639,7 +639,12 @@ public class ParameterOptimizationRun extends ExecutionRun {
 		String paramOptIterations = props.getString("optimizationIterations");
 
 		for (int i = 0; i < programConfigs.size(); i++) {
+			int totalIterationsPerParam = (int) Math.pow(
+					Long.valueOf(paramOptIterations),
+					1.0 / optimizationParameters.get(i).size());
+
 			for (int j = 0; j < dataConfigs.size(); j++) {
+
 				optimizationMethods
 						.add(ParameterOptimizationMethod.parseFromString(
 								repo,
@@ -652,8 +657,8 @@ public class ParameterOptimizationRun extends ExecutionRun {
 								optimizationParameters.get(i),
 								optimizationCriterion,
 								paramOptIterations != null
-										? ArraysExt.rep(Integer
-												.valueOf(paramOptIterations),
+										? ArraysExt.rep(
+												totalIterationsPerParam,
 												optimizationParameters.get(i)
 														.size()) : ArraysExt
 												.rep(10, optimizationParameters
