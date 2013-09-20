@@ -407,8 +407,8 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 	 * 
 	 * <p>
 	 * If this method is invoked twice, without
-	 * {@link #giveQualityFeedback(QualitySet)} being invoked in
-	 * between, a {@link IllegalStateException} is thrown.
+	 * {@link #giveQualityFeedback(QualitySet)} being invoked in between, a
+	 * {@link IllegalStateException} is thrown.
 	 * 
 	 * @param forcedParameterSet
 	 *            If this parameter is set != null, this parameter set is forced
@@ -448,8 +448,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 				// take first parameter set to simulate skipping
 				ParameterSet paramSet = this.getResult().getParameterSets()
 						.get(0);
-				QualitySet qualitySet = this.getResult()
-						.get(paramSet);
+				QualitySet qualitySet = this.getResult().get(paramSet);
 				this.next(paramSet, this.currentCount + 1);
 				this.giveQualityFeedback(qualitySet);
 			}
@@ -539,8 +538,7 @@ public abstract class ParameterOptimizationMethod extends RepositoryObject {
 							long.class, File.class,
 							ParameterOptimizationRun.class,
 							ProgramConfig.class, DataConfig.class, List.class,
-							QualityMeasure.class, int[].class,
-							boolean.class);
+							QualityMeasure.class, int[].class, boolean.class);
 			// changed 21.03.2013: do not register new parameter optimization
 			// methods here, because run is not set yet
 			ParameterOptimizationMethod method = constr.newInstance(repository,
