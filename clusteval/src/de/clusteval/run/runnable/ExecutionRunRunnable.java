@@ -848,6 +848,10 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 						proc.destroy();
 						break;
 					}
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+					}
 				}
 
 				try {
