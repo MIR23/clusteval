@@ -178,10 +178,10 @@ public class RunResultRepository extends Repository {
 		// TODO: verify
 		this.runResultBasePath = this.parent.runResultBasePath;
 		// does not work in case of resume run
-		this.clusterResultsBasePath = FileUtils.buildPath(this.basePath,
-				"clusters");
-		this.clusterResultsQualityBasePath = FileUtils.buildPath(this.basePath,
-				"clusters");
+		this.calculationsResultsBasePath = FileUtils.buildPath(this.basePath,
+				"calculations");
+		this.calculationsResultsQualityBasePath = FileUtils.buildPath(
+				this.basePath, "calculations");
 		this.logsBasePath = FileUtils.buildPath(this.basePath, "logs");
 		this.supplementaryBasePath = this.parent.supplementaryBasePath;
 		this.contextBasePath = this.parent.contextBasePath;
@@ -390,8 +390,7 @@ public class RunResultRepository extends Repository {
 	 */
 	@Override
 	public boolean isQualityMeasureRegistered(String dsFormatClassName) {
-		return this.parent
-				.isQualityMeasureRegistered(dsFormatClassName);
+		return this.parent.isQualityMeasureRegistered(dsFormatClassName);
 	}
 
 	/*
