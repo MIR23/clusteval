@@ -34,6 +34,6 @@
 	<classpathentry kind="lib" path="lib/jung2/jung-api-2.0.1.jar" sourcepath="lib/jung2/jung-api-2.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jung2/jung-graph-impl-2.0.1.jar" sourcepath="lib/jung2/jung-graph-impl-2.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jung2/collections-generic-4.01.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-oracle"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
