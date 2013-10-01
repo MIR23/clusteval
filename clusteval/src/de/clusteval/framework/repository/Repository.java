@@ -511,14 +511,14 @@ public class Repository {
 	 * (identified by its unique run identifier) all clustering results are
 	 * stored.
 	 */
-	protected String clusterResultsBasePath;
+	protected String calculationsResultsBasePath;
 
 	/**
 	 * The absolute path to the directory, where for a certain runresult
 	 * (identified by its unique run identifier) all qualities of clustering
 	 * results are stored.
 	 */
-	protected String clusterResultsQualityBasePath;
+	protected String calculationsResultsQualityBasePath;
 
 	/**
 	 * The absolute path to the directory, where for a certain runresult
@@ -1416,7 +1416,7 @@ public class Repository {
 	 *         are stored.
 	 */
 	public String getClusterResultsBasePath() {
-		return this.clusterResultsBasePath;
+		return this.calculationsResultsBasePath;
 	}
 
 	/**
@@ -1425,7 +1425,7 @@ public class Repository {
 	 *         clustering results are stored.
 	 */
 	public String getClusterResultsQualityBasePath() {
-		return this.clusterResultsQualityBasePath;
+		return this.calculationsResultsQualityBasePath;
 	}
 
 	/**
@@ -3355,10 +3355,10 @@ public class Repository {
 				"configs");
 		this.runBasePath = FileUtils.buildPath(this.basePath, "runs");
 		this.runResultBasePath = FileUtils.buildPath(this.basePath, "results");
-		this.clusterResultsBasePath = FileUtils.buildPath(
-				this.runResultBasePath, "%RUNIDENTSTRING", "clusters");
-		this.clusterResultsQualityBasePath = FileUtils.buildPath(
-				this.runResultBasePath, "%RUNIDENTSTRING", "clusters");
+		this.calculationsResultsBasePath = FileUtils.buildPath(
+				this.runResultBasePath, "%RUNIDENTSTRING", "calculations");
+		this.calculationsResultsQualityBasePath = FileUtils.buildPath(
+				this.runResultBasePath, "%RUNIDENTSTRING", "calculations");
 		this.analysisResultsBasePath = FileUtils.buildPath(
 				this.runResultBasePath, "%RUNIDENTSTRING", "analyses");
 		this.logsBasePath = FileUtils.buildPath(this.runResultBasePath,
