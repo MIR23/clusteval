@@ -16,10 +16,13 @@ package de.clusteval.graphmatching;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import utils.Pair;
 import de.clusteval.data.DataConfig;
@@ -51,7 +54,7 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	protected List<Pair<String, String>> mappings;
 
 	protected Map<String, String> graph1ToGraph2;
-
+	
 	protected QualitySet qualities;
 
 	/**
@@ -118,6 +121,28 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	public String getMatchingForGraph1Vertex(final String v) {
 		return this.graph1ToGraph2.get(v);
 	}
+	
+	public Set<String> getMatchingForGraphOneVertices() {
+		return this.graph1ToGraph2.keySet();
+	}
+	
+	public Collection<String> getMatchingForGraphTwoVertices() {
+		return this.graph1ToGraph2.values();
+	}
+	
+	
+	public String getMatchingForGraph2Vertex(final String mappedV) {
+		
+		Set<Entry<String, String>> set = this.graph1ToGraph2.entrySet();
+		
+		for (Entry<String, String> entry : set) {
+			if (entry.getValue() == mappedV){
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+
 
 	public void addMatching(final Pair<String, String> pair) {
 		this.mappings.add(pair);

@@ -1,0 +1,5 @@
+context = GraphMatchingContext
+programConfig = netal
+dataConfig = rashid_merge,rashid1,rashid2
+qualityMeasures = AlignedEdgesQualityMeasure,GraphEditDistanceQualityMeasure,EdgeCorrectnessQualityMeasure
+mode = parameter_optimization
