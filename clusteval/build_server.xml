@@ -32,6 +32,10 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-logging-api-1.1.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-cli-1.2.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jansi-1.9.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/collections-generic-4.01.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/jung-algorithms-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/jung-graph-impl-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/jung-api-2.0.1.jar" />
 		</jar>
 	</target>
 </project>
