@@ -25,7 +25,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.clusteval.paramOptimization.ParameterOptimizationMethod;
+import com.mysql.jdbc.CommunicationsException;
+
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
 import de.clusteval.data.dataset.DataSet;
@@ -35,6 +36,7 @@ import de.clusteval.data.dataset.type.DataSetType;
 import de.clusteval.data.goldstandard.GoldStandard;
 import de.clusteval.data.goldstandard.GoldStandardConfig;
 import de.clusteval.data.statistics.DataStatistic;
+import de.clusteval.paramOptimization.ParameterOptimizationMethod;
 import de.clusteval.program.DoubleProgramParameter;
 import de.clusteval.program.IntegerProgramParameter;
 import de.clusteval.program.Program;
@@ -52,9 +54,9 @@ import de.clusteval.run.Run;
 import de.clusteval.run.RunAnalysisRun;
 import de.clusteval.run.RunDataAnalysisRun;
 import de.clusteval.run.result.AnalysisRunResult;
-import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.DataAnalysisRunResult;
 import de.clusteval.run.result.ExecutionRunResult;
+import de.clusteval.run.result.GraphMatchingRunResult;
 import de.clusteval.run.result.ParameterOptimizationResult;
 import de.clusteval.run.result.RunAnalysisRunResult;
 import de.clusteval.run.result.RunDataAnalysisRunResult;
@@ -132,7 +134,8 @@ public abstract class SQLCommunicator {
 				sb.append("null,");
 			else {
 				sb.append("'");
-				sb.append(s);
+				// 02.10.2013: added escaping
+				sb.append(s.replace("'", "''").replace("\"", "\"\""));
 				sb.append("',");
 			}
 		}
