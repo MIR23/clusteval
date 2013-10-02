@@ -292,7 +292,7 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 			final List<ExecutionRunResult> result) throws RegisterException {
 
 		File clusterFolder = new File(FileUtils.buildPath(
-				runResultFolder.getAbsolutePath(), "clusters"));
+				runResultFolder.getAbsolutePath(), "calculations"));
 
 		for (final DataConfig dataConfig : run.getDataConfigs()) {
 			for (final ProgramConfig programConfig : run.getProgramConfigs()) {
@@ -455,7 +455,7 @@ public class GraphMatchingRunResult extends ExecutionRunResult {
 			final ClusteringRun paramRun = (ClusteringRun) run;
 
 			File clusterFolder = new File(FileUtils.buildPath(
-					runResultFolder.getAbsolutePath(), "clusters"));
+					runResultFolder.getAbsolutePath(), "calculations"));
 			for (final DataConfig dataConfig : paramRun.getDataConfigs()) {
 				for (final ProgramConfig programConfig : paramRun
 						.getProgramConfigs()) {

@@ -13,13 +13,11 @@
  */
 package de.clusteval.run.result.format;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 import utils.parse.TextFileParser;
 import de.clusteval.data.DataConfig;
-import de.clusteval.run.result.GraphMatchingRunResult;
 
 /**
  * @author Christian Wiwie
@@ -118,4 +116,41 @@ public abstract class RunResultFormatParser extends TextFileParser {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public abstract void convertToStandardFormat() throws IOException;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see utils.parse.TextFileParser#getLineOutput(java.lang.String[],
+	 * java.lang.String[])
+	 */
+	@SuppressWarnings("unused")
+	@Override
+	protected String getLineOutput(String[] key, String[] value) {
+		StringBuilder sb = new StringBuilder();
+		// write the header into the file containing the parameter values
+		if (this.parsedLines == 0) {
+			String[] paramNames = params.keySet().toArray(new String[0]);
+
+			for (String paramName : paramNames) {
+				sb.append(paramName);
+				sb.append(",");
+			}
+			if (paramNames.length > 0)
+				sb.deleteCharAt(sb.length() - 1);
+			sb.append("\t");
+			sb.append("Matching");
+			sb.append(System.getProperty("line.separator"));
+
+			for (String paramName : paramNames) {
+				sb.append(params.get(paramName));
+				sb.append(",");
+			}
+			if (paramNames.length > 0)
+				sb.deleteCharAt(sb.length() - 1);
+			sb.append(this.outSplit);
+		}
+
+		return sb.toString();
+	}
+
 }

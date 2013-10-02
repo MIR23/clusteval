@@ -641,16 +641,16 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 
 		invocation = replaceRunParameters(invocation);
 
-		this.log.info(this.getRun() + " (" + this.programConfig + ","
-				+ this.dataConfig + ", Iteration " + optId
-				+ ") Parameter Set: " + effectiveParams);
-
 		try {
 			invocation = replaceDefaultParameters(invocation);
 		} catch (MissingParameterValueException e) {
 			this.exceptions.add(e);
 			return null;
 		}
+
+		this.log.info(this.getRun() + " (" + this.programConfig + ","
+				+ this.dataConfig + ", Iteration " + optId
+				+ ") Parameter Set: " + effectiveParams);
 
 		return invocation;
 	}

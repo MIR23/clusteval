@@ -3009,7 +3009,7 @@ public class Repository {
 		for (File resultDir : new File(this.getRunResultBasePath()).listFiles()) {
 			if (resultDir.isDirectory()) {
 				File clustersDir = new File(FileUtils.buildPath(
-						resultDir.getAbsolutePath(), "clusters"));
+						resultDir.getAbsolutePath(), "calculations"));
 				if (clustersDir.exists() && clustersDir.isDirectory()) {
 					/*
 					 * Take only those, that contain at least one *.complete

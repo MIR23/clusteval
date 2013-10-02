@@ -199,7 +199,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult
 			// ArrayList<ParameterOptimizationResult>();
 
 			File clusterFolder = new File(FileUtils.buildPath(
-					runResultFolder.getAbsolutePath(), "clusters"));
+					runResultFolder.getAbsolutePath(), "calculations"));
 			for (final ParameterOptimizationMethod method : paramRun
 					.getOptimizationMethods()) {
 				final File completeFile = new File(FileUtils.buildPath(
@@ -766,7 +766,7 @@ public class ParameterOptimizationResult extends ExecutionRunResult
 			RunResultParseException {
 
 		File clusterFolder = new File(FileUtils.buildPath(
-				runResultFolder.getAbsolutePath(), "clusters"));
+				runResultFolder.getAbsolutePath(), "calculations"));
 		for (final ParameterOptimizationMethod method : run
 				.getOptimizationMethods()) {
 			final File completeFile = new File(FileUtils.buildPath(
