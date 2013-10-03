@@ -472,6 +472,9 @@ public class ParameterOptimizationRun extends ExecutionRun {
 		 * Default optimization method for all programs, where no specific
 		 * method is defined
 		 */
+		if (!props.containsKey("optimizationMethod"))
+			throw new RunException(
+					"The optimization method has to be specified as attribute 'optimizationMethod'");
 		String paramOptMethod = props.getString("optimizationMethod");
 		List<String> paramOptMethods = new ArrayList<String>();
 
@@ -627,6 +630,9 @@ public class ParameterOptimizationRun extends ExecutionRun {
 
 		QualityMeasure optimizationCriterion = null;
 
+		if (!props.containsKey("optimizationCriterion"))
+			throw new RunException(
+					"The optimization criterion has to be specified as attribute 'optimizationCriterion'");
 		String paramOptCriterion = props.getString("optimizationCriterion");
 		optimizationCriterion = QualityMeasure.parseFromString(repo,
 				paramOptCriterion);

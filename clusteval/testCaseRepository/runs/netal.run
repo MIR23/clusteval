@@ -3,5 +3,3 @@ programConfig = netal
 dataConfig = rashid_merge
 qualityMeasures = AlignedEdgesQualityMeasure,GraphEditDistanceQualityMeasure,EdgeCorrectnessQualityMeasure,C_1QualityMeasure,C_1PrimeQualityMeasure,LTwoCompactnessQualityMeasure
 mode = parameter_optimization
-optimizationMethod = LayeredDivisiveParameterOptimizationMethod
-optimizationCriterion = EdgeCorrectnessQualityMeasure

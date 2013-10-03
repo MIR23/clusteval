@@ -84,7 +84,7 @@ public class TestRepositoryObject {
 		repository.initialize();
 		repositoryObject = new StubRepositoryObject(this.repository, false,
 				System.currentTimeMillis(), new File("test"));
-		context = Context.parseFromString(repository, "ClusteringContext");
+		context = Context.parseFromString(repository, "GraphMatchingContext");
 	}
 
 	/**
@@ -99,7 +99,8 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#getAbsolutePath()}.
+	 * {@link de.clusteval.framework.repository.RepositoryObject#getAbsolutePath()}
+	 * .
 	 * 
 	 * @throws Exception
 	 */
@@ -117,7 +118,7 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#setAbsolutePath(java.io.File)}
+	 * {@link de.clusteval.framework.repository.RepositoryObject#setAbsolutePath(java.io.File)}
 	 * .
 	 * 
 	 * @throws Exception
@@ -140,7 +141,8 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#getChangeDate()}.
+	 * {@link de.clusteval.framework.repository.RepositoryObject#getChangeDate()}
+	 * .
 	 * 
 	 * @throws Exception
 	 */
@@ -157,7 +159,8 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#equals(java.lang.Object)}.
+	 * {@link de.clusteval.framework.repository.RepositoryObject#equals(java.lang.Object)}
+	 * .
 	 * 
 	 * @throws Exception
 	 */
@@ -209,7 +212,8 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#copyTo(java.io.File)}.
+	 * {@link de.clusteval.framework.repository.RepositoryObject#copyTo(java.io.File)}
+	 * .
 	 * 
 	 * @throws IOException
 	 * @throws RegisterException
@@ -217,13 +221,11 @@ public class TestRepositoryObject {
 	 */
 	@Test
 	public void testCopyToFile() throws IOException, RegisterException {
-		File f = new File(
-				"testCaseRepository/data/goldstandards/DS1/Zachary_karate_club_gold_standard.txt")
+		File f = new File("testCaseRepository/runs/netal.run")
 				.getAbsoluteFile();
 		this.repositoryObject = new StubRepositoryObject(this.repository,
 				false, f.lastModified(), f);
-		File destF = new File(
-				"testCaseRepository/data/goldstandards/DS1/Zachary_karate_club_gold_standard_copy.txt")
+		File destF = new File("testCaseRepository/runs/netal_copy.run")
 				.getAbsoluteFile();
 		if (destF.exists())
 			file.FileUtils.delete(destF);
@@ -235,7 +237,7 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#copyTo(java.io.File, boolean)}
+	 * {@link de.clusteval.framework.repository.RepositoryObject#copyTo(java.io.File, boolean)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -244,19 +246,16 @@ public class TestRepositoryObject {
 	 */
 	@Test
 	public void testCopyToFileBoolean() throws IOException, RegisterException {
-		File f = new File(
-				"testCaseRepository/data/goldstandards/DS1/Zachary_karate_club_gold_standard.txt")
+		File f = new File("testCaseRepository/runs/netal.run")
 				.getAbsoluteFile();
 		this.repositoryObject = new StubRepositoryObject(this.repository,
 				false, f.lastModified(), f);
-		File destFolder = new File(
-				"testCaseRepository/data/goldstandards/DS1/copy");
+		File destFolder = new File("testCaseRepository/runs/copy");
 		if (destFolder.exists())
 			FileUtils.deleteDirectory(destFolder);
 		destFolder.mkdirs();
 		this.repositoryObject.copyToFolder(destFolder);
-		File destF = new File(
-				"testCaseRepository/data/goldstandards/DS1/copy/Zachary_karate_club_gold_standard.txt");
+		File destF = new File("testCaseRepository/runs/copy/netal.run");
 		Assert.assertTrue(destF.exists());
 		FileUtils.contentEquals(f, destF);
 		file.FileUtils.delete(destF);
@@ -264,7 +263,7 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#addListener(utils.RepositoryListener)}
+	 * {@link de.clusteval.framework.repository.RepositoryObject#addListener(utils.RepositoryListener)}
 	 * .
 	 * 
 	 * @throws RegisterException
@@ -298,7 +297,7 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#removeListener(utils.RepositoryListener)}
+	 * {@link de.clusteval.framework.repository.RepositoryObject#removeListener(utils.RepositoryListener)}
 	 * .
 	 * 
 	 * @throws RegisterException
@@ -334,7 +333,7 @@ public class TestRepositoryObject {
 
 	/**
 	 * Test method for
-	 * {@link framework.repository.RepositoryObject#notify(utils.RepositoryEvent)}
+	 * {@link de.clusteval.framework.repository.RepositoryObject#notify(utils.RepositoryEvent)}
 	 * .
 	 * 
 	 * @throws IOException
