@@ -13,6 +13,7 @@
  */
 package de.clusteval.framework.repository;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,7 +26,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mysql.jdbc.CommunicationsException;
+import utils.Formatter;
+
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 
 import de.clusteval.context.Context;
 import de.clusteval.data.DataConfig;
@@ -619,24 +622,39 @@ public abstract class SQLCommunicator {
 	 */
 	public void initDB() {
 		try {
-			SQLException lastException = null;
+			// SQLException lastException = null;
+			String password = getDBPassword();
 			/**
 			 * While we do not have a connection and the password is wrong,
 			 * retry
 			 */
 			while (conn == null) {
-				// different error than wrong password
-				if (lastException != null
-						&& lastException.getErrorCode() != 1045)
-					throw lastException;
 				// first try or wrong password
 				try {
 					conn = DriverManager.getConnection("jdbc:mysql://"
 							+ getServer() + "/" + getDatabase() + "?",
-							getDBUsername(), getDBPassword());
+							getDBUsername(), password);
 					conn.setAutoCommit(false);
 				} catch (SQLException e) {
-					lastException = e;
+					if (e instanceof CommunicationsException
+							&& e.getCause() instanceof ConnectException) {
+						this.repository.log
+								.warn("Could not connect to the database server. Retrying in "
+										+ Formatter.formatMsToDuration(5000));
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e1) {
+						}
+						continue;
+					}
+					switch (e.getErrorCode()) {
+					// wrong password
+						case 1045 :
+							password = getDBPassword();
+							break;
+						default :
+							throw e;
+					}
 				}
 			}
 

@@ -70,12 +70,13 @@ public class MysqlConfig {
 		Console c = System.console();
 		if (c != null) {
 			mysqlPassword = new String(System.console().readPassword(
-					"MySQL password for '%s': ", mysqlUsername));
+					"MySQL password for '%s'@%s: ", mysqlUsername, mysqlHost));
 		}
 		// handling for eclipse launching
 		else {
 			mysqlPassword = "";
-			System.out.printf("MySQL password for '%s': ", mysqlUsername);
+			System.out.printf("MySQL password for '%s'@%s: ", mysqlUsername,
+					mysqlHost);
 			BufferedReader bufferedReader = new BufferedReader(
 					new InputStreamReader(System.in));
 			try {
