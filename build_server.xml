@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ClusEvalFramework">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+	<target name="create_run_jar">
+		<jar destfile="packages/ClustEvalFramework_Server.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="de.clusteval.framework.ClustevalBackendServer" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin">
+			</fileset>
+			<zipfileset excludes="META-INF/*.SF" src="lib/mysql-connector-java-5.1.21-bin.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/pcolt/parallelcolt-0.9.4.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/logback/slf4j-api-1.6.4.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/logback/logback-core-1.0.9.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/logback/logback-classic-1.0.9.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/logback/log4j-1.2.16.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/logback/logback-access-1.0.9.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/junit-addons-1.4.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/Wiutils.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/rJava/REngine.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/rJava/Rserve.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/transclust/TransClust.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/junit.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-configuration-1.8.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-io-2.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-lang-2.6.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-lang3-3.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-logging-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-logging-adapters-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-logging-api-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/apacheCommons/commons-cli-1.2.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jansi-1.9.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/collections-generic-4.01.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/jung-algorithms-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/jung-graph-impl-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jung2/jung-api-2.0.1.jar" />
+		</jar>
+	</target>
+</project>
