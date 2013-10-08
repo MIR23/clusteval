@@ -1,4 +1,0 @@
-programConfig = TransClust_2
-dataConfig = DS1
-qualityMeasures = TransClustF2ClusteringQualityMeasure,FDRClusteringQualityMeasure,FPRClusteringQualityMeasure,RandIndexClusteringQualityMeasure,SensitivityClusteringQualityMeasure,SpecificityClusteringQualityMeasure
-mode = internal_parameter_optimization

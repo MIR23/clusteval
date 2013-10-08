@@ -1,3 +1,0 @@
-uniqueRunIdentifiers = 05_06_2013-15_52_16_tcga
-mode = runAnalysis
-runStatistics = CooccurrenceRunStatistic,CooccurrenceBestRunStatistic

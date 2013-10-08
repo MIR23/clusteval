@@ -1,3 +1,0 @@
-dataConfig = nora_cancer_abs_lusc,nora_cancer_abs_brca,nora_cancer_abs_gbm
-mode = dataAnalysis
-dataStatistics = HopkinsDataStatistic

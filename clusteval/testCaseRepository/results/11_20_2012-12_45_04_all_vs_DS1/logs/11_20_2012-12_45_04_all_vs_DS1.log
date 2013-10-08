@@ -1,9 +1,0 @@
-04_14_2013-15_51_33	RESUMING run "all_vs_DS1"
-04_14_2013-15_54_16	RESUMING run "all_vs_DS1"
-04_14_2013-15_54_16	Starting runThread "[Run:all_vs_DS1] (TransClust_2,DS1)"
-04_14_2013-15_54_16	Starting runThread "[Run:all_vs_DS1] (APcluster_1,DS1)"
-04_14_2013-15_54_16	Starting runThread "[Run:all_vs_DS1] (MCL_1,DS1)"
-04_14_2013-15_54_19	Finished runThread "[Run:all_vs_DS1] (MCL_1,DS1)" (Duration 3s 80ms)
-04_14_2013-15_54_30	Finished runThread "[Run:all_vs_DS1] (APcluster_1,DS1)" (Duration 14s 741ms)
-04_14_2013-16_00_50	Finished runThread "[Run:all_vs_DS1] (TransClust_2,DS1)" (Duration 6m 34s 36ms)
-04_14_2013-16_00_50	Finished run "all_vs_DS1" (Duration 6m 34s 281ms)

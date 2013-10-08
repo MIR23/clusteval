@@ -1,3 +1,0 @@
-04_13_2013-14_53_17	Starting run "test_kmeans_sfld_layered_f2"
-04_13_2013-14_53_31	Starting runThread "[Run:test_kmeans_sfld_layered_f2] (KMeans_Clustering,sfld_1)"
-04_13_2013-14_53_37	Finished runThread "[Run:test_kmeans_sfld_layered_f2] (KMeans_Clustering,sfld_1)" (Duration 7s 293ms)
