@@ -13,11 +13,13 @@
  */
 package de.clusteval.context;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class IncompatibleContextException extends Exception {
+public class IncompatibleContextException extends ClustEvalException {
 
 	/**
 	 * 

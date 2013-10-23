@@ -18,7 +18,7 @@ package de.clusteval.utils;
  * 
  * @author Christian Wiwie
  */
-public class InvalidConfigurationFileException extends Exception {
+public class InvalidConfigurationFileException extends ClustEvalException {
 
 	/**
 	 * 

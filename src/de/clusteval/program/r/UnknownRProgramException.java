@@ -13,11 +13,13 @@
  */
 package de.clusteval.program.r;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownRProgramException extends Exception {
+public class UnknownRProgramException extends ClustEvalException {
 
 	/**
 	 * 

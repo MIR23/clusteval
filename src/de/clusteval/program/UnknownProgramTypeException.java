@@ -13,11 +13,13 @@
  */
 package de.clusteval.program;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownProgramTypeException extends Exception {
+public class UnknownProgramTypeException extends ClustEvalException {
 
 	/**
 	 * 

@@ -13,11 +13,13 @@
  */
 package de.clusteval.program;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownParameterType extends Exception {
+public class UnknownParameterType extends ClustEvalException {
 
 	/**
 	 * 

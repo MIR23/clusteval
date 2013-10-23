@@ -13,22 +13,18 @@
  */
 package de.clusteval.framework.repository.config;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class RepositoryConfigurationException extends Exception {
+public class RepositoryConfigurationException extends ClustEvalException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3499581646376240590L;
-
-	/**
-	 * 
-	 */
-	public RepositoryConfigurationException() {
-	}
 
 	/**
 	 * @param message

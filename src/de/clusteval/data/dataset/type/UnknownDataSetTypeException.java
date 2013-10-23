@@ -13,10 +13,12 @@
  */
 package de.clusteval.data.dataset.type;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  */
-public class UnknownDataSetTypeException extends Exception {
+public class UnknownDataSetTypeException extends ClustEvalException {
 
 	/**
 	 * 

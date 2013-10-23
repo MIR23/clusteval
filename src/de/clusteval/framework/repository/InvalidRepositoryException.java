@@ -13,11 +13,13 @@
  */
 package de.clusteval.framework.repository;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class InvalidRepositoryException extends Exception {
+public class InvalidRepositoryException extends ClustEvalException {
 
 	/**
 	 * 

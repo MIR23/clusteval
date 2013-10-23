@@ -13,12 +13,14 @@
  */
 package de.clusteval.run.result.format;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * The Class UnknownRunResultFormatException.
  * 
  * @author Christian Wiwie
  */
-public class UnknownRunResultFormatException extends Exception {
+public class UnknownRunResultFormatException extends ClustEvalException {
 
 	/**
 	 * 

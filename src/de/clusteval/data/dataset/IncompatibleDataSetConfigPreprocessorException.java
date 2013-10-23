@@ -13,11 +13,15 @@
  */
 package de.clusteval.data.dataset;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class IncompatibleDataSetConfigPreprocessorException extends Exception {
+public class IncompatibleDataSetConfigPreprocessorException
+		extends
+			ClustEvalException {
 
 	/**
 	 * 

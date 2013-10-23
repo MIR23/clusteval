@@ -13,11 +13,13 @@
  */
 package de.clusteval.data.preprocessing;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownDataPreprocessorException extends Exception {
+public class UnknownDataPreprocessorException extends ClustEvalException {
 
 	/**
 	 * @param string

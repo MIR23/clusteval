@@ -13,11 +13,15 @@
  */
 package de.clusteval.paramOptimization;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownParameterOptimizationMethodException extends Exception {
+public class UnknownParameterOptimizationMethodException
+		extends
+			ClustEvalException {
 
 	/**
 	 * 

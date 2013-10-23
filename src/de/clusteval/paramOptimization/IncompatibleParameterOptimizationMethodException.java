@@ -13,11 +13,15 @@
  */
 package de.clusteval.paramOptimization;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class IncompatibleParameterOptimizationMethodException extends Exception {
+public class IncompatibleParameterOptimizationMethodException
+		extends
+			ClustEvalException {
 
 	/**
 	 * 

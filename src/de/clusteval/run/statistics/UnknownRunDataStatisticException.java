@@ -13,11 +13,13 @@
  */
 package de.clusteval.run.statistics;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownRunDataStatisticException extends Exception {
+public class UnknownRunDataStatisticException extends ClustEvalException {
 
 	/**
 	 * 

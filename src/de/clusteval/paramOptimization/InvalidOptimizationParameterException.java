@@ -13,11 +13,13 @@
  */
 package de.clusteval.paramOptimization;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class InvalidOptimizationParameterException extends Exception {
+public class InvalidOptimizationParameterException extends ClustEvalException {
 
 	/**
 	 * @param string

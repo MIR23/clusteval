@@ -943,7 +943,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		this.log.debug(this.getRun() + " (" + this.programConfig + ","
 				+ this.dataConfig + ") Assessing quality of results...");
 		List<Pair<ParameterSet, QualitySet>> qualities = new ArrayList<Pair<ParameterSet, QualitySet>>();
-		try {
+		try { 
 			final String qualityFile = this.internalParams.get("q");
 			convertedResult.loadIntoMemory();
 			final Pair<ParameterSet, GraphMatching> pair = convertedResult

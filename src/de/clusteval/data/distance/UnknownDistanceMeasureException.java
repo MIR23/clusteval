@@ -13,11 +13,13 @@
  */
 package de.clusteval.data.distance;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class UnknownDistanceMeasureException extends Exception {
+public class UnknownDistanceMeasureException extends ClustEvalException {
 
 	/**
 	 * 

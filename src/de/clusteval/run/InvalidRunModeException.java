@@ -13,11 +13,13 @@
  */
 package de.clusteval.run;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class InvalidRunModeException extends Exception {
+public class InvalidRunModeException extends ClustEvalException {
 
 	/**
 	 * 

@@ -13,11 +13,13 @@
  */
 package de.clusteval.framework.repository;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class RepositoryAlreadyExistsException extends Exception {
+public class RepositoryAlreadyExistsException extends ClustEvalException {
 
 	/**
 	 * 

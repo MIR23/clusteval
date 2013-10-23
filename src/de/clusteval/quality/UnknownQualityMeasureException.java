@@ -13,10 +13,12 @@
  */
 package de.clusteval.quality;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  */
-public class UnknownQualityMeasureException extends Exception {
+public class UnknownQualityMeasureException extends ClustEvalException {
 
 	/**
 	 * 

@@ -13,6 +13,8 @@
  */
 package de.clusteval.program;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * This exception is thrown, if a program parameter should be used during a
  * parameter optimization process but is not defined as a optimizable parameter.
@@ -20,7 +22,7 @@ package de.clusteval.program;
  * @author Christian Wiwie
  * 
  */
-public class NoOptimizableProgramParameterException extends Exception {
+public class NoOptimizableProgramParameterException extends ClustEvalException {
 
 	/**
 	 * 

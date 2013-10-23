@@ -13,13 +13,15 @@
  */
 package de.clusteval.program;
 
+import de.clusteval.utils.ClustEvalException;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class UnknownProgramParameterException.
- *
+ * 
  * @author Christian Wiwie
  */
-public class UnknownProgramParameterException extends Exception {
+public class UnknownProgramParameterException extends ClustEvalException {
 
 	/**
 	 * 
@@ -28,8 +30,9 @@ public class UnknownProgramParameterException extends Exception {
 
 	/**
 	 * Instantiates a new unknown program parameter exception.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public UnknownProgramParameterException(final String message) {
 		super(message);

@@ -13,11 +13,13 @@
  */
 package de.clusteval.run;
 
+import de.clusteval.utils.ClustEvalException;
+
 /**
  * @author Christian Wiwie
  * 
  */
-public class RunException extends Exception {
+public class RunException extends ClustEvalException {
 
 	/**
 	 * @param message
