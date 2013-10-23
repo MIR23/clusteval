@@ -953,7 +953,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	protected void writeQualitiesToFile(
 			List<Triple<ParameterSet, QualitySet, Long>> qualities) {
-		result.writeQualitiesToCompleteFile(qualities);
+		result.writeQualitiesToFiles(qualities);
 	}
 
 	/**
