@@ -194,27 +194,8 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 * If at all, then this method is invoked by {@link #beginRun()} before
 	 * anything has been executed by the runnable.
 	 */
-	protected void writeHeaderIntoCompleteFile(
-			final String completeQualityOutput) {
-		StringBuilder sb = new StringBuilder();
-		// 04.04.2013: adding iteration numbers into complete file
-		sb.append("iteration\t");
-		for (int p = 0; p < programConfig.getOptimizableParams().size(); p++) {
-			ProgramParameter<?> param = programConfig.getOptimizableParams()
-					.get(p);
-			if (p > 0)
-				sb.append(",");
-			sb.append(param);
-		}
-		sb.append("\t");
-		for (QualityMeasure measure : this.getRun().getQualityMeasures()) {
-			sb.append(measure.getClass().getSimpleName());
-			sb.append("\t");
-		}
-		sb.deleteCharAt(sb.length() - 1);
-		sb.append("\n");
-
-		FileUtils.appendStringToFile(completeQualityOutput, sb.toString());
+	protected void writeHeaderIntoCompleteFile() {
+		result.writeHeaderIntoCompleteFile();
 	}
 
 	/**
@@ -943,8 +924,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 		this.log.debug(this.getRun() + " (" + this.programConfig + ","
 				+ this.dataConfig + ") Assessing quality of results...");
 		List<Pair<ParameterSet, QualitySet>> qualities = new ArrayList<Pair<ParameterSet, QualitySet>>();
-		try { 
-			final String qualityFile = this.internalParams.get("q");
+		try {
 			convertedResult.loadIntoMemory();
 			final Pair<ParameterSet, GraphMatching> pair = convertedResult
 					.getGraphMatching();
@@ -952,11 +932,6 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 			QualitySet quals = pair.getSecond().assessQuality(dataConfig,
 					this.getRun().getQualityMeasures());
 			qualities.add(Pair.getPair(pair.getFirst(), quals));
-			for (QualityMeasure qualityMeasure : quals.keySet()) {
-				FileUtils.appendStringToFile(qualityFile,
-						qualityMeasure.getClass().getSimpleName() + "\t"
-								+ quals.get(qualityMeasure) + "\n");
-			}
 
 			this.log.debug(this.getRun() + " (" + this.programConfig + ","
 					+ this.dataConfig + ") Finished quality calculations");
@@ -978,34 +953,7 @@ public abstract class ExecutionRunRunnable extends RunRunnable {
 	 */
 	protected void writeQualitiesToFile(
 			List<Triple<ParameterSet, QualitySet, Long>> qualities) {
-		// 04.04.2013: adding iteration number into first column
-		/*
-		 * Write the qualities into the complete file
-		 */
-		for (Triple<ParameterSet, QualitySet, Long> clustSet : qualities) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(clustSet.getThird());
-			sb.append("\t");
-			for (int p = 0; p < programConfig.getOptimizableParams().size(); p++) {
-				ProgramParameter<?> param = programConfig
-						.getOptimizableParams().get(p);
-				if (p > 0)
-					sb.append(",");
-				sb.append(clustSet.getFirst().get(param.getName()));
-			}
-			sb.append("\t");
-			for (QualityMeasure measure : this.getRun().getQualityMeasures()) {
-				sb.append(clustSet.getSecond().get(measure));
-				sb.append("\t");
-			}
-			sb.deleteCharAt(sb.length() - 1);
-			sb.append("\n");
-
-			FileUtils.appendStringToFile(completeQualityOutput, sb.toString());
-
-			this.log.info(this.getRun() + " (" + this.programConfig + ","
-					+ this.dataConfig + ") " + clustSet.getSecond().toString());
-		}
+		result.writeQualitiesToCompleteFile(qualities);
 	}
 
 	/**

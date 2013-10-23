@@ -82,7 +82,7 @@ public class InternalParameterOptimizationRunRunnable
 			IncompleteGoldStandardException, RNotAvailableException {
 		super.beforeRun();
 		if (!new File(completeQualityOutput).exists() || !isResume)
-			writeHeaderIntoCompleteFile(completeQualityOutput);
+			writeHeaderIntoCompleteFile();
 
 		this.optId = 1;
 	}

@@ -14,12 +14,20 @@
 package de.clusteval.run.result;
 
 import java.io.File;
+import java.util.List;
 
+import utils.Triple;
 import de.clusteval.data.DataConfig;
 import de.clusteval.framework.repository.RegisterException;
 import de.clusteval.framework.repository.Repository;
+import de.clusteval.program.ParameterSet;
 import de.clusteval.program.ProgramConfig;
+import de.clusteval.program.ProgramParameter;
+import de.clusteval.quality.QualityMeasure;
+import de.clusteval.quality.QualitySet;
+import de.clusteval.run.ExecutionRun;
 import de.clusteval.run.Run;
+import file.FileUtils;
 
 /**
  * @author Christian Wiwie
@@ -90,4 +98,86 @@ public abstract class ExecutionRunResult extends RunResult {
 		return this.dataConfig;
 	}
 
+	/**
+	 * A helper method to write a header into the complete quality output in the
+	 * beginning.
+	 * 
+	 * <p>
+	 * If at all, then this method is invoked by {@link #beginRun()} before
+	 * anything has been executed by the runnable.
+	 */
+	public void writeHeaderIntoCompleteFile() {
+		StringBuilder sb = new StringBuilder();
+		// 04.04.2013: adding iteration numbers into complete file
+		sb.append("iteration\t");
+		for (int p = 0; p < programConfig.getOptimizableParams().size(); p++) {
+			ProgramParameter<?> param = programConfig.getOptimizableParams()
+					.get(p);
+			if (p > 0)
+				sb.append(",");
+			sb.append(param);
+		}
+		sb.append("\t");
+		for (QualityMeasure measure : ((ExecutionRun) this.getRun())
+				.getQualityMeasures()) {
+			sb.append(measure.getClass().getSimpleName());
+			sb.append("\t");
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("\n");
+
+		FileUtils.appendStringToFile(this.getAbsolutePath(), sb.toString());
+	}
+
+	/**
+	 * Helper method of {@link #assessQualities(GraphMatchingRunResult)},
+	 * invoked to write the assessed clustering qualities into files.
+	 * 
+	 * @param qualities
+	 *            A list containing pairs of parameter sets and corresponding
+	 *            clustering qualities of different measures.
+	 */
+	public void writeQualitiesToCompleteFile(
+			List<Triple<ParameterSet, QualitySet, Long>> qualities) {
+		// 04.04.2013: adding iteration number into first column
+		for (Triple<ParameterSet, QualitySet, Long> clustSet : qualities) {
+			/*
+			 * Write the qualities into the complete file
+			 */
+			StringBuilder sb = new StringBuilder();
+			sb.append(clustSet.getThird());
+			sb.append("\t");
+			for (int p = 0; p < programConfig.getOptimizableParams().size(); p++) {
+				ProgramParameter<?> param = programConfig
+						.getOptimizableParams().get(p);
+				if (p > 0)
+					sb.append(",");
+				sb.append(clustSet.getFirst().get(param.getName()));
+			}
+			sb.append("\t");
+			for (QualityMeasure measure : ((ExecutionRun) this.getRun())
+					.getQualityMeasures()) {
+				sb.append(clustSet.getSecond().get(measure));
+				sb.append("\t");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			sb.append("\n");
+
+			FileUtils.appendStringToFile(this.getAbsolutePath(), sb.toString());
+
+			// write into individual files
+			final String qualityFile = this.getAbsolutePath().replace(
+					".results.qual.complete",
+					"." + clustSet.getThird() + ".results.matching.conv.qual");
+			for (QualityMeasure qualityMeasure : clustSet.getSecond().keySet()) {
+				FileUtils.appendStringToFile(qualityFile, qualityMeasure
+						.getClass().getSimpleName()
+						+ "\t"
+						+ clustSet.getSecond().get(qualityMeasure) + "\n");
+			}
+
+			this.log.info(this.getRun() + " (" + this.programConfig + ","
+					+ this.dataConfig + ") " + clustSet.getSecond().toString());
+		}
+	}
 }

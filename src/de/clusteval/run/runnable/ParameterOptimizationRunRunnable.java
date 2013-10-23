@@ -170,7 +170,7 @@ public class ParameterOptimizationRunRunnable extends ExecutionRunRunnable {
 			IncompleteGoldStandardException, RNotAvailableException {
 		super.beforeRun();
 		if (!new File(completeQualityOutput).exists() || !isResume)
-			writeHeaderIntoCompleteFile(completeQualityOutput);
+			writeHeaderIntoCompleteFile();
 
 		/*
 		 * Pass converted data configuration to optimization method
@@ -322,8 +322,7 @@ public class ParameterOptimizationRunRunnable extends ExecutionRunRunnable {
 		FileUtils.appendStringToFile(completeQualityOutput, sb.toString());
 
 		QualitySet minimalQualities = new QualitySet();
-		for (QualityMeasure measure : this.getRun()
-				.getQualityMeasures())
+		for (QualityMeasure measure : this.getRun().getQualityMeasures())
 			minimalQualities.put(measure,
 					QualityMeasureValue.getForNotTerminated());
 		if (this.optimizationMethod instanceof IDivergingParameterOptimizationMethod) {

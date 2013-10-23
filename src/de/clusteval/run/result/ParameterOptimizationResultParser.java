@@ -110,7 +110,7 @@ public class ParameterOptimizationResultParser extends TextFileParser {
 				// clustering exists
 				String iterationId = iterationNumber + "";
 				String clusteringFilePath = this.getAbsoluteFilePath().replace(
-						"results.qual.complete", iterationId + ".results.conv");
+						"results.qual.complete", iterationId + ".results.matching.conv");
 				File absFile = new File(clusteringFilePath).getAbsoluteFile();
 				// if the corresponding file exists take the qualities for
 				// granted

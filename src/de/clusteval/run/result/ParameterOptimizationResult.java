@@ -677,23 +677,23 @@ public class ParameterOptimizationResult extends ExecutionRunResult
 	public void unloadFromMemory() {
 		if (this.parameterSets != null) {
 			this.parameterSets.clear();
-			this.parameterSets = null;
+			// this.parameterSets = null;
 		}
 		if (this.iterationNumbers != null) {
 			this.iterationNumbers.clear();
-			this.iterationNumbers = null;
+			// this.iterationNumbers = null;
 		}
 		if (this.parameterSetToIterationNumber != null) {
 			this.parameterSetToIterationNumber.clear();
-			this.parameterSetToIterationNumber = null;
+			// this.parameterSetToIterationNumber = null;
 		}
 		if (this.parameterSetToClustering != null) {
 			this.parameterSetToClustering.clear();
-			this.parameterSetToClustering = null;
+			// this.parameterSetToClustering = null;
 		}
 		if (this.parameterSetToQualities != null) {
 			this.parameterSetToQualities.clear();
-			this.parameterSetToQualities = null;
+			// this.parameterSetToQualities = null;
 		}
 	}
 

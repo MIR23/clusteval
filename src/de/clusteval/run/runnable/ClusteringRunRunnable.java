@@ -85,7 +85,7 @@ public class ClusteringRunRunnable extends ExecutionRunRunnable {
 		super.beforeRun();
 
 		if (!new File(completeQualityOutput).exists() || !isResume)
-			writeHeaderIntoCompleteFile(completeQualityOutput);
+			writeHeaderIntoCompleteFile();
 
 		optId = 1;
 	}
