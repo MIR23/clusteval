@@ -54,7 +54,7 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	protected List<Pair<String, String>> mappings;
 
 	protected Map<String, String> graph1ToGraph2;
-	
+
 	protected QualitySet qualities;
 
 	/**
@@ -81,6 +81,8 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	}
 
 	protected void updateMap() {
+		if (this.graph1ToGraph2 == null)
+			this.graph1ToGraph2 = new HashMap<String, String>();
 		for (Pair<String, String> p : mappings)
 			this.graph1ToGraph2.put(p.getFirst(), p.getSecond());
 	}
@@ -121,28 +123,26 @@ public class GraphMatching implements Iterable<Pair<String, String>> {
 	public String getMatchingForGraph1Vertex(final String v) {
 		return this.graph1ToGraph2.get(v);
 	}
-	
+
 	public Set<String> getMatchingForGraphOneVertices() {
 		return this.graph1ToGraph2.keySet();
 	}
-	
+
 	public Collection<String> getMatchingForGraphTwoVertices() {
 		return this.graph1ToGraph2.values();
 	}
-	
-	
+
 	public String getMatchingForGraph2Vertex(final String mappedV) {
-		
+
 		Set<Entry<String, String>> set = this.graph1ToGraph2.entrySet();
-		
+
 		for (Entry<String, String> entry : set) {
-			if (entry.getValue() == mappedV){
+			if (entry.getValue() == mappedV) {
 				return entry.getKey();
 			}
 		}
 		return null;
 	}
-
 
 	public void addMatching(final Pair<String, String> pair) {
 		this.mappings.add(pair);

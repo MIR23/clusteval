@@ -137,7 +137,7 @@ public abstract class ExecutionRunResult extends RunResult {
 	 *            A list containing pairs of parameter sets and corresponding
 	 *            clustering qualities of different measures.
 	 */
-	public void writeQualitiesToCompleteFile(
+	public void writeQualitiesToFiles(
 			List<Triple<ParameterSet, QualitySet, Long>> qualities) {
 		// 04.04.2013: adding iteration number into first column
 		for (Triple<ParameterSet, QualitySet, Long> clustSet : qualities) {
@@ -169,6 +169,8 @@ public abstract class ExecutionRunResult extends RunResult {
 			final String qualityFile = this.getAbsolutePath().replace(
 					".results.qual.complete",
 					"." + clustSet.getThird() + ".results.matching.conv.qual");
+			if (new File(qualityFile).exists())
+				new File(qualityFile).delete();
 			for (QualityMeasure qualityMeasure : clustSet.getSecond().keySet()) {
 				FileUtils.appendStringToFile(qualityFile, qualityMeasure
 						.getClass().getSimpleName()
