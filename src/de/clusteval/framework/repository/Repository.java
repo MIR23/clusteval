@@ -5179,21 +5179,25 @@ public class Repository {
 			MyRengine rEngine;
 			try {
 				rEngine = new MyRengine("");
-				for (String libName : generator.getRequiredRlibraries())
-					try {
-						rEngine.loadLibrary(libName,
-								classObject.getSimpleName());
-						// first we clear the old exceptions for this class
-						this.clearMissingRLibraries(generator.getClass()
-								.getName());
-					} catch (RLibraryNotLoadedException e) {
-						if (this.addMissingRLibraryException(e))
-							this.warn("\""
-									+ generator.getClass().getSimpleName()
-									+ "\" could not be loaded due to an unsatisfied R library dependency: "
-									+ libName);
-					}
-				return true;
+				try {
+					for (String libName : generator.getRequiredRlibraries())
+						try {
+							rEngine.loadLibrary(libName,
+									classObject.getSimpleName());
+							// first we clear the old exceptions for this class
+							this.clearMissingRLibraries(generator.getClass()
+									.getName());
+						} catch (RLibraryNotLoadedException e) {
+							if (this.addMissingRLibraryException(e))
+								this.warn("\""
+										+ generator.getClass().getSimpleName()
+										+ "\" could not be loaded due to an unsatisfied R library dependency: "
+										+ libName);
+						}
+					return true;
+				} finally {
+					rEngine.close();
+				}
 			} catch (RserveException e) {
 			}
 		} catch (UnknownDataStatisticException e1) {
@@ -6846,21 +6850,25 @@ public class Repository {
 			MyRengine rEngine;
 			try {
 				rEngine = new MyRengine("");
-				for (String libName : generator.getRequiredRlibraries())
-					try {
-						rEngine.loadLibrary(libName,
-								classObject.getSimpleName());
-						// first we clear the old exceptions for this class
-						this.clearMissingRLibraries(generator.getClass()
-								.getName());
-					} catch (RLibraryNotLoadedException e) {
-						if (this.addMissingRLibraryException(e))
-							this.warn("\""
-									+ generator
-									+ "\" could not be loaded due to an unsatisfied R library dependency: "
-									+ libName);
-					}
-				return true;
+				try {
+					for (String libName : generator.getRequiredRlibraries())
+						try {
+							rEngine.loadLibrary(libName,
+									classObject.getSimpleName());
+							// first we clear the old exceptions for this class
+							this.clearMissingRLibraries(generator.getClass()
+									.getName());
+						} catch (RLibraryNotLoadedException e) {
+							if (this.addMissingRLibraryException(e))
+								this.warn("\""
+										+ generator
+										+ "\" could not be loaded due to an unsatisfied R library dependency: "
+										+ libName);
+						}
+					return true;
+				} finally {
+					rEngine.close();
+				}
 			} catch (RserveException e) {
 				if (this.addMissingRLibraryException(new RLibraryNotLoadedException(
 						generator.getClass().getName(), "R")))
@@ -6902,21 +6910,25 @@ public class Repository {
 			MyRengine rEngine;
 			try {
 				rEngine = new MyRengine("");
-				for (String libName : preprocessor.getRequiredRlibraries())
-					try {
-						rEngine.loadLibrary(libName,
-								classObject.getSimpleName());
-						// first we clear the old exceptions for this class
-						this.clearMissingRLibraries(preprocessor.getClass()
-								.getName());
-					} catch (RLibraryNotLoadedException e) {
-						if (this.addMissingRLibraryException(e))
-							this.warn("\""
-									+ preprocessor
-									+ "\" could not be loaded due to an unsatisfied R library dependency: "
-									+ libName);
-					}
-				return true;
+				try {
+					for (String libName : preprocessor.getRequiredRlibraries())
+						try {
+							rEngine.loadLibrary(libName,
+									classObject.getSimpleName());
+							// first we clear the old exceptions for this class
+							this.clearMissingRLibraries(preprocessor.getClass()
+									.getName());
+						} catch (RLibraryNotLoadedException e) {
+							if (this.addMissingRLibraryException(e))
+								this.warn("\""
+										+ preprocessor
+										+ "\" could not be loaded due to an unsatisfied R library dependency: "
+										+ libName);
+						}
+					return true;
+				} finally {
+					rEngine.close();
+				}
 			} catch (RserveException e) {
 				if (this.addMissingRLibraryException(new RLibraryNotLoadedException(
 						preprocessor.getClass().getName(), "R")))
@@ -7014,21 +7026,25 @@ public class Repository {
 			MyRengine rEngine;
 			try {
 				rEngine = new MyRengine("");
-				for (String libName : measure.getRequiredRlibraries())
-					try {
-						rEngine.loadLibrary(libName,
-								classObject.getSimpleName());
-						// first we clear the old exceptions for this class
-						this.clearMissingRLibraries(measure.getClass()
-								.getName());
-					} catch (RLibraryNotLoadedException e) {
-						if (this.addMissingRLibraryException(e))
-							this.warn("\""
-									+ measure
-									+ "\" could not be loaded due to an unsatisfied R library dependency: "
-									+ libName);
-					}
-				return true;
+				try {
+					for (String libName : measure.getRequiredRlibraries())
+						try {
+							rEngine.loadLibrary(libName,
+									classObject.getSimpleName());
+							// first we clear the old exceptions for this class
+							this.clearMissingRLibraries(measure.getClass()
+									.getName());
+						} catch (RLibraryNotLoadedException e) {
+							if (this.addMissingRLibraryException(e))
+								this.warn("\""
+										+ measure
+										+ "\" could not be loaded due to an unsatisfied R library dependency: "
+										+ libName);
+						}
+					return true;
+				} finally {
+					rEngine.close();
+				}
 			} catch (RserveException e) {
 				if (this.addMissingRLibraryException(new RLibraryNotLoadedException(
 						measure.getClass().getName(), "R")))
@@ -7070,21 +7086,25 @@ public class Repository {
 			MyRengine rEngine;
 			try {
 				rEngine = new MyRengine("");
-				for (String libName : generator.getRequiredRlibraries())
-					try {
-						rEngine.loadLibrary(libName,
-								classObject.getSimpleName());
-						// first we clear the old exceptions for this class
-						this.clearMissingRLibraries(generator.getClass()
-								.getName());
-					} catch (RLibraryNotLoadedException e) {
-						if (this.addMissingRLibraryException(e))
-							this.warn("\""
-									+ generator
-									+ "\" could not be loaded due to an unsatisfied R library dependency: "
-									+ libName);
-					}
-				return true;
+				try {
+					for (String libName : generator.getRequiredRlibraries())
+						try {
+							rEngine.loadLibrary(libName,
+									classObject.getSimpleName());
+							// first we clear the old exceptions for this class
+							this.clearMissingRLibraries(generator.getClass()
+									.getName());
+						} catch (RLibraryNotLoadedException e) {
+							if (this.addMissingRLibraryException(e))
+								this.warn("\""
+										+ generator
+										+ "\" could not be loaded due to an unsatisfied R library dependency: "
+										+ libName);
+						}
+					return true;
+				} finally {
+					rEngine.close();
+				}
 			} catch (RserveException e) {
 				if (this.addMissingRLibraryException(new RLibraryNotLoadedException(
 						generator.getClass().getName(), "R")))

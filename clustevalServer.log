@@ -1282,3 +1282,122 @@
 @localhost:1099 06 Oct 2013 13:59:24.054 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - [Run:gedevo] (gedevo,rashid_merge, Iteration 3) Parameter Set: {maxsame=300.0, pop=100.0}
 @localhost:1099 07 Oct 2013 11:14:48.248 [main] ERROR d.c.f.ClustevalBackendServer - Connection to Rserve could not be established, please ensure that your Rserve instance is running before starting this framework.
 @localhost:1099 07 Oct 2013 11:14:48.287 [main] ERROR d.c.f.ClustevalBackendServer - Functionality that requires R will not be available until Rserve has been started.
+@localhost:1099 22 Oct 2013 12:24:58.313 [main] ERROR d.c.f.ClustevalBackendServer - Connection to Rserve could not be established, please ensure that your Rserve instance is running before starting this framework.
+@localhost:1099 22 Oct 2013 12:24:58.316 [main] ERROR d.c.f.ClustevalBackendServer - Functionality that requires R will not be available until Rserve has been started.
+@localhost:1099 22 Oct 2013 12:24:58.341 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/statistics/data
+@localhost:1099 22 Oct 2013 12:24:58.342 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/statistics/run
+@localhost:1099 22 Oct 2013 12:24:58.342 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/statistics/rundata
+@localhost:1099 22 Oct 2013 12:24:58.343 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/distanceMeasures
+@localhost:1099 22 Oct 2013 12:24:58.343 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/generators
+@localhost:1099 22 Oct 2013 12:24:58.343 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/generators/dataset
+@localhost:1099 22 Oct 2013 12:24:58.343 [main] INFO  d.c.framework.repository.Repository - Recreating repository folder /home/chris/git/clustevalGraphMatch/repository/supp/preprocessing
+@localhost:1099 22 Oct 2013 12:25:19.282 [main] WARN  d.c.framework.repository.Repository - Could not connect to the database server. Retrying in 5s 0ms
+@localhost:1099 22 Oct 2013 12:25:24.289 [main] WARN  d.c.framework.repository.Repository - Could not connect to the database server. Retrying in 5s 0ms
+@localhost:1099 22 Oct 2013 12:25:29.295 [main] WARN  d.c.framework.repository.Repository - Could not connect to the database server. Retrying in 5s 0ms
+@localhost:1099 22 Oct 2013 12:25:34.298 [main] WARN  d.c.framework.repository.Repository - Could not connect to the database server. Retrying in 5s 0ms
+@localhost:1099 22 Oct 2013 12:25:40.181 [main] INFO  d.c.f.r.DefaultSQLCommunicator - Initializing MySQL database
+@localhost:1099 22 Oct 2013 12:25:40.326 [main] INFO  d.c.f.ClustevalBackendServer - Using repository at '/home/chris/git/clustevalGraphMatch/repository'
+@localhost:1099 22 Oct 2013 12:25:40.732 [main] INFO  d.c.f.ClustevalBackendServer - Framework up and listening on port 1099
+@localhost:1099 22 Oct 2013 12:25:40.732 [main] INFO  d.c.f.ClustevalBackendServer - Used number of processors: 2
+@localhost:1099 22 Oct 2013 12:25:40.835 [DataSetFormatFinderThread-2] INFO  d.c.framework.repository.Repository - New format conversion available: EdgeListDataSetFormat->GwLEDADataSetFormat (EdgeListDataSetFormatParser.convertEdgeToGwLEDA)
+@localhost:1099 22 Oct 2013 12:25:40.836 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.EdgeListDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:40.868 [ParameterOptimizationMethodFinderThread-13] INFO  d.c.framework.repository.Repository - New Parameter Optimization Method Class registered: DivisiveParameterOptimizationMethod
+@localhost:1099 22 Oct 2013 12:25:40.979 [ParameterOptimizationMethodFinderThread-13] INFO  d.c.p.ParameterOptimizationMethodFinder - ParameterOptimizationMethod de.clusteval.paramOptimization.DivisiveParameterOptimizationMethod loaded
+@localhost:1099 22 Oct 2013 12:25:41.033 [ParameterOptimizationMethodFinderThread-13] INFO  d.c.framework.repository.Repository - New Parameter Optimization Method Class registered: LayeredDivisiveParameterOptimizationMethod
+@localhost:1099 22 Oct 2013 12:25:41.266 [DataSetTypeFinderThread-5] INFO  d.c.d.d.type.DataSetTypeFinder - DataSetType de.clusteval.data.dataset.type.GeneExpressionDataSetType loaded
+@localhost:1099 22 Oct 2013 12:25:41.267 [QualityMeasureFinderThread-12] INFO  d.c.quality.QualityMeasureFinder - QualityMeasure de.clusteval.quality.AlignedEdgesQualityMeasure loaded
+@localhost:1099 22 Oct 2013 12:25:41.306 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormat de.clusteval.run.result.format.TabSepGraphMatchingRunResultFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.307 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.EdgeListDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.309 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.RunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.310 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.TabSepGraphMatchingRunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.322 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.GMLDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.348 [QualityMeasureFinderThread-12] INFO  d.c.quality.QualityMeasureFinder - QualityMeasure de.clusteval.quality.LTwoCompactnessQualityMeasure loaded
+@localhost:1099 22 Oct 2013 12:25:41.348 [ParameterOptimizationMethodFinderThread-13] INFO  d.c.p.ParameterOptimizationMethodFinder - ParameterOptimizationMethod de.clusteval.paramOptimization.LayeredDivisiveParameterOptimizationMethod loaded
+@localhost:1099 22 Oct 2013 12:25:41.471 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.GMLDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.496 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.PDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.509 [QualityMeasureFinderThread-12] INFO  d.c.quality.QualityMeasureFinder - QualityMeasure de.clusteval.quality.C_1QualityMeasure loaded
+@localhost:1099 22 Oct 2013 12:25:41.655 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormat de.clusteval.run.result.format.MigraalRunResultFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.657 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.RunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.657 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.MigraalRunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.727 [QualityMeasureFinderThread-12] INFO  d.c.quality.QualityMeasureFinder - QualityMeasure de.clusteval.quality.C_1PrimeQualityMeasure loaded
+@localhost:1099 22 Oct 2013 12:25:41.727 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.PDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.765 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.PINDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.776 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormat de.clusteval.run.result.format.SpinalRunResultFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.778 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.RunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.778 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.SpinalRunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.805 [QualityMeasureFinderThread-12] INFO  d.c.quality.QualityMeasureFinder - QualityMeasure de.clusteval.quality.GraphEditDistanceQualityMeasure loaded
+@localhost:1099 22 Oct 2013 12:25:41.840 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.PINDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.866 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.GwLEDADataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.905 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormat de.clusteval.run.result.format.GedevoRunResultFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.907 [QualityMeasureFinderThread-12] INFO  d.c.quality.QualityMeasureFinder - QualityMeasure de.clusteval.quality.EdgeCorrectnessQualityMeasure loaded
+@localhost:1099 22 Oct 2013 12:25:41.907 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.RunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.908 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.GedevoRunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:41.912 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.GwLEDADataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:41.947 [DataSetFormatFinderThread-2] INFO  d.c.framework.repository.Repository - New format conversion available: EdgeListHDataSetFormat->GMLDataSetFormat (EdgeListHDataSetFormatParser.convertEdgeHToGML)
+@localhost:1099 22 Oct 2013 12:25:41.948 [DataSetFormatFinderThread-2] INFO  d.c.framework.repository.Repository - New format conversion available: EdgeListHDataSetFormat->PINDataSetFormat (EdgeListHDataSetFormatParser.convertEdgeHToPIN)
+@localhost:1099 22 Oct 2013 12:25:41.948 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.EdgeListHDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.021 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.EdgeListHDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:42.043 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.SeqSimDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.074 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.SeqSimDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:42.077 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormat de.clusteval.run.result.format.CgraalRunResultFormat loaded
+@localhost:1099 22 Oct 2013 12:25:42.080 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.RunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.083 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.CgraalRunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.090 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormat de.clusteval.run.result.format.NetalRunResultFormat loaded
+@localhost:1099 22 Oct 2013 12:25:42.091 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.RunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.092 [RunResultFormatFinderThread-3] INFO  d.c.r.r.f.RunResultFormatFinder - RunResultFormatParser de.clusteval.run.result.format.NetalRunResultFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.134 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormatParser de.clusteval.data.dataset.format.NodeSignatureDataSetFormatParser loaded
+@localhost:1099 22 Oct 2013 12:25:42.192 [DataSetFormatFinderThread-2] INFO  d.c.d.d.format.DataSetFormatFinder - DataSetFormat de.clusteval.data.dataset.format.NodeSignatureDataSetFormat loaded
+@localhost:1099 22 Oct 2013 12:25:42.215 [ContextFinderThread-4] INFO  de.clusteval.context.ContextFinder - Context de.clusteval.context.GraphMatchingContext loaded
+@localhost:1099 22 Oct 2013 12:25:42.231 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New program: spinal
+@localhost:1099 22 Oct 2013 12:25:42.238 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/VZV.sigs
+@localhost:1099 22 Oct 2013 12:25:42.291 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New ProgramConfig: spinal
+@localhost:1099 22 Oct 2013 12:25:42.414 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/EBV.gw
+@localhost:1099 22 Oct 2013 12:25:42.467 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/VZV.gml
+@localhost:1099 22 Oct 2013 12:25:42.486 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/EBV.sigs
+@localhost:1099 22 Oct 2013 12:25:42.494 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New program: migraal
+@localhost:1099 22 Oct 2013 12:25:42.504 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New ProgramConfig: migraal
+@localhost:1099 22 Oct 2013 12:25:42.513 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New program: netal
+@localhost:1099 22 Oct 2013 12:25:42.515 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New ProgramConfig: netal
+@localhost:1099 22 Oct 2013 12:25:42.525 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/EBV_vs_VZV.pin
+@localhost:1099 22 Oct 2013 12:25:42.549 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New program: gedevo
+@localhost:1099 22 Oct 2013 12:25:42.552 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New ProgramConfig: gedevo
+@localhost:1099 22 Oct 2013 12:25:42.589 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/N2.sigs
+@localhost:1099 22 Oct 2013 12:25:42.594 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New program: cgraal
+@localhost:1099 22 Oct 2013 12:25:42.597 [ProgramConfigFinderThread-18] INFO  d.c.framework.repository.Repository - New ProgramConfig: cgraal
+@localhost:1099 22 Oct 2013 12:25:42.630 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/VZV.gw
+@localhost:1099 22 Oct 2013 12:25:42.657 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/EBV.edgelist
+@localhost:1099 22 Oct 2013 12:25:42.693 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/EBV_vs_VZV.pairlist
+@localhost:1099 22 Oct 2013 12:25:42.721 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/N2.edgelist
+@localhost:1099 22 Oct 2013 12:25:42.758 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/EBV.gml
+@localhost:1099 22 Oct 2013 12:25:42.763 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/N1.edgelist
+@localhost:1099 22 Oct 2013 12:25:42.784 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/VZV.edgelist
+@localhost:1099 22 Oct 2013 12:25:42.806 [DataSetFinderThread-6] INFO  d.c.framework.repository.Repository - New dataset: rashid/N1.sigs
+@localhost:1099 22 Oct 2013 12:25:42.921 [DataSetConfigFinderThread-14] INFO  d.c.framework.repository.Repository - New DataSetConfig: rashid2
+@localhost:1099 22 Oct 2013 12:25:42.951 [DataSetConfigFinderThread-14] INFO  d.c.framework.repository.Repository - New DataSetConfig: rashid3
+@localhost:1099 22 Oct 2013 12:25:42.991 [DataSetConfigFinderThread-14] INFO  d.c.framework.repository.Repository - New DataSetConfig: rashid_merge
+@localhost:1099 22 Oct 2013 12:25:43.051 [DataSetConfigFinderThread-14] INFO  d.c.framework.repository.Repository - New DataSetConfig: rashid
+@localhost:1099 22 Oct 2013 12:25:43.095 [DataConfigFinderThread-16] INFO  d.c.framework.repository.Repository - New dataconfig: rashid_merge
+@localhost:1099 22 Oct 2013 12:25:43.121 [RunFinderThread-19] INFO  d.c.framework.repository.Repository - New Run: [Run:netal]
+@localhost:1099 22 Oct 2013 12:25:43.127 [DataConfigFinderThread-16] INFO  d.c.framework.repository.Repository - New dataconfig: rashid
+@localhost:1099 22 Oct 2013 12:25:43.158 [DataConfigFinderThread-16] WARN  de.clusteval.data.DataConfigFinder - Could not parse DataConfig /home/chris/git/clustevalGraphMatch/repository/data/configs/graals.dataconfig: Dataset config "/home/chris/git/clustevalGraphMatch/repository/data/datasets/configs/graals.dsconfig" does not exist!
+@localhost:1099 22 Oct 2013 12:25:43.203 [DataConfigFinderThread-16] INFO  d.c.framework.repository.Repository - New dataconfig: rashid3
+@localhost:1099 22 Oct 2013 12:25:43.248 [DataConfigFinderThread-16] INFO  d.c.framework.repository.Repository - New dataconfig: rashid2
+@localhost:1099 22 Oct 2013 12:25:43.250 [RunFinderThread-19] INFO  d.c.framework.repository.Repository - New Run: [Run:migraal]
+@localhost:1099 22 Oct 2013 12:25:43.334 [RunFinderThread-19] INFO  d.c.framework.repository.Repository - New Run: [Run:spinal]
+@localhost:1099 22 Oct 2013 12:25:43.409 [RunFinderThread-19] INFO  d.c.framework.repository.Repository - New Run: [Run:gedevo]
+@localhost:1099 22 Oct 2013 12:25:43.477 [RunFinderThread-19] INFO  d.c.framework.repository.Repository - New Run: [Run:cgraal]
+@localhost:1099 22 Oct 2013 12:25:43.568 [main] INFO  d.c.framework.repository.Repository - Repository initialization finished
+@localhost:1099 22 Oct 2013 12:25:44.173 [RunResultFinderThread-21] INFO  d.c.framework.repository.Repository - New RunResult: /home/chris/git/clustevalGraphMatch/repository/results/10_06_2013-13_48_50_gedevo/calculations/gedevo_rashid_merge.results.qual.complete
+@localhost:1099 22 Oct 2013 12:25:44.582 [RunResultFinderThread-21] INFO  d.c.framework.repository.Repository - New RunResult: /home/chris/git/clustevalGraphMatch/repository/results/10_06_2013-13_31_59_netal/calculations/netal_rashid_merge.results.qual.complete
+@localhost:1099 22 Oct 2013 12:25:44.971 [RunResultFinderThread-21] INFO  d.c.framework.repository.Repository - New RunResult: /home/chris/git/clustevalGraphMatch/repository/results/10_02_2013-20_52_44_spinal/calculations/spinal_rashid_merge.1.results.conv
+@localhost:1099 22 Oct 2013 12:25:45.699 [RunResultFinderThread-21] INFO  d.c.framework.repository.Repository - New RunResult: /home/chris/git/clustevalGraphMatch/repository/results/10_02_2013-20_52_42_migraal/calculations/migraal_rashid_merge.results.qual.complete
+@localhost:1099 22 Oct 2013 12:26:29.403 [RMI TCP Connection(3)-127.0.0.1] INFO  d.c.f.threading.RunSchedulerThread - Run scheduled...gedevo
+@localhost:1099 22 Oct 2013 12:26:29.805 [Thread-51] INFO  d.c.run.ParameterOptimizationRun - Starting run "gedevo"
+@localhost:1099 22 Oct 2013 12:26:29.806 [Thread-51] INFO  d.c.run.ParameterOptimizationRun - Run mode is "ParameterOptimizationRun"
+@localhost:1099 22 Oct 2013 12:26:29.920 [Thread-51] INFO  d.c.run.ParameterOptimizationRun - Run [Run:gedevo] - Waiting for runs to finish...
+@localhost:1099 22 Oct 2013 12:26:29.923 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - Run [Run:gedevo] (gedevo,rashid_merge) started (asynchronously)
+@localhost:1099 22 Oct 2013 12:26:30.177 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - [Run:gedevo] (gedevo,rashid_merge, Iteration 1) Parameter Set: {maxsame=200.0, pop=100.0}
+@localhost:1099 22 Oct 2013 12:26:36.308 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - [Run:gedevo] (gedevo,rashid_merge) {GraphEditDistanceQualityMeasure=260.0, LTwoCompactnessQualityMeasure=NaN, EdgeCorrectnessQualityMeasure=33.75, C_1PrimeQualityMeasure=36.0, C_1QualityMeasure=36.0, AlignedEdgesQualityMeasure=54.0}
+@localhost:1099 22 Oct 2013 12:26:36.309 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - [Run:gedevo] (gedevo,rashid_merge, Iteration 2) Parameter Set: {maxsame=250.0, pop=100.0}
+@localhost:1099 22 Oct 2013 12:26:44.056 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - [Run:gedevo] (gedevo,rashid_merge) {GraphEditDistanceQualityMeasure=260.0, LTwoCompactnessQualityMeasure=NaN, EdgeCorrectnessQualityMeasure=33.75, C_1PrimeQualityMeasure=41.0, C_1QualityMeasure=41.0, AlignedEdgesQualityMeasure=54.0}
+@localhost:1099 22 Oct 2013 12:26:44.057 [pool-2-thread-1] INFO  d.c.r.r.ParameterOptimizationRunRunnable - [Run:gedevo] (gedevo,rashid_merge, Iteration 3) Parameter Set: {maxsame=300.0, pop=100.0}
